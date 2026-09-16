@@ -1,0 +1,1107 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "border-subtle": "#e2e8f0",
+          "on-tertiary-container": "#d88500",
+          "surface-container-highest": "#e4e2df",
+          "on-error-container": "#93000a",
+          "primary-container": "#16324f",
+          "on-primary": "#ffffff",
+          "outline-variant": "#c3c6ce",
+          "secondary-container": "#d5e3fc",
+          "on-tertiary-fixed": "#2b1700",
+          "surface-dim": "#dbdad7",
+          "surface-variant": "#e4e2df",
+          "tertiary-fixed": "#ffddbb",
+          "on-error": "#ffffff",
+          "surface-container-lowest": "#ffffff",
+          "on-secondary-container": "#57657a",
+          "on-secondary": "#ffffff",
+          "on-surface-variant": "#43474d",
+          "on-secondary-fixed-variant": "#3a485b",
+          "surface": "#fbf9f6",
+          "surface-container-low": "#f5f3f0",
+          "on-primary-container": "#809abd",
+          "primary-fixed-dim": "#aec9ed",
+          "error-container": "#ffdad6",
+          "error": "#ba1a1a",
+          "inverse-primary": "#aec9ed",
+          "primary-fixed": "#d2e4ff",
+          "primary": "#001d37",
+          "secondary-fixed": "#d5e3fc",
+          "background": "#fbf9f6",
+          "surface-tint": "#466080",
+          "secondary-fixed-dim": "#b9c7df",
+          "warning-amber-soft": "#fef3c7",
+          "inverse-on-surface": "#f2f0ed",
+          "on-tertiary": "#ffffff",
+          "inverse-surface": "#30312f",
+          "tertiary": "#2c1700",
+          "on-surface": "#1b1c1a",
+          "border-strong": "#cbd5e1",
+          "on-background": "#1b1c1a",
+          "on-secondary-fixed": "#0d1c2e",
+          "tertiary-fixed-dim": "#ffb868",
+          "surface-card": "#ffffff",
+          "on-tertiary-fixed-variant": "#673d00",
+          "secondary": "#515f74",
+          "success-shamrock": "#059669",
+          "surface-container": "#efeeeb",
+          "surface-container-high": "#eae8e5",
+          "on-primary-fixed-variant": "#2e4867",
+          "tertiary-container": "#482900",
+          "surface-bright": "#fbf9f6",
+          "outline": "#74777e",
+          "on-primary-fixed": "#001d37"
+        },
+        "borderRadius": {
+          "DEFAULT": "0.25rem",
+          "lg": "0.5rem",
+          "xl": "0.75rem",
+          "full": "9999px"
+        },
+        "spacing": {
+          "margin-mobile": "1rem",
+          "spacing-2xl": "2rem",
+          "spacing-md": "1rem",
+          "spacing-xl": "1.5rem",
+          "spacing-2xs": "0.25rem",
+          "spacing-lg": "1.25rem",
+          "gutter-mobile": "1rem",
+          "spacing-sm": "0.75rem",
+          "spacing-xs": "0.5rem",
+          "margin-desktop": "2rem",
+          "gutter-desktop": "1.5rem",
+          "spacing-3xl": "2.5rem"
+        },
+        "fontFamily": {
+          "body-md": [
+            "Inter"
+          ],
+          "body-lg": [
+            "Inter"
+          ],
+          "label-lg": [
+            "Inter"
+          ],
+          "headline-md": [
+            "Plus Jakarta Sans"
+          ],
+          "numeric-metric-mobile": [
+            "Plus Jakarta Sans"
+          ],
+          "headline-sm": [
+            "Plus Jakarta Sans"
+          ],
+          "numeric-metric": [
+            "Plus Jakarta Sans"
+          ],
+          "body-sm": [
+            "Inter"
+          ],
+          "label-sm": [
+            "Inter"
+          ],
+          "label-md": [
+            "Inter"
+          ],
+          "headline-xl-mobile": [
+            "Plus Jakarta Sans"
+          ],
+          "headline-xl": [
+            "Plus Jakarta Sans"
+          ],
+          "headline-lg": [
+            "Plus Jakarta Sans"
+          ]
+        },
+        "fontSize": {
+          "body-md": [
+            "14px",
+            {
+              "lineHeight": "20px",
+              "fontWeight": "400"
+            }
+          ],
+          "body-lg": [
+            "16px",
+            {
+              "lineHeight": "24px",
+              "fontWeight": "400"
+            }
+          ],
+          "label-lg": [
+            "14px",
+            {
+              "lineHeight": "20px",
+              "fontWeight": "600"
+            }
+          ],
+          "headline-md": [
+            "20px",
+            {
+              "lineHeight": "28px",
+              "fontWeight": "600"
+            }
+          ],
+          "numeric-metric-mobile": [
+            "30px",
+            {
+              "lineHeight": "36px",
+              "fontWeight": "800"
+            }
+          ],
+          "headline-sm": [
+            "18px",
+            {
+              "lineHeight": "24px",
+              "fontWeight": "600"
+            }
+          ],
+          "numeric-metric": [
+            "36px",
+            {
+              "lineHeight": "44px",
+              "fontWeight": "800"
+            }
+          ],
+          "body-sm": [
+            "12px",
+            {
+              "lineHeight": "16px",
+              "fontWeight": "400"
+            }
+          ],
+          "label-sm": [
+            "11px",
+            {
+              "lineHeight": "14px",
+              "letterSpacing": "0.04em",
+              "fontWeight": "600"
+            }
+          ],
+          "label-md": [
+            "12px",
+            {
+              "lineHeight": "16px",
+              "fontWeight": "600"
+            }
+          ],
+          "headline-xl-mobile": [
+            "26px",
+            {
+              "lineHeight": "32px",
+              "fontWeight": "700"
+            }
+          ],
+          "headline-xl": [
+            "32px",
+            {
+              "lineHeight": "40px",
+              "fontWeight": "700"
+            }
+          ],
+          "headline-lg": [
+            "24px",
+            {
+              "lineHeight": "32px",
+              "fontWeight": "700"
+            }
+          ]
+        }
+      },
+    },
+  }</script></head><body class="bg-surface font-body-md text-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-72 bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-50 flex flex-col justify-between select-none"><div class="flex flex-col flex-1 overflow-y-auto"><div class="h-16 px-spacing-xl flex items-center justify-between"><div class="flex items-center gap-spacing-xs"><img alt="Brand logo. - Primary color: #16324f
+- Font: plusJakartaSans
+- Mode: light
+- Roundness: rounded-md
+" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1XkZniit_VHuFtiy4Afn4UrwAF0e_yMaTFEAW732zaDaxY0TY1_yGv_EIKxB3WyxBZckRkkVndquZ9xP8ID7VRKiGMu7c5GysYOInlzfftkMbihCulCCfpuJ_BbuOZs9uA2wrFewOZskiXwAnTKHTz2_gZ2mX0E-Kur6MDBPCb4uKNUnKPKV_JbspBCYvRG-_bnlW10Pyoj6cjYoyzz8OSzdMoCO1249XNQ9mx_s-Q4b_jlsfi8caqkWijN"/><span class="font-headline-sm text-headline-sm tracking-tight text-primary">Advance</span></div><span class="px-spacing-xs py-spacing-2xs rounded bg-surface-container-high text-secondary font-label-sm text-label-sm uppercase tracking-wider">Admin</span></div><div class="px-spacing-md py-spacing-xs"><div class="p-spacing-sm rounded-lg bg-surface-container-low"><div class="flex items-center justify-between mb-spacing-2xs"><span class="font-label-sm text-label-sm text-on-surface-variant">Admin Console</span><span class="flex h-2 w-2 relative"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-success-shamrock opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-success-shamrock"></span></span></div><div class="font-label-md text-label-md text-primary truncate">Senior Risk Admin</div><div class="font-body-sm text-body-sm text-secondary">Ops Tier 1 Verification</div></div></div><nav class="flex-1 px-spacing-md py-spacing-xs space-y-spacing-2xs" data-active-classes="bg-primary-container text-on-primary font-label-md"><a class="flex items-center justify-between px-spacing-md py-spacing-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all group" data-path="overview-analytics" href="#"><div class="flex items-center gap-spacing-sm"><span class="material-symbols-outlined text-[20px]">analytics</span><span class="font-label-md text-label-md">Overview / Analytics</span></div></a><a class="flex items-center justify-between px-spacing-md py-spacing-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all group" data-path="verification-queue" href="#"><div class="flex items-center gap-spacing-sm"><span class="material-symbols-outlined text-[20px]">verified_user</span><span class="font-label-md text-label-md">Verification Queue</span></div><span class="px-spacing-xs py-spacing-2xs rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm">9 Pending</span></a><a aria-current="page" class="flex items-center justify-between px-spacing-md py-spacing-sm rounded-lg transition-all group bg-primary-container text-on-primary font-label-md" data-path="invoice-oversight" href="#"><div class="flex items-center gap-spacing-sm"><span class="material-symbols-outlined text-[20px]">receipt_long</span><span class="font-label-md text-label-md">Invoice Oversight</span></div><span class="px-spacing-xs py-spacing-2xs rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm">3 Flagged</span></a><a class="flex items-center justify-between px-spacing-md py-spacing-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all group" data-path="dispute-resolution" href="#"><div class="flex items-center gap-spacing-sm"><span class="material-symbols-outlined text-[20px]">gavel</span><span class="font-label-md text-label-md">Dispute Resolution</span></div><span class="px-spacing-xs py-spacing-2xs rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm">2 Active</span></a><a class="flex items-center justify-between px-spacing-md py-spacing-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all group" data-path="audit-compliance-logs" href="#"><div class="flex items-center gap-spacing-sm"><span class="material-symbols-outlined text-[20px]">history_edu</span><span class="font-label-md text-label-md">Audit &amp; Compliance Logs</span></div></a><a class="flex items-center justify-between px-spacing-md py-spacing-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all group" data-path="system-settings" href="#"><div class="flex items-center gap-spacing-sm"><span class="material-symbols-outlined text-[20px]">settings</span><span class="font-label-md text-label-md">Settings</span></div></a></nav></div><div class="p-spacing-md bg-surface-container-low/60 m-spacing-md rounded-xl"><div class="flex items-center gap-spacing-xs mb-spacing-xs"><span class="material-symbols-outlined text-success-shamrock text-[16px]">cloud_done</span><span class="font-label-sm text-label-sm text-on-surface font-bold uppercase tracking-wider">System Health</span></div><div class="flex items-center justify-between"><span class="font-body-sm text-body-sm text-on-surface-variant">Protocol Status</span><span class="font-label-sm text-label-sm text-success-shamrock font-bold">99.98% Operational</span></div><div class="w-full bg-surface-container-highest h-1 rounded-full mt-spacing-xs overflow-hidden"><div class="bg-success-shamrock h-full w-[99.98%]"></div></div></div></aside><div class="pl-72"><header class="fixed top-0 left-72 right-0 h-16 bg-surface/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-spacing-xl"><div class="flex items-center gap-spacing-md flex-1 max-w-lg"><div class="relative w-full"><span class="material-symbols-outlined absolute left-spacing-sm top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">search</span><input class="w-full h-10 pl-10 pr-spacing-md rounded-lg bg-surface-container-low text-on-surface placeholder:text-on-surface-variant/60 font-body-sm text-body-sm focus:outline-none focus:bg-surface-container-lowest transition-colors" placeholder="Search trade facility, buyer, counterparty, tax ID..." type="text"/></div></div><div class="flex items-center gap-spacing-md"><div class="hidden lg:flex items-center gap-spacing-xs px-spacing-sm py-spacing-2xs rounded-lg bg-surface-container"><span class="material-symbols-outlined text-success-shamrock text-[16px]">shield</span><span class="font-label-sm text-label-sm text-on-surface-variant">Automated Underwriting: <strong class="text-on-surface">Strict Mode</strong></span></div><div class="flex items-center gap-spacing-xs"><button class="w-9 h-9 flex items-center justify-center rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors relative" type="button"><span class="material-symbols-outlined text-[20px]">notifications</span><span class="absolute top-2 right-2 w-2 h-2 rounded-full bg-error"></span></button><button class="w-9 h-9 flex items-center justify-center rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" type="button"><span class="material-symbols-outlined text-[20px]">tune</span></button></div><div class="h-6 w-px bg-surface-container-highest"></div><div class="flex items-center gap-spacing-sm"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div><div class="hidden sm:flex flex-col text-left"><span class="font-label-sm text-label-sm text-on-surface">Ops Admin #408</span><span class="font-body-sm text-body-sm text-on-surface-variant">Duty Desk Alpha</span></div></div></div></header><main class="relative pt-16 bg-surface w-full px-spacing-xl"><div class="flex flex-col w-full pb-spacing-3xl">
+<!-- Page Header & Liquidity Indicator -->
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-spacing-md py-spacing-xl">
+<div class="flex flex-col gap-spacing-2xs">
+<div class="flex items-center gap-spacing-xs">
+<span class="px-spacing-xs py-spacing-2xs rounded bg-surface-container-high text-primary font-label-sm text-label-sm uppercase tracking-wider font-bold">Ledger v4.12 Live</span>
+<span class="inline-block w-1.5 h-1.5 rounded-full bg-success-shamrock"></span>
+<span class="font-body-sm text-body-sm text-secondary">Real-Time Oracle Feed: Verified Block #20,891,422</span>
+</div>
+<h1 class="font-headline-xl text-headline-xl text-primary tracking-tight">Invoice Oversight &amp; Liquidity Vaults</h1>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-2xl">
+        Live real-time monitoring of all factored invoices, escrow vaults, and settlement schedules across verified agricultural supply corridors.
+      </p>
+</div>
+<!-- Quick Actions / Protocol Hedging Status -->
+<div class="flex items-center gap-spacing-sm">
+<div class="px-spacing-md py-spacing-xs rounded-xl bg-surface-container-low flex items-center gap-spacing-sm shadow-sm">
+<div class="w-8 h-8 rounded-lg bg-surface-container-highest flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[18px]">lock_clock</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-secondary">Global Escrow Buffer</span>
+<span class="font-label-md text-label-md text-primary font-bold">18.4% Reserves ($88,780)</span>
+</div>
+</div>
+<button class="h-10 px-spacing-md rounded-lg bg-primary text-on-primary font-label-md text-label-md flex items-center gap-spacing-xs shadow-sm hover:bg-primary-container transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">file_download</span>
+        Export Ledger .CSV
+      </button>
+</div>
+</div>
+<!-- Top Metric Cards (Bento Stripe) -->
+<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-spacing-md mb-spacing-xl">
+<!-- Metric 1: Total Volume -->
+<div class="p-spacing-lg rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition-shadow">
+<div class="flex items-start justify-between mb-spacing-md">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider font-semibold">Total Monitored Volume</span>
+<span class="font-numeric-metric text-numeric-metric text-primary mt-spacing-2xs font-extrabold tracking-tight">$482,500 <span class="font-body-sm text-body-sm text-secondary font-normal">USDC</span></span>
+</div>
+<div class="w-10 h-10 rounded-lg bg-secondary-container/50 text-on-secondary-fixed flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">account_balance_wallet</span>
+</div>
+</div>
+<div class="flex items-center gap-spacing-xs text-secondary font-body-sm text-body-sm">
+<span class="inline-flex items-center text-success-shamrock font-label-sm text-label-sm font-bold">
+<span class="material-symbols-outlined text-[14px]">trending_up</span> +14.2%
+        </span>
+<span>vs. last settlement epoch (30d)</span>
+</div>
+<div class="w-full bg-surface-container h-1 rounded-full mt-spacing-md overflow-hidden">
+<div class="bg-primary h-full w-[78%]"></div>
+</div>
+</div>
+<!-- Metric 2: In Transit -->
+<div class="p-spacing-lg rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition-shadow">
+<div class="flex items-start justify-between mb-spacing-md">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider font-semibold">Active in Transit</span>
+<span class="font-numeric-metric text-numeric-metric text-primary mt-spacing-2xs font-extrabold tracking-tight">$312,800 <span class="font-body-sm text-body-sm text-secondary font-normal">USDC</span></span>
+</div>
+<div class="w-10 h-10 rounded-lg bg-surface-container-high text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">local_shipping</span>
+</div>
+</div>
+<div class="flex items-center justify-between font-body-sm text-body-sm text-on-surface-variant">
+<span class="font-label-md text-label-md text-primary font-semibold">24 Batches Confirmed</span>
+<span class="font-label-sm text-label-sm text-success-shamrock font-bold">GPS Verified (98%)</span>
+</div>
+<div class="w-full bg-surface-container h-1 rounded-full mt-spacing-md overflow-hidden">
+<div class="bg-success-shamrock h-full w-[65%]"></div>
+</div>
+</div>
+<!-- Metric 3: Pending Settlement -->
+<div class="p-spacing-lg rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition-shadow">
+<div class="flex items-start justify-between mb-spacing-md">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider font-semibold">Pending Settlement</span>
+<span class="font-numeric-metric text-numeric-metric text-primary mt-spacing-2xs font-extrabold tracking-tight">$126,200 <span class="font-body-sm text-body-sm text-secondary font-normal">USDC</span></span>
+</div>
+<div class="w-10 h-10 rounded-lg bg-tertiary-fixed text-on-tertiary-fixed flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">hourglass_top</span>
+</div>
+</div>
+<div class="flex items-center justify-between font-body-sm text-body-sm text-on-surface-variant">
+<span class="font-label-md text-label-md text-on-tertiary-fixed font-semibold">8 Batches due &lt; 7 days</span>
+<span class="font-label-sm text-label-sm text-secondary">Auto-Sweep Active</span>
+</div>
+<div class="w-full bg-surface-container h-1 rounded-full mt-spacing-md overflow-hidden">
+<div class="bg-on-tertiary-container h-full w-[42%]"></div>
+</div>
+</div>
+<!-- Metric 4: Risk Alert -->
+<div class="p-spacing-lg rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition-shadow">
+<div class="flex items-start justify-between mb-spacing-md">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-error uppercase tracking-wider font-bold">Flagged / Risk Alert</span>
+<span class="font-numeric-metric text-numeric-metric text-error mt-spacing-2xs font-extrabold tracking-tight">$43,500 <span class="font-body-sm text-body-sm text-error/70 font-normal">USDC</span></span>
+</div>
+<div class="w-10 h-10 rounded-lg bg-error-container text-on-error-container flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">warning</span>
+</div>
+</div>
+<div class="flex items-center justify-between font-body-sm text-body-sm">
+<span class="font-label-md text-label-md text-error font-bold">3 Batches Require Audit</span>
+<span class="px-spacing-xs py-spacing-2xs rounded bg-error/10 text-error font-label-sm text-label-sm font-bold">Action Needed</span>
+</div>
+<div class="w-full bg-surface-container h-1 rounded-full mt-spacing-md overflow-hidden">
+<div class="bg-error h-full w-[24%]"></div>
+</div>
+</div>
+</div>
+<!-- Operational Overview & Visual Supply Node Card -->
+<div class="mb-spacing-xl p-spacing-lg rounded-xl bg-surface-container-low flex flex-col lg:flex-row items-center justify-between gap-spacing-lg shadow-sm">
+<div class="flex items-center gap-spacing-md">
+<div class="w-16 h-16 rounded-xl bg-surface-container-highest overflow-hidden flex-shrink-0 relative">
+<img class="w-full h-full object-cover" data-alt="Close up macro photograph of high grade sun dried arabica coffee beans stored in heavy jute burlap bags ready for export trade finance audit in Mombasa warehouse." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDbjNC_NG_LgreXMU_F4qroXpCw6Ia-jm3wT7xzsgKEyZA7Hocct9z86fJNsR5wajEBrzvNslQOovPHUGEgLuvC6a9GaF46DQMVd56JnX58SQAtPpkMJgVePYm2RZ_tcq-f5TgAdRkVKpjxmPwh7Bcv1bIZutv_xGXnzYlqL6SFISAnxgUH5KE3zcPiVaugqvcfPdDbIRtb84La605dTgJbT0EK_ow2cZr-ghvsf5nxeymbR4qBhLYhWg"/>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-spacing-xs">
+<span class="font-label-md text-label-md text-primary font-bold">East Africa Corridor Velocity</span>
+<span class="px-spacing-xs py-spacing-2xs rounded-full bg-success-shamrock/15 text-success-shamrock font-label-sm text-label-sm font-bold">Optimal Yield</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-spacing-2xs max-w-xl">
+          Automated smart contracts have released $184,200 into farmer aggregate vaults this week. Average clearance time from Port of Mombasa customs scan to liquidity disburse: <strong>3.8 hours</strong>.
+        </p>
+</div>
+</div>
+<!-- Small embedded summary sparkline SVG -->
+<div class="flex items-center gap-spacing-xl flex-shrink-0">
+<div class="flex flex-col text-right">
+<span class="font-label-sm text-label-sm text-secondary">Repayment Reliability Rate</span>
+<span class="font-headline-sm text-headline-sm text-primary font-bold">99.14%</span>
+<span class="font-body-sm text-body-sm text-success-shamrock">Zero Principal Defaults</span>
+</div>
+<div class="w-36 h-12 flex items-center">
+<svg class="w-full h-full text-success-shamrock" fill="none" viewbox="0 0 140 40" xmlns="http://www.w3.org/2000/svg">
+<path d="M2 34L25 28L50 32L75 14L100 19L120 8L138 4" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+<path d="M2 34L25 28L50 32L75 14L100 19L120 8L138 4V40H2V34Z" fill="currentColor" fill-opacity="0.08"></path>
+</svg>
+</div>
+</div>
+</div>
+<!-- Filters & Segment Controls -->
+<div class="flex flex-col gap-spacing-md mb-spacing-md">
+<!-- Status Segmented Pills -->
+<div class="flex items-center gap-spacing-xs overflow-x-auto pb-spacing-xs scrollbar-none">
+<button class="px-spacing-md py-spacing-xs rounded-lg bg-primary text-on-primary font-label-sm text-label-sm whitespace-nowrap shadow-sm font-bold" type="button">
+        All Invoices (35)
+      </button>
+<button class="px-spacing-md py-spacing-xs rounded-lg bg-surface-container-lowest text-on-surface-variant hover:bg-surface-container-high font-label-sm text-label-sm whitespace-nowrap transition-colors" type="button">
+        Funded &amp; In Transit (21)
+      </button>
+<button class="px-spacing-md py-spacing-xs rounded-lg bg-surface-container-lowest text-on-surface-variant hover:bg-surface-container-high font-label-sm text-label-sm whitespace-nowrap transition-colors" type="button">
+        Pending Buyer Settlement (7)
+      </button>
+<button class="px-spacing-md py-spacing-xs rounded-lg bg-surface-container-lowest text-on-surface-variant hover:bg-surface-container-high font-label-sm text-label-sm whitespace-nowrap transition-colors" type="button">
+        Matured / Settled (112)
+      </button>
+<button class="px-spacing-md py-spacing-xs rounded-lg bg-surface-container-lowest text-error hover:bg-error-container font-label-sm text-label-sm whitespace-nowrap transition-colors flex items-center gap-spacing-2xs" type="button">
+<span class="w-1.5 h-1.5 rounded-full bg-error"></span>
+        Flagged / Under Review (3)
+      </button>
+<button class="px-spacing-md py-spacing-xs rounded-lg bg-surface-container-lowest text-on-surface-variant hover:bg-surface-container-high font-label-sm text-label-sm whitespace-nowrap transition-colors flex items-center gap-spacing-2xs" type="button">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+        Frozen (2)
+      </button>
+</div>
+<!-- Second Filter Row: Buyer Dropdown + Search + Quick Table Settings -->
+<div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-spacing-md p-spacing-sm rounded-xl bg-surface-container-lowest shadow-sm">
+<div class="flex flex-wrap items-center gap-spacing-sm flex-1">
+<!-- Quick Search Bar -->
+<div class="relative min-w-[280px] flex-1 max-w-md">
+<span class="material-symbols-outlined absolute left-spacing-sm top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">search</span>
+<input class="w-full h-10 pl-10 pr-spacing-md rounded-lg bg-surface-container-low text-on-surface placeholder:text-on-surface-variant/60 font-body-sm text-body-sm focus:outline-none focus:bg-surface-container transition-colors" id="invoiceSearchInput" placeholder="Search by Invoice #, Seller, Offtaker, or Vault Hash..." type="text"/>
+</div>
+<!-- Buyer Dropdown Filter -->
+<div class="relative">
+<select class="h-10 pl-spacing-md pr-8 rounded-lg bg-surface-container-low text-on-surface font-label-sm text-label-sm appearance-none focus:outline-none focus:bg-surface-container cursor-pointer transition-colors">
+<option value="">All Buyers / Offtakers (Global)</option>
+<option value="unga">Unga Group Holdings Plc</option>
+<option value="hamburg">Hamburg Coffee Importers AG</option>
+<option value="spiceroute">Spiceroute Trading DMCC</option>
+<option value="carrefour">Carrefour East Africa (Majid Al Futtaim)</option>
+<option value="greatrift">Great Rift Supermarkets</option>
+</select>
+<span class="material-symbols-outlined absolute right-2.5 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none text-[18px]">expand_more</span>
+</div>
+<!-- Commodity Filter -->
+<div class="relative">
+<select class="h-10 pl-spacing-md pr-8 rounded-lg bg-surface-container-low text-on-surface font-label-sm text-label-sm appearance-none focus:outline-none focus:bg-surface-container cursor-pointer transition-colors">
+<option value="">Commodity Class: All</option>
+<option value="grain">Maize &amp; Grains</option>
+<option value="coffee">Arabica Specialty Coffee</option>
+<option value="spices">Cloves &amp; Vanilla</option>
+<option value="produce">Avocados &amp; Fresh Hort</option>
+</select>
+<span class="material-symbols-outlined absolute right-2.5 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none text-[18px]">expand_more</span>
+</div>
+</div>
+<!-- Action: Batch Control -->
+<div class="flex items-center gap-spacing-xs">
+<button class="h-10 px-spacing-sm rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface font-label-sm text-label-sm flex items-center gap-spacing-xs transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">filter_list</span>
+          More Filters
+        </button>
+<button class="h-10 w-10 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface flex items-center justify-center transition-colors" title="Reload Realtime Feed" type="button">
+<span class="material-symbols-outlined text-[18px]">refresh</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Comprehensive Data Table Container -->
+<div class="w-full bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden flex flex-col">
+<!-- Horizontal Scroller for wide responsive table -->
+<div class="overflow-x-auto">
+<table class="w-full text-left min-w-[1100px] border-collapse">
+<!-- Table Header -->
+<thead>
+<tr class="bg-surface-container-low/70 text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">
+<th class="py-spacing-sm px-spacing-md font-semibold">Invoice Ref &amp; Commodity</th>
+<th class="py-spacing-sm px-spacing-md font-semibold">Seller / Counterparty</th>
+<th class="py-spacing-sm px-spacing-md font-semibold">Offtaker / Buyer</th>
+<th class="py-spacing-sm px-spacing-md font-semibold text-right">Face Value / Advance</th>
+<th class="py-spacing-sm px-spacing-md font-semibold">Escrow &amp; Maturity</th>
+<th class="py-spacing-sm px-spacing-md font-semibold">Risk &amp; Vault Health</th>
+<th class="py-spacing-sm px-spacing-md font-semibold text-right">Intervention / Action</th>
+</tr>
+</thead>
+<!-- Table Body -->
+<tbody class="divide-y divide-surface-container">
+<!-- ROW 1: Normal Verified / Transit -->
+<tr class="hover:bg-surface-container-low/40 transition-colors group">
+<td class="py-spacing-md px-spacing-md align-top">
+<div class="flex items-start gap-spacing-sm">
+<div class="w-2 h-10 rounded-full bg-success-shamrock flex-shrink-0 mt-0.5" title="Active Verified Vault"></div>
+<div class="flex flex-col">
+<div class="flex items-center gap-spacing-xs">
+<span class="font-label-md text-label-md text-primary font-bold">#INV-2024-089</span>
+<span class="px-spacing-2xs py-0.5 rounded bg-surface-container-high text-secondary font-label-sm text-label-sm">ERC-4626</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface mt-spacing-2xs">Grade A White Maize 40MT</span>
+<div class="flex items-center gap-spacing-2xs text-secondary font-label-sm text-label-sm mt-0.5">
+<span class="material-symbols-outlined text-[14px]">pin_drop</span>
+<span>Corridor: Nakuru → Nairobi</span>
+</div>
+</div>
+</div>
+</td>
+<td class="py-spacing-md px-spacing-md align-top">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Kilimo Mills East Africa Ltd</span>
+<div class="flex items-center gap-spacing-2xs mt-spacing-2xs">
+<span class="px-spacing-xs py-0.5 rounded bg-secondary-container text-on-secondary-fixed font-label-sm text-label-sm font-bold">Tier 2 Supplier</span>
+<span class="text-secondary text-[12px] font-body-sm">Score 88/100</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant/80 mt-1">Tax ID: KE-994021-M</span>
+</div>
+</td>
+<td class="py-spacing-md px-spacing-md align-top">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-primary font-semibold">Unga Group Holdings Plc</span>
+<span class="font-body-sm text-body-sm text-secondary mt-spacing-2xs">Direct Processing Plant #3</span>
+<div class="flex items-center gap-spacing-2xs mt-1 text-success-shamrock font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">verified</span>
+<span>Credit Confirmed (AAA)</span>
+</div>
+</div>
+</td>
+<td class="py-spacing-md px-spacing-md align-top text-right">
+<div class="flex flex-col items-end">
+<span class="font-headline-sm text-headline-sm text-primary font-bold">$3,200.00</span>
+<span class="font-body-sm text-body-sm text-success-shamrock font-semibold mt-0.5">
+                  $2,608.00 advance (85%)
+                </span>
+<span class="font-label-sm text-label-sm text-secondary mt-1">
+                  15% Reserve: $592.00
+                </span>
+</div>
+</td>
+<td class="py-spacing-md px-spacing-md align-top">
+<div class="flex flex-col">
+<div class="flex items-center gap-spacing-xs">
+<span class="material-symbols-outlined text-secondary text-[16px]">schedule</span>
+<span class="font-label-md text-label-md text-on-surface font-semibold">42 days remaining</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Maturity: Nov 18, 2024</span>
+<div class="w-28 bg-surface-container-high h-1.5 rounded-full mt-spacing-xs overflow-hidden">
+<div class="bg-primary h-full w-[35%]"></div>
+</div>
+</div>
+</td>
+<td class="py-spacing-md px-spacing-md align-top">
+<div class="flex flex-col">
+<div class="flex items-center gap-spacing-xs">
+<span class="w-2 h-2 rounded-full bg-success-shamrock"></span>
+<span class="font-label-sm text-label-sm text-success-shamrock font-bold">Normal / Hedged</span>
+</div>
+<span class="font-body-sm text-body-sm text-secondary mt-0.5">15% reserve intact in escrow</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant mt-1">Hash: 0x8f4...e29c</span>
+</div>
+</td>
+<td class="py-spacing-md px-spacing-md align-top text-right">
+<div class="flex items-center justify-end gap-spacing-xs">
+<button class="h-8 px-spacing-sm rounded bg-surface-container-low hover:bg-tertiary-fixed hover:text-on-tertiary-fixed text-secondary font-label-sm text-label-sm flex items-center gap-1 transition-colors" onclick="openFreezeModal('#INV-2024-089', 'Kilimo Mills East Africa Ltd', '$3,200.00')" type="button">
+<span class="material-symbols-outlined text-[16px]">pause_circle</span>
+                  Freeze
+                </button>
+<div class="relative group/menu inline-block">
+<button class="w-8 h-8 rounded bg-surface-container-low hover:bg-surface-container text-on-surface-variant flex items-center justify-center transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">more_vert</span>
+</button>
+<div class="hidden group-hover/menu:flex absolute right-0 top-full mt-1 w-44 rounded-xl bg-surface-container-lowest shadow-lg py-spacing-xs flex-col z-20">
+<a class="px-spacing-md py-spacing-xs font-label-sm text-label-sm text-on-surface hover:bg-surface-container-low flex items-center gap-spacing-xs" href="#">
+<span class="material-symbols-outlined text-[16px]">visibility</span> Inspect Docs
+                    </a>
+<a class="px-spacing-md py-spacing-xs font-label-sm text-label-sm text-on-surface hover:bg-surface-container-low flex items-center gap-spacing-xs" href="#">
+<span class="material-symbols-outlined text-[16px]">history</span> Audit Trail
+                    </a>
+<a class="px-spacing-md py-spacing-xs font-label-sm text-label-sm text-on-surface hover:bg-surface-container-low flex items-center gap-spacing-xs" href="#">
+<span class="material-symbols-outlined text-[16px]">account_balance</span> View Smart Vault
+                    </a>
+</div>
+</div>
+</div>
+</td>
+</tr>
+<!-- ROW 2: High Value / Insured Arabica -->
+<tr class="hover:bg-surface-container-low/40 transition-colors group">
+<td class="py-spacing-md px-spacing-md align-top">
+<div class="flex items-start gap-spacing-sm">
+<div class="w-2 h-10 rounded-full bg-success-shamrock flex-shrink-0 mt-0.5"></div>
+<div class="flex flex-col">
+<div class="flex items-center gap-spacing-xs">
+<span class="font-label-md text-label-md text-primary font-bold">#INV-2024-094</span>
+<span class="px-spacing-2xs py-0.5 rounded bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm">High Value</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface mt-spacing-2xs">Washed Arabica AA Coffee (30 Bags)</span>
+<div class="flex items-center gap-spacing-2xs text-secondary font-label-sm text-label-sm mt-0.5">
+<span class="material-symbols-outlined text-[14px]">directions_boat</span>
+<span>Corridor: Moshi → Hamburg Port</span>
+</div>
+</div>
+</div>
+</td>
+<td class="py-spacing-md px-spacing-md align-top">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Kilimanjaro Specialty Harvest</span>
+<div class="flex items-center gap-spacing-2xs mt-spacing-2xs">
+<span class="px-spacing-xs py-0.5 rounded bg-surface-container-high text-primary font-label-sm text-label-sm font-bold">Tier 3 Supplier</span>
+<span class="text-secondary text-[12px] font-body-sm">Score 94/100</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant/80 mt-1">Tax ID: TZ-410882-K</span>
+</div>
+</td>
+<td class="py-spacing-md px-spacing-md align-top">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-primary font-semibold">Hamburg Coffee Importers AG</span>
+<span class="font-body-sm text-body-sm text-secondary mt-spacing-2xs">European Central Bonded Roastery</span>
+<div class="flex items-center gap-spacing-2xs mt-1 text-primary font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">shield_with_heart</span>
+<span>Underwritten via Zurich Re</span>
+</div>
+</div>
+</td>
+<td class="py-spacing-md px-spacing-md align-top text-right">
+<div class="flex flex-col items-end">
+<span class="font-headline-sm text-headline-sm text-primary font-bold">$8,500.00</span>
+<span class="font-body-sm text-body-sm text-success-shamrock font-semibold mt-0.5">
+                  $7,225.00 advance (85%)
+                </span>
+<span class="font-label-sm text-label-sm text-secondary mt-1">
+                  15% Reserve: $1,275.00
+                </span>
+</div>
+</td>
+<td class="py-spacing-md px-spacing-md align-top">
+<div class="flex flex-col">
+<div class="flex items-center gap-spacing-xs">
+<span class="material-symbols-outlined text-secondary text-[16px]">schedule</span>
+<span class="font-label-md text-label-md text-on-surface font-semibold">28 days remaining</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Maturity: Nov 04, 2024</span>
+<div class="w-28 bg-surface-container-high h-1.5 rounded-full mt-spacing-xs overflow-hidden">
+<div class="bg-primary h-full w-[52%]"></div>
+</div>
+</div>
+</td>
+<td class="py-spacing-md px-spacing-md align-top">
+<div class="flex flex-col">
+<div class="flex items-center gap-spacing-xs">
+<span class="w-2 h-2 rounded-full bg-success-shamrock"></span>
+<span class="font-label-sm text-label-sm text-success-shamrock font-bold">Normal (Insured Lloyd's)</span>
+</div>
+<span class="font-body-sm text-body-sm text-secondary mt-0.5">Bill of Lading #BL-9920-MSC</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant mt-1">Hash: 0x3d1...8a19</span>
+</div>
+</td>
+<td class="py-spacing-md px-spacing-md align-top text-right">
+<div class="flex items-center justify-end gap-spacing-xs">
+<button class="h-8 px-spacing-sm rounded bg-surface-container-low hover:bg-tertiary-fixed hover:text-on-tertiary-fixed text-secondary font-label-sm text-label-sm flex items-center gap-1 transition-colors" onclick="openFreezeModal('#INV-2024-094', 'Kilimanjaro Specialty Harvest', '$8,500.00')" type="button">
+<span class="material-symbols-outlined text-[16px]">pause_circle</span>
+                  Freeze
+                </button>
+<div class="relative group/menu inline-block">
+<button class="w-8 h-8 rounded bg-surface-container-low hover:bg-surface-container text-on-surface-variant flex items-center justify-center transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">more_vert</span>
+</button>
+<div class="hidden group-hover/menu:flex absolute right-0 top-full mt-1 w-44 rounded-xl bg-surface-container-lowest shadow-lg py-spacing-xs flex-col z-20">
+<a class="px-spacing-md py-spacing-xs font-label-sm text-label-sm text-on-surface hover:bg-surface-container-low flex items-center gap-spacing-xs" href="#">
+<span class="material-symbols-outlined text-[16px]">visibility</span> Inspect Docs
+                    </a>
+<a class="px-spacing-md py-spacing-xs font-label-sm text-label-sm text-on-surface hover:bg-surface-container-low flex items-center gap-spacing-xs" href="#">
+<span class="material-symbols-outlined text-[16px]">history</span> Audit Trail
+                    </a>
+<a class="px-spacing-md py-spacing-xs font-label-sm text-label-sm text-on-surface hover:bg-surface-container-low flex items-center gap-spacing-xs" href="#">
+<span class="material-symbols-outlined text-[16px]">account_balance</span> View Smart Vault
+                    </a>
+</div>
+</div>
+</div>
+</td>
+</tr>
+<!-- ROW 3: Audit In Progress (Zanzibar Spices) -->
+<tr class="hover:bg-surface-container-low/40 transition-colors group">
+<td class="py-spacing-md px-spacing-md align-top">
+<div class="flex items-start gap-spacing-sm">
+<div class="w-2 h-10 rounded-full bg-on-tertiary-container flex-shrink-0 mt-0.5"></div>
+<div class="flex flex-col">
+<div class="flex items-center gap-spacing-xs">
+<span class="font-label-md text-label-md text-primary font-bold">#INV-2024-071</span>
+<span class="px-spacing-2xs py-0.5 rounded bg-warning-amber-soft text-on-tertiary-fixed font-label-sm text-label-sm">Auditing</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface mt-spacing-2xs">Organic Cloves &amp; Bourbon Vanilla</span>
+<div class="flex items-center gap-spacing-2xs text-secondary font-label-sm text-label-sm mt-0.5">
+<span class="material-symbols-outlined text-[14px]">flight_takeoff</span>
+<span>Corridor: Stone Town → Dubai DWC</span>
+</div>
+</div>
+</div>
+</td>
+<td class="py-spacing-md px-spacing-md align-top">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Zanzibar Spice Wholesalers</span>
+<div class="flex items-center gap-spacing-2xs mt-spacing-2xs">
+<span class="px-spacing-xs py-0.5 rounded bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm font-bold">Tier 1 Supplier</span>
+<span class="text-secondary text-[12px] font-body-sm">Score 76/100</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant/80 mt-1">Tax ID: ZNZ-10029-S</span>
+</div>
+</td>
+<td class="py-spacing-md px-spacing-md align-top">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-primary font-semibold">Spiceroute Trading DMCC</span>
+<span class="font-body-sm text-body-sm text-secondary mt-spacing-2xs">Almas Tower Procurement</span>
+<div class="flex items-center gap-spacing-2xs mt-1 text-on-tertiary-container font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">hourglass_empty</span>
+<span>Phytosanitary Cert Pending</span>
+</div>
+</div>
+</td>
+<td class="py-spacing-md px-spacing-md align-top text-right">
+<div class="flex flex-col items-end">
+<span class="font-headline-sm text-headline-sm text-primary font-bold">$1,500.00</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant font-semibold mt-0.5">
+                  $1,275.00 (85% committed)
+                </span>
+<span class="font-label-sm text-label-sm text-secondary mt-1">
+                  15% Reserve: $225.00
+                </span>
+</div>
+</td>
+<td class="py-spacing-md px-spacing-md align-top">
+<div class="flex flex-col">
+<div class="flex items-center gap-spacing-xs">
+<span class="material-symbols-outlined text-on-tertiary-container text-[16px]">timelapse</span>
+<span class="font-label-md text-label-md text-on-surface font-semibold">18 days remaining</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Maturity: Oct 25, 2024</span>
+<div class="w-28 bg-surface-container-high h-1.5 rounded-full mt-spacing-xs overflow-hidden">
+<div class="bg-on-tertiary-container h-full w-[70%]"></div>
+</div>
+</div>
+</td>
+<td class="py-spacing-md px-spacing-md align-top">
+<div class="flex flex-col">
+<div class="flex items-center gap-spacing-xs">
+<span class="w-2 h-2 rounded-full bg-on-tertiary-container animate-pulse"></span>
+<span class="font-label-sm text-label-sm text-on-tertiary-container font-bold">Audit In Progress</span>
+</div>
+<span class="font-body-sm text-body-sm text-secondary mt-0.5">Warehouse weight cross-check</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant mt-1">Hash: 0x11c...74dd</span>
+</div>
+</td>
+<td class="py-spacing-md px-spacing-md align-top text-right">
+<div class="flex items-center justify-end gap-spacing-xs">
+<button class="h-8 px-spacing-sm rounded bg-surface-container-low hover:bg-tertiary-fixed hover:text-on-tertiary-fixed text-secondary font-label-sm text-label-sm flex items-center gap-1 transition-colors" onclick="openFreezeModal('#INV-2024-071', 'Zanzibar Spice Wholesalers', '$1,500.00')" type="button">
+<span class="material-symbols-outlined text-[16px]">pause_circle</span>
+                  Freeze
+                </button>
+<div class="relative group/menu inline-block">
+<button class="w-8 h-8 rounded bg-surface-container-low hover:bg-surface-container text-on-surface-variant flex items-center justify-center transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">more_vert</span>
+</button>
+<div class="hidden group-hover/menu:flex absolute right-0 top-full mt-1 w-44 rounded-xl bg-surface-container-lowest shadow-lg py-spacing-xs flex-col z-20">
+<a class="px-spacing-md py-spacing-xs font-label-sm text-label-sm text-on-surface hover:bg-surface-container-low flex items-center gap-spacing-xs" href="#">
+<span class="material-symbols-outlined text-[16px]">visibility</span> Inspect Docs
+                    </a>
+<a class="px-spacing-md py-spacing-xs font-label-sm text-label-sm text-on-surface hover:bg-surface-container-low flex items-center gap-spacing-xs" href="#">
+<span class="material-symbols-outlined text-[16px]">history</span> Audit Trail
+                    </a>
+<a class="px-spacing-md py-spacing-xs font-label-sm text-label-sm text-on-surface hover:bg-surface-container-low flex items-center gap-spacing-xs" href="#">
+<span class="material-symbols-outlined text-[16px]">account_balance</span> View Smart Vault
+                    </a>
+</div>
+</div>
+</div>
+</td>
+</tr>
+<!-- ROW 4: DYNAMIC STATE - FLAGGED / HIGH ALERT DISPUTE -->
+<tr class="bg-error-container/20 hover:bg-error-container/30 transition-colors group">
+<td class="py-spacing-md px-spacing-md align-top">
+<div class="flex items-start gap-spacing-sm">
+<div class="w-2 h-10 rounded-full bg-error flex-shrink-0 mt-0.5"></div>
+<div class="flex flex-col">
+<div class="flex items-center gap-spacing-xs">
+<span class="font-label-md text-label-md text-error font-bold">#INV-2024-052</span>
+<span class="px-spacing-2xs py-0.5 rounded bg-error text-on-error font-label-sm text-label-sm font-bold animate-pulse">FLAGGED</span>
+</div>
+<span class="font-body-sm text-body-sm text-primary font-semibold mt-spacing-2xs">Fresh Hass Avocados 18MT</span>
+<div class="flex items-center gap-spacing-2xs text-error font-label-sm text-label-sm mt-0.5">
+<span class="material-symbols-outlined text-[14px]">warning</span>
+<span>Temperature excursion reported</span>
+</div>
+</div>
+</div>
+</td>
+<td class="py-spacing-md px-spacing-md align-top">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Rift Valley Fresh Ltd</span>
+<div class="flex items-center gap-spacing-2xs mt-spacing-2xs">
+<span class="px-spacing-xs py-0.5 rounded bg-error-container text-on-error-container font-label-sm text-label-sm font-bold">Tier 2 Supplier (At Risk)</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant/80 mt-1">Tax ID: KE-488921-R</span>
+</div>
+</td>
+<td class="py-spacing-md px-spacing-md align-top">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-primary font-semibold">Carrefour East Africa</span>
+<span class="font-body-sm text-body-sm text-secondary mt-spacing-2xs">Cold Storage Hub #2</span>
+<div class="flex items-center gap-spacing-2xs mt-1 text-error font-label-sm text-label-sm font-bold">
+<span class="material-symbols-outlined text-[14px]">gavel</span>
+<span>Dispute: Quality Downgrade</span>
+</div>
+</div>
+</td>
+<td class="py-spacing-md px-spacing-md align-top text-right">
+<div class="flex flex-col items-end">
+<span class="font-headline-sm text-headline-sm text-error font-bold">$6,400.00</span>
+<span class="font-body-sm text-body-sm text-error font-semibold mt-0.5">
+                  $5,440.00 advance released
+                </span>
+<span class="font-label-sm text-label-sm text-on-error-container mt-1">
+                  15% Reserve Locked ($960)
+                </span>
+</div>
+</td>
+<td class="py-spacing-md px-spacing-md align-top">
+<div class="flex flex-col">
+<div class="flex items-center gap-spacing-xs text-error font-bold">
+<span class="material-symbols-outlined text-[16px]">priority_high</span>
+<span class="font-label-md text-label-md">OVERDUE by 2 days</span>
+</div>
+<span class="font-body-sm text-body-sm text-error/80 mt-0.5">Due Oct 05, 2024</span>
+<div class="w-28 bg-error-container h-1.5 rounded-full mt-spacing-xs overflow-hidden">
+<div class="bg-error h-full w-[100%]"></div>
+</div>
+</div>
+</td>
+<td class="py-spacing-md px-spacing-md align-top">
+<div class="flex flex-col">
+<div class="flex items-center gap-spacing-xs">
+<span class="w-2 h-2 rounded-full bg-error"></span>
+<span class="font-label-sm text-label-sm text-error font-bold">High Alert - Delivery Dispute</span>
+</div>
+<span class="font-body-sm text-body-sm text-secondary mt-0.5">Buyer claims ripeness loss</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant mt-1">Hash: 0x992...c41a</span>
+</div>
+</td>
+<td class="py-spacing-md px-spacing-md align-top text-right">
+<div class="flex items-center justify-end gap-spacing-xs">
+<!-- Action Freeze Trigger with alert styling -->
+<button class="h-8 px-spacing-sm rounded bg-error text-on-error hover:bg-on-error-container font-label-sm text-label-sm flex items-center gap-1 transition-colors font-bold shadow-sm" onclick="openFreezeModal('#INV-2024-052', 'Rift Valley Fresh Ltd', '$6,400.00')" type="button">
+<span class="material-symbols-outlined text-[16px]">lock</span>
+                  Freeze
+                </button>
+<div class="relative group/menu inline-block">
+<button class="w-8 h-8 rounded bg-surface-container-low hover:bg-surface-container text-on-surface-variant flex items-center justify-center transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">more_vert</span>
+</button>
+<div class="hidden group-hover/menu:flex absolute right-0 top-full mt-1 w-44 rounded-xl bg-surface-container-lowest shadow-lg py-spacing-xs flex-col z-20">
+<a class="px-spacing-md py-spacing-xs font-label-sm text-label-sm text-error hover:bg-error-container/20 flex items-center gap-spacing-xs font-bold" href="#">
+<span class="material-symbols-outlined text-[16px]">support_agent</span> Escalate Dispute
+                    </a>
+<a class="px-spacing-md py-spacing-xs font-label-sm text-label-sm text-on-surface hover:bg-surface-container-low flex items-center gap-spacing-xs" href="#">
+<span class="material-symbols-outlined text-[16px]">visibility</span> Inspect Sensor Logs
+                    </a>
+<a class="px-spacing-md py-spacing-xs font-label-sm text-label-sm text-on-surface hover:bg-surface-container-low flex items-center gap-spacing-xs" href="#">
+<span class="material-symbols-outlined text-[16px]">account_balance</span> Vault Hedging
+                    </a>
+</div>
+</div>
+</div>
+</td>
+</tr>
+<!-- ROW 5: DYNAMIC STATE - ALREADY FROZEN ROW -->
+<tr class="bg-surface-container-high/40 hover:bg-surface-container-high/60 transition-colors group opacity-90">
+<td class="py-spacing-md px-spacing-md align-top">
+<div class="flex items-start gap-spacing-sm">
+<div class="w-2 h-10 rounded-full bg-secondary flex-shrink-0 mt-0.5"></div>
+<div class="flex flex-col">
+<div class="flex items-center gap-spacing-xs">
+<span class="font-label-md text-label-md text-secondary font-bold">#INV-2024-038</span>
+<span class="px-spacing-xs py-0.5 rounded bg-secondary text-on-secondary font-label-sm text-label-sm font-bold">FROZEN</span>
+</div>
+<span class="font-body-sm text-body-sm text-secondary line-through mt-spacing-2xs">Processed Black Tea Cut 25MT</span>
+<div class="flex items-center gap-spacing-2xs text-secondary font-label-sm text-label-sm mt-0.5">
+<span class="material-symbols-outlined text-[14px]">lock</span>
+<span>Smart Contracts Suspended</span>
+</div>
+</div>
+</div>
+</td>
+<td class="py-spacing-md px-spacing-md align-top">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface-variant font-semibold">Kericho Agro Highlands Co-op</span>
+<span class="font-body-sm text-body-sm text-secondary mt-spacing-2xs">Tier 1 Supplier</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant/80 mt-1">Suspended by Ops Admin #408</span>
+</div>
+</td>
+<td class="py-spacing-md px-spacing-md align-top">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface-variant font-semibold">Great Rift Supermarkets</span>
+<span class="font-body-sm text-body-sm text-secondary mt-spacing-2xs">Regional Distribution Hub</span>
+<span class="font-label-sm text-label-sm text-secondary mt-1">Direct Settlement Blocked</span>
+</div>
+</td>
+<td class="py-spacing-md px-spacing-md align-top text-right">
+<div class="flex flex-col items-end">
+<span class="font-headline-sm text-headline-sm text-secondary font-bold">$4,800.00</span>
+<span class="font-body-sm text-body-sm text-secondary mt-0.5">
+                  Liquidity Draw Halted
+                </span>
+<span class="font-label-sm text-label-sm text-error font-bold mt-1">
+                  100% Escrow Frozen
+                </span>
+</div>
+</td>
+<td class="py-spacing-md px-spacing-md align-top">
+<div class="flex flex-col">
+<div class="flex items-center gap-spacing-xs text-secondary">
+<span class="material-symbols-outlined text-[16px]">pause</span>
+<span class="font-label-md text-label-md font-semibold">Execution Paused</span>
+</div>
+<span class="font-body-sm text-body-sm text-secondary mt-0.5">Audit Ticket #AUD-8821</span>
+<div class="w-28 bg-surface-container-highest h-1.5 rounded-full mt-spacing-xs">
+<div class="bg-secondary h-full w-[100%]"></div>
+</div>
+</div>
+</td>
+<td class="py-spacing-md px-spacing-md align-top">
+<div class="flex flex-col">
+<div class="flex items-center gap-spacing-xs">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span class="font-label-sm text-label-sm text-secondary font-bold">Admin Hold Active</span>
+</div>
+<span class="font-body-sm text-body-sm text-secondary mt-0.5">Awaiting Customs Stamp #2</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant mt-1">Hash: 0x77b...91aa</span>
+</div>
+</td>
+<td class="py-spacing-md px-spacing-md align-top text-right">
+<div class="flex items-center justify-end gap-spacing-xs">
+<!-- Unfreeze / Escalate Button -->
+<button class="h-8 px-spacing-sm rounded bg-primary text-on-primary hover:bg-primary-container font-label-sm text-label-sm flex items-center gap-1 transition-colors font-bold shadow-sm" onclick="alert('Initiating multi-signature release escalation for Invoice #INV-2024-038. Required: 2 Admin Keys.')" type="button">
+<span class="material-symbols-outlined text-[16px]">lock_open</span>
+                  Unfreeze / Escalate
+                </button>
+<div class="relative group/menu inline-block">
+<button class="w-8 h-8 rounded bg-surface-container-low hover:bg-surface-container text-on-surface-variant flex items-center justify-center transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">more_vert</span>
+</button>
+<div class="hidden group-hover/menu:flex absolute right-0 top-full mt-1 w-44 rounded-xl bg-surface-container-lowest shadow-lg py-spacing-xs flex-col z-20">
+<a class="px-spacing-md py-spacing-xs font-label-sm text-label-sm text-on-surface hover:bg-surface-container-low flex items-center gap-spacing-xs" href="#">
+<span class="material-symbols-outlined text-[16px]">article</span> Compliance Log
+                    </a>
+<a class="px-spacing-md py-spacing-xs font-label-sm text-label-sm text-on-surface hover:bg-surface-container-low flex items-center gap-spacing-xs" href="#">
+<span class="material-symbols-outlined text-[16px]">lock_reset</span> Re-key Escrow
+                    </a>
+</div>
+</div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Pagination & Ledger Summary Footer -->
+<div class="p-spacing-md bg-surface-container-low flex flex-col sm:flex-row items-center justify-between gap-spacing-md">
+<div class="flex items-center gap-spacing-md">
+<span class="font-body-sm text-body-sm text-secondary">
+          Displaying <strong class="text-primary">1 - 5</strong> of <strong class="text-primary">35</strong> factored trade facilities
+        </span>
+<div class="flex items-center gap-spacing-xs">
+<span class="font-label-sm text-label-sm text-secondary">Show:</span>
+<select class="h-8 pl-spacing-xs pr-6 rounded bg-surface-container-lowest text-on-surface font-label-sm text-label-sm appearance-none focus:outline-none cursor-pointer">
+<option>10 per page</option>
+<option>25 per page</option>
+<option>50 per page</option>
+</select>
+</div>
+</div>
+<div class="flex items-center gap-spacing-xs">
+<button class="h-8 px-spacing-sm rounded bg-surface-container-lowest text-secondary font-label-sm text-label-sm disabled:opacity-40" disabled="" type="button">
+          Previous
+        </button>
+<button class="h-8 w-8 rounded bg-primary text-on-primary font-label-sm text-label-sm font-bold" type="button">
+          1
+        </button>
+<button class="h-8 w-8 rounded bg-surface-container-lowest text-on-surface hover:bg-surface-container-high font-label-sm text-label-sm" type="button">
+          2
+        </button>
+<button class="h-8 w-8 rounded bg-surface-container-lowest text-on-surface hover:bg-surface-container-high font-label-sm text-label-sm" type="button">
+          3
+        </button>
+<span class="text-secondary px-spacing-2xs">...</span>
+<button class="h-8 w-8 rounded bg-surface-container-lowest text-on-surface hover:bg-surface-container-high font-label-sm text-label-sm" type="button">
+          7
+        </button>
+<button class="h-8 px-spacing-sm rounded bg-surface-container-lowest text-on-surface hover:bg-surface-container-high font-label-sm text-label-sm" type="button">
+          Next
+        </button>
+</div>
+</div>
+</div>
+<!-- Operational Field Context Banner -->
+<div class="mt-spacing-xl grid grid-cols-1 md:grid-cols-3 gap-spacing-md">
+<div class="p-spacing-md rounded-xl bg-surface-container-low flex items-start gap-spacing-sm">
+<div class="w-10 h-10 rounded-lg bg-surface-container-highest flex-shrink-0 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]">verified_user</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-primary font-semibold">Automated Settlement Oracle</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+          Settlement triggers upon electronic confirmation of buyer bill-of-lading counter-signature. Funds automatically split into 85% liquidity pool rebate + 15% escrow return.
+        </p>
+</div>
+</div>
+<div class="p-spacing-md rounded-xl bg-surface-container-low flex items-start gap-spacing-sm">
+<div class="w-10 h-10 rounded-lg bg-surface-container-highest flex-shrink-0 flex items-center justify-center text-on-tertiary-container">
+<span class="material-symbols-outlined text-[20px]">balance</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-primary font-semibold">Tiered Underwriting Criteria</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+          Suppliers are auto-evaluated against SGS warehouse receipts and customs manifest APIs. Maximum single buyer concentration is capped at 30% of portfolio volume.
+        </p>
+</div>
+</div>
+<div class="p-spacing-md rounded-xl bg-surface-container-low flex items-start gap-spacing-sm">
+<div class="w-10 h-10 rounded-lg bg-surface-container-highest flex-shrink-0 flex items-center justify-center text-error">
+<span class="material-symbols-outlined text-[20px]">emergency</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-primary font-semibold">Emergency Liquidity Interlock</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+          Freezing a facility immediately halts subsequent batch draws, locks the counterparty credit line, and activates a 48-hour mandatory conciliation window.
+        </p>
+</div>
+</div>
+</div>
+<!-- INTERACTIVE CONFIRMATION MODAL: FREEZE FACILITY -->
+<div class="fixed inset-0 z-50 hidden items-center justify-center bg-inverse-surface/60 backdrop-blur-sm p-spacing-md" id="freezeModal">
+<div class="w-full max-w-lg rounded-2xl bg-surface-container-lowest shadow-2xl p-spacing-xl flex flex-col relative transform transition-all">
+<!-- Close icon button -->
+<button class="absolute top-spacing-md right-spacing-md w-8 h-8 rounded-lg bg-surface-container-low hover:bg-surface-container-high text-on-surface-variant flex items-center justify-center transition-colors" onclick="closeFreezeModal()" type="button">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+<!-- Header with alert icon -->
+<div class="flex items-center gap-spacing-sm mb-spacing-md">
+<div class="w-12 h-12 rounded-xl bg-error-container text-on-error-container flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[24px]">pause_circle</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-error uppercase font-bold tracking-wider">Protocol Intervention</span>
+<h2 class="font-headline-sm text-headline-sm text-primary font-bold">Freeze Escrow &amp; Liquidity Facility</h2>
+</div>
+</div>
+<!-- Body / Warning Description -->
+<p class="font-body-md text-body-md text-on-surface-variant mb-spacing-md">
+        You are about to freeze automated liquidity releases and smart vault executions for:
+      </p>
+<!-- Target Invoice Details Box -->
+<div class="p-spacing-md rounded-xl bg-surface-container-low mb-spacing-md flex flex-col gap-spacing-xs">
+<div class="flex justify-between items-center">
+<span class="font-label-sm text-label-sm text-secondary">Target Invoice Reference</span>
+<span class="font-label-md text-label-md text-primary font-bold" id="modalInvoiceRef">#INV-2024-089</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-label-sm text-label-sm text-secondary">Seller / Counterparty</span>
+<span class="font-body-sm text-body-sm text-on-surface font-semibold" id="modalSeller">Kilimo Mills East Africa Ltd</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-label-sm text-label-sm text-secondary">Total Face Value</span>
+<span class="font-label-md text-label-md text-primary font-bold" id="modalAmount">$3,200.00 USDC</span>
+</div>
+</div>
+<!-- Intervention Reason Selection -->
+<div class="flex flex-col gap-spacing-xs mb-spacing-md">
+<label class="font-label-sm text-label-sm text-on-surface font-semibold">Intervention Rationale (Logged to Audit Ledger)</label>
+<select class="h-10 px-spacing-md rounded-lg bg-surface-container-low text-on-surface font-body-sm text-body-sm focus:outline-none focus:bg-surface-container cursor-pointer">
+<option>Suspected Document Discrepancy / Weight Mismatch</option>
+<option>Buyer Formal Dispute Notification</option>
+<option>Corridor Transit Inactivity / GPS Loss &gt; 24h</option>
+<option>Counterparty Regulatory Compliance Hold</option>
+<option>Manual Ops Auditor Discretionary Freeze</option>
+</select>
+</div>
+<!-- Checkbox Acknowledgement -->
+<label class="flex items-start gap-spacing-xs mb-spacing-lg cursor-pointer select-none">
+<input class="w-4 h-4 mt-1 rounded text-primary focus:ring-0 cursor-pointer" id="freezeConfirmCheck" type="checkbox"/>
+<span class="font-body-sm text-body-sm text-on-surface-variant">
+          I confirm that as Senior Risk Admin I am authorized to enact liquidity halts. This action immediately issues an on-chain event and alerts the seller treasury.
+        </span>
+</label>
+<!-- Action Buttons -->
+<div class="flex items-center justify-end gap-spacing-sm">
+<button class="h-10 px-spacing-md rounded-lg bg-surface-container text-on-surface font-label-md text-label-md hover:bg-surface-container-high transition-colors" onclick="closeFreezeModal()" type="button">
+          Cancel
+        </button>
+<button class="h-10 px-spacing-lg rounded-lg bg-error text-on-error font-label-md text-label-md font-bold hover:bg-on-error-container transition-colors shadow-sm flex items-center gap-spacing-xs" id="confirmFreezeBtn" onclick="executeFreeze()" type="button">
+<span class="material-symbols-outlined text-[18px]">lock</span>
+          Enact Facility Freeze
+        </button>
+</div>
+</div>
+</div>
+<!-- Client-Side Vanilla Micro-Interactions -->
+<script>
+    function openFreezeModal(invoiceRef, seller, amount) {
+      document.getElementById('modalInvoiceRef').textContent = invoiceRef;
+      document.getElementById('modalSeller').textContent = seller;
+      document.getElementById('modalAmount').textContent = amount + ' USDC';
+      const modal = document.getElementById('freezeModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeFreezeModal() {
+      const modal = document.getElementById('freezeModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function executeFreeze() {
+      const check = document.getElementById('freezeConfirmCheck');
+      if (!check.checked) {
+        alert('Please acknowledge the authorization statement prior to executing a facility freeze.');
+        return;
+      }
+      const ref = document.getElementById('modalInvoiceRef').textContent;
+      alert('Intervention executed for ' + ref + '. Smart vault parameters updated to FROZEN. Audit log hash generated.');
+      closeFreezeModal();
+    }
+
+    // Quick instant search filter on rows
+    document.getElementById('invoiceSearchInput').addEventListener('input', function(e) {
+      const val = e.target.value.toLowerCase();
+      const rows = document.querySelectorAll('tbody tr');
+      rows.forEach(row => {
+        const text = row.innerText.toLowerCase();
+        row.style.display = text.includes(val) ? '' : 'none';
+      });
+    });
+  </script>
+</div></main></div></body></html>

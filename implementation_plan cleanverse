@@ -1,0 +1,73 @@
+# Implementation Plan - Cleanverse Identity Verification API Integration
+
+Connecting the Seller Tier 1 ($500) and Tier 2 ($5,000) verification screens to Cleanverse's Identity Verification API. Automated 3-stage decision engine routes submissions based on verification confidence:
+1. **Clear Pass**: Unlocks credit tier automatically.
+2. **Clear Fail**: Displays friendly rejection message with actionable reason.
+3. **Uncertain**: Routes to Admin Verification Queue for human inspection.
+
+## User Review Required
+
+> [!IMPORTANT]
+> - **Cleanverse API Service**: Created at `src/services/cleanverseService.ts` supporting Tier 1 Government ID scanning and Tier 2 Business Document / Shop Video verification.
+> - **3-Tier Decision Engine**:
+>   - **Pass**: Instant credit limit expansion ($500 for Tier 1, $5,000 for Tier 2).
+>   - **Fail**: Friendly rejection modal with specific reason (e.g. *"Photo lighting too dim or edges cut off"*).
+>   - **Uncertain**: Auto-escalated to Admin Queue (`verifications` Supabase table) with Cleanverse AI risk flags.
+
+## Open Questions
+
+> [!NOTE]
+> Environment variables `VITE_CLEANVERSE_API_KEY` and `VITE_CLEANVERSE_ENDPOINT` will be added to `.env` with intelligent fallback simulation.
+
+---
+
+## Proposed Changes
+
+### Cleanverse API Integration Layer
+
+#### [NEW] [src/services/cleanverseService.ts](file:///c:/Users/User/Documents/Advance/src/services/cleanverseService.ts)
+- Cleanverse API SDK wrapper exposing:
+  - `verifyTier1Id(documentUrl, fullName)`: Sends ID photo for OCR, face match, and document authenticity checks.
+  - `verifyTier2Business(documentUrl, businessName, videoUrl?)`: Checks business registration, tax PIN, and shop/farm video location metadata.
+  - Returns `CleanverseResult` (`status: 'pass' | 'fail' | 'uncertain'`, `confidenceScore: number`, `extractedName`, `taxIdVerified`, `failureReason?: string`).
+
+#### [MODIFY] [src/types/index.ts](file:///c:/Users/User/Documents/Advance/src/types/index.ts)
+- Add `cleanverseStatus` and `cleanverseConfidence` fields to `VerificationRequest` and `SellerProfile`.
+
+---
+
+### Seller Verification Screens
+
+#### [MODIFY] [src/components/seller/Tier1Verification.tsx](file:///c:/Users/User/Documents/Advance/src/components/seller/Tier1Verification.tsx)
+- Integrate Cleanverse Tier 1 scanning:
+  - Displays real-time Cleanverse AI scanning feedback indicator.
+  - On **Pass**: Unlocks $500 limit automatically and redirects to dashboard.
+  - On **Fail**: Shows friendly rejection modal with cause and re-upload button.
+  - On **Uncertain**: Moves item to Admin Queue and redirects to `VerificationInProgress`.
+
+#### [MODIFY] [src/components/seller/Tier2Verification.tsx](file:///c:/Users/User/Documents/Advance/src/components/seller/Tier2Verification.tsx)
+- Integrate Cleanverse Tier 2 checking:
+  - Supports Business Registration PDF, Bank Statement, and Shop/Farm video upload.
+  - On **Pass**: Unlocks $5,000 limit automatically.
+  - On **Fail**: Displays rejection banner with feedback.
+  - On **Uncertain**: Routes to Admin Queue.
+
+---
+
+### Admin Verification Queue Updates
+
+#### [MODIFY] [src/components/admin/VerificationQueue.tsx](file:///c:/Users/User/Documents/Advance/src/components/admin/VerificationQueue.tsx)
+- Display Cleanverse AI analysis flags, confidence scores %, and recommended risk score on queue cards.
+
+---
+
+## Verification Plan
+
+### Automated Tests
+- Run `npm run build` to verify zero TypeScript errors.
+- Test Cleanverse API response handlers (pass, fail, uncertain simulation).
+
+### Manual Verification
+- **Cleanverse Pass Test**: Upload clean ID -> Verify $500 limit unlocked automatically without admin intervention.
+- **Cleanverse Fail Test**: Simulate rejected document -> Confirm friendly rejection message appears with retry option.
+- **Cleanverse Uncertain Test**: Submit borderline document -> Confirm item lands in Admin Queue for human review.

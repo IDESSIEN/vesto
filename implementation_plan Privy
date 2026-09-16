@@ -1,0 +1,60 @@
+# Implementation Plan - Embedded Wallet & Privy/Para Auth Integration
+
+Integrating embedded MPC wallet authentication into Advance following the Monskills wallet-integration architecture:
+- **Zero Seed Phrase Onboarding**: Sellers and Lenders sign up via clean Email, Mobile Number, or Social Login. An embedded MPC wallet is automatically created in the background.
+- **Connect Existing Wallet Option**: Provides a dedicated "Connect Existing External Wallet" option (MetaMask, Coinbase, WalletConnect, Rainbow) for experienced Web3 users.
+- **Monad Testnet Auto-Wiring**: Automatically configures `monadTestnet` (Chain ID: 10143) with RPC transport and native balance display.
+
+## User Review Required
+
+> [!IMPORTANT]
+> - **Embedded MPC Wallets**: Sellers and Lenders never see or manage seed phrases. Signing up via email/SMS automatically provisions a secure wallet.
+> - **Dual Auth UI**: Onboarding forms feature:
+>   1. **Email / Mobile Sign-Up**: Creates automatic embedded wallet.
+>   2. **"Connect Existing Wallet"**: Allows connecting Web3 wallets for existing crypto users.
+
+## Open Questions
+
+> [!NOTE]
+> Environment variables `VITE_PRIVY_APP_ID` / `VITE_PARA_API_KEY` will be added to `.env` with client-side fallback provider for seamless offline execution.
+
+---
+
+## Proposed Changes
+
+### Wallet & Auth Components
+
+#### [NEW] [src/components/auth/WalletAuthModal.tsx](file:///c:/Users/User/Documents/Advance/src/components/auth/WalletAuthModal.tsx)
+- Reusable Auth & Wallet modal providing:
+  - Email / Mobile Sign-Up input field (triggers automatic embedded MPC wallet creation).
+  - "Connect Existing Wallet" section with MetaMask, Coinbase, WalletConnect icons.
+  - Success screen displaying provisioned embedded wallet address on Monad Testnet.
+
+#### [MODIFY] [src/components/seller/SellerSignUp.tsx](file:///c:/Users/User/Documents/Advance/src/components/seller/SellerSignUp.tsx)
+- Integrate embedded wallet creation directly into Seller onboarding form.
+
+#### [MODIFY] [src/components/lender/LenderSignUp.tsx](file:///c:/Users/User/Documents/Advance/src/components/lender/LenderSignUp.tsx)
+- Integrate embedded wallet creation into Lender onboarding form.
+
+#### [MODIFY] [src/components/common/Navbar.tsx](file:///c:/Users/User/Documents/Advance/src/components/common/Navbar.tsx)
+- Update Monad wallet pill to display authenticated user's email/phone handle, embedded wallet address, and MON testnet balance.
+
+#### [MODIFY] [src/context/AppContext.tsx](file:///c:/Users/User/Documents/Advance/src/context/AppContext.tsx)
+- Manage embedded vs external wallet authentication state (`walletType: 'embedded' | 'external'`).
+
+---
+
+## Verification Plan
+
+### Automated Tests
+- Run `npm run build` ensuring zero TypeScript compilation errors.
+- Verify embedded wallet address generation and state updates.
+
+### Manual Verification
+- **Seller Embedded Sign-Up Test**:
+  1. Open Seller Sign Up -> Enter Email/Phone -> Click `Create Account & Embedded Wallet`.
+  2. Confirm account created with provisioned wallet address (`0x...`) without seeing any seed phrase.
+- **External Wallet Connect Test**:
+  1. Click `Connect Existing Wallet` -> Select MetaMask / Coinbase -> Confirm connection.
+- **Monad Testnet Display Test**:
+  1. Verify Navbar displays `0x71C...89Fa` and `42.50 MON` on Monad Testnet.

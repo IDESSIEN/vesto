@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{width:100vw;margin:0;padding:0;}body{overscroll-behavior:none;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: 'class', theme: { extend: { colors: { 'on-surface-variant': '#43474d', 'secondary-container': '#d5e3fc', 'outline-variant': '#c3c6ce', 'on-secondary': '#ffffff', 'tertiary': '#2c1700', 'outline': '#74777e', 'inverse-primary': '#aec9ed', 'success-shamrock': '#059669', 'on-background': '#1b1c1a', 'surface-container-low': '#f5f3f0', 'on-secondary-container': '#57657a', 'tertiary-fixed-dim': '#ffb868', 'on-tertiary': '#ffffff', 'surface-bright': '#fbf9f6', 'surface-container-lowest': '#ffffff', 'surface-variant': '#e4e2df', 'surface-tint': '#466080', 'primary-fixed': '#d2e4ff', 'on-primary-container': '#809abd', 'tertiary-container': '#482900', 'on-tertiary-container': '#d88500', 'secondary-fixed': '#d5e3fc', 'inverse-surface': '#30312f', 'on-secondary-fixed-variant': '#3a485b', 'on-primary': '#ffffff', 'on-primary-fixed-variant': '#2e4867', 'on-tertiary-fixed': '#2b1700', 'warning-amber-soft': '#fef3c7', 'on-error-container': '#93000a', 'primary-container': '#16324f', 'on-error': '#ffffff', 'secondary': '#515f74', 'error-container': '#ffdad6', 'on-secondary-fixed': '#0d1c2e', 'surface-container-high': '#eae8e5', 'on-tertiary-fixed-variant': '#673d00', 'tertiary-fixed': '#ffddbb', 'surface-container-highest': '#e4e2df', 'on-surface': '#1b1c1a', 'primary-fixed-dim': '#aec9ed', 'primary': '#001d37', 'surface-container': '#efeeeb', 'on-primary-fixed': '#001d37', 'background': '#fbf9f6', 'secondary-fixed-dim': '#b9c7df', 'surface': '#fbf9f6', 'inverse-on-surface': '#f2f0ed', 'border-subtle': '#e2e8f0', 'error': '#ba1a1a', 'border-strong': '#cbd5e1', 'surface-card': '#ffffff', 'surface-dim': '#dbdad7' }, borderRadius: { 'DEFAULT': '0.25rem', 'lg': '0.5rem', 'xl': '0.75rem', 'full': '9999px' }, spacing: { 'margin-desktop': '2rem', 'spacing-2xs': '0.25rem', 'margin-mobile': '1rem', 'spacing-xs': '0.5rem', 'gutter-mobile': '1rem', 'gutter-desktop': '1.5rem', 'spacing-xl': '1.5rem', 'spacing-md': '1rem', 'spacing-2xl': '2rem', 'spacing-sm': '0.75rem', 'spacing-lg': '1.25rem', 'spacing-3xl': '2.5rem' }, fontFamily: { 'headline-lg': ['Plus Jakarta Sans'], 'body-lg': ['Inter'], 'headline-sm': ['Plus Jakarta Sans'], 'label-md': ['Inter'], 'headline-xl-mobile': ['Plus Jakarta Sans'], 'body-sm': ['Inter'], 'headline-xl': ['Plus Jakarta Sans'], 'label-lg': ['Inter'], 'numeric-metric': ['Plus Jakarta Sans'], 'headline-md': ['Plus Jakarta Sans'], 'numeric-metric-mobile': ['Plus Jakarta Sans'], 'label-sm': ['Inter'], 'body-md': ['Inter'] }, fontSize: { 'headline-lg': ['24px', { lineHeight: '32px', fontWeight: '700' }], 'body-lg': ['16px', { lineHeight: '24px', fontWeight: '400' }], 'headline-sm': ['18px', { lineHeight: '24px', fontWeight: '600' }], 'label-md': ['12px', { lineHeight: '16px', fontWeight: '600' }], 'headline-xl-mobile': ['26px', { lineHeight: '32px', fontWeight: '700' }], 'body-sm': ['12px', { lineHeight: '16px', fontWeight: '400' }], 'headline-xl': ['32px', { lineHeight: '40px', fontWeight: '700' }], 'label-lg': ['14px', { lineHeight: '20px', fontWeight: '600' }], 'numeric-metric': ['36px', { lineHeight: '44px', fontWeight: '800' }], 'headline-md': ['20px', { lineHeight: '28px', fontWeight: '600' }], 'numeric-metric-mobile': ['30px', { lineHeight: '36px', fontWeight: '800' }], 'label-sm': ['11px', { lineHeight: '14px', letterSpacing: '0.04em', fontWeight: '600' }], 'body-md': ['14px', { lineHeight: '20px', fontWeight: '400' }] } } } };</script></head><body class="bg-surface text-on-surface font-body-md text-body-md flex flex-col min-h-screen"><main class="flex flex-col relative w-full pt-safe pb-safe bg-surface min-h-screen"><div class="flex flex-col w-full px-spacing-md pb-32">
+<!-- Stepper Indicator -->
+<div class="flex flex-col gap-spacing-xs mt-spacing-sm mb-spacing-lg">
+<div class="flex items-center justify-between">
+<div class="inline-flex items-center gap-spacing-xs bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full">
+<span class="w-2 h-2 rounded-full bg-success-shamrock"></span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider">Lender Onboarding</span>
+<span class="text-outline-variant">•</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-semibold">Step 1 of 2</span>
+</div>
+<div class="flex items-center gap-1.5 bg-surface-container-high px-2.5 py-1 rounded-full text-on-surface-variant">
+<span class="material-symbols-outlined text-base text-success-shamrock">verified_user</span>
+<span class="font-label-sm text-label-sm font-semibold">Institutional Grade</span>
+</div>
+</div>
+<!-- Step Progress Bar -->
+<div class="w-full bg-surface-container-highest h-1.5 rounded-full overflow-hidden mt-1">
+<div class="bg-primary-container h-full w-1/2 rounded-full transition-all duration-500"></div>
+</div>
+</div>
+<!-- Narrative Header -->
+<div class="flex flex-col gap-spacing-xs mb-spacing-xl">
+<h1 class="font-headline-xl-mobile text-headline-xl-mobile text-primary tracking-tight">
+      Fund Real Agricultural Trade
+    </h1>
+<p class="font-body-md text-body-md text-on-surface-variant">
+      Earn competitive yields by providing working capital advances backed by verified ag-export invoices across East Africa.
+    </p>
+</div>
+<!-- Visual Hero Teaser (Agri-Trade Visual Anchor) -->
+<div class="relative w-full rounded-xl overflow-hidden mb-spacing-xl shadow-sm bg-surface-container-low">
+<img class="w-full h-36 object-cover" data-alt="Sunlit organic Arabica coffee bean processing terminal in the lush highlands of Mount Kenya with precision sorting burlap bags labeled for global export, bathed in warm afternoon golden sun with deep natural earth and navy accents, crisp documentary style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDyAAeeami27iP1TG4HE0HjZJ5QJ4F1IC1BqpxY3744L_WjBwDGVHGfbe1nqinEf3oUgdKiF9j2WujEBjInX2c0sC-2CjYiedbu-Xtn7yqt9gQIsL2ElQkGv5q2vey1UMO_0hwL3YYO9369fcjLBQ47th_yhQU1iwCurK-ZbEjHRNkTjyUsa6n_G-6JYyCBmPkyJ6h-prlYuyUKmfV4WxACtng88E2qe8P7yq4wX4EziJ_9KrfOe966-w"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/30 to-transparent flex items-end p-spacing-md">
+<div class="flex items-center justify-between w-full">
+<div class="flex items-center gap-2">
+<div class="w-7 h-7 rounded-full bg-surface-bright/20 backdrop-blur flex items-center justify-center text-surface-bright">
+<span class="material-symbols-outlined text-sm">inventory_2</span>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-surface-variant uppercase">Current Pool Backing</p>
+<p class="font-headline-sm text-headline-sm text-surface-bright">Kilimanjaro Specialty Harvest</p>
+</div>
+</div>
+<div class="bg-surface-bright/20 backdrop-blur px-2 py-1 rounded text-right">
+<p class="font-label-sm text-label-sm text-warning-amber-soft">Target Net APY</p>
+<p class="font-label-lg text-label-lg text-surface-bright font-bold">14.2%</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Account Form Section -->
+<div class="flex flex-col gap-spacing-lg mb-spacing-2xl">
+<!-- Form Card -->
+<div class="bg-surface-container-lowest rounded-xl p-spacing-md shadow-sm flex flex-col gap-spacing-md">
+<div>
+<label class="block font-label-md text-label-md text-on-surface font-semibold mb-1.5" for="lender-email">
+          Email Address
+        </label>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3.5 text-secondary text-lg pointer-events-none">
+            mail
+          </span>
+<input class="w-full h-12 pl-10 pr-4 bg-surface-container-low text-on-surface placeholder:text-secondary/60 rounded-lg text-body-md font-body-md outline-none focus:bg-surface-container-lowest transition-colors" id="lender-email" placeholder="you@domain.com" type="email"/>
+</div>
+</div>
+<!-- Investor Classification Badges -->
+<div class="flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Investor Classification</span>
+<span class="font-label-sm text-label-sm text-secondary flex items-center gap-0.5 cursor-pointer">
+<span class="material-symbols-outlined text-xs">info</span>
+            Criteria
+          </span>
+</div>
+<div class="grid grid-cols-2 gap-2" id="tier-selector">
+<button class="tier-btn active-tier flex flex-col text-left p-2.5 rounded-lg bg-secondary-container text-on-secondary-container transition-all" onclick="selectTier(this)" type="button">
+<div class="flex items-center justify-between w-full mb-1">
+<span class="font-label-sm text-label-sm font-semibold">Individual LP</span>
+<span class="material-symbols-outlined text-sm tier-check">check_circle</span>
+</div>
+<span class="font-body-sm text-body-sm opacity-80 leading-tight">Starting from $1,000 USDC</span>
+</button>
+<button class="tier-btn flex flex-col text-left p-2.5 rounded-lg bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-all" onclick="selectTier(this)" type="button">
+<div class="flex items-center justify-between w-full mb-1">
+<span class="font-label-sm text-label-sm font-semibold">Accredited / Entity</span>
+<span class="material-symbols-outlined text-sm tier-check hidden">check_circle</span>
+</div>
+<span class="font-body-sm text-body-sm opacity-80 leading-tight">Institutional allocation</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Web3 Wallet Setup Selection -->
+<div class="flex flex-col gap-spacing-sm mb-spacing-xl">
+<div class="flex flex-col mb-1">
+<h2 class="font-headline-sm text-headline-sm text-primary flex items-center gap-1.5">
+<span class="material-symbols-outlined text-lg text-tertiary-container">account_balance_wallet</span>
+        Choose Your Web3 Wallet Setup
+      </h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+        Select how you want to custody and deploy your USDC stablecoin liquidity.
+      </p>
+</div>
+<!-- Option A (Recommended Smart Wallet) -->
+<div class="wallet-card cursor-pointer relative bg-primary-container text-on-primary rounded-xl p-spacing-md shadow-md transition-all transform active:scale-[0.99] flex flex-col gap-3" id="wallet-card-a" onclick="chooseWallet('a')">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-2.5">
+<div class="w-10 h-10 rounded-lg bg-surface-bright/15 backdrop-blur flex items-center justify-center text-tertiary-fixed">
+<span class="material-symbols-outlined text-xl">auto_awesome</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<h3 class="font-headline-sm text-headline-sm text-surface-bright">Create a wallet for me</h3>
+<span class="flex items-center text-success-shamrock" id="badge-a">
+<span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</span>
+</div>
+<span class="inline-block bg-tertiary-fixed text-on-tertiary-fixed text-label-sm font-label-sm font-bold px-2 py-0.5 rounded-full mt-0.5">
+              RECOMMENDED FOR BEGINNERS
+            </span>
+</div>
+</div>
+</div>
+<p class="font-body-sm text-body-sm text-surface-variant/90 leading-relaxed">
+        Instant smart contract account secured by your biometrics &amp; email. Zero seed phrase hassle, fully gas-sponsored transactions.
+      </p>
+<div class="pt-2 flex items-center justify-between text-surface-bright/80 font-label-sm text-label-sm">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-xs text-success-shamrock">lock_reset</span>
+          Social Cloud Recovery
+        </span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-xs text-tertiary-fixed">bolt</span>
+          Zero Gas Fees
+        </span>
+</div>
+</div>
+<!-- Option B (Self-Custody External Wallet) -->
+<div class="wallet-card cursor-pointer relative bg-surface-container-lowest text-on-surface rounded-xl p-spacing-md shadow-sm transition-all transform active:scale-[0.99] flex flex-col gap-3" id="wallet-card-b" onclick="chooseWallet('b')">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-2.5">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-xl">link</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<h3 class="font-headline-sm text-headline-sm text-primary">Connect my own wallet</h3>
+<span class="hidden items-center text-success-shamrock" id="badge-b">
+<span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</span>
+</div>
+<span class="inline-block bg-surface-container-high text-on-surface-variant text-label-sm font-label-sm font-semibold px-2 py-0.5 rounded mt-0.5">
+              METAMASK • COINBASE • PHANTOM
+            </span>
+</div>
+</div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+        Bring your existing self-custody EVM wallet or hardware signer (Ledger, Trezor) to fund invoices directly from cold storage.
+      </p>
+<div class="pt-1 flex items-center gap-3 text-secondary font-label-sm text-label-sm">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">vpn_key</span>
+          Direct Signature
+        </span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">hub</span>
+          Base &amp; Polygon L2
+        </span>
+</div>
+</div>
+</div>
+<!-- Trust Guarantee Banner -->
+<div class="bg-warning-amber-soft rounded-xl p-spacing-md mb-spacing-lg shadow-sm flex items-start gap-3">
+<div class="w-8 h-8 rounded-full bg-tertiary-fixed-dim/40 flex items-center justify-center text-tertiary flex-shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-base">shield_with_heart</span>
+</div>
+<div class="flex flex-col gap-0.5">
+<h4 class="font-label-md text-label-md text-tertiary font-bold">Non-Custodial Guarantee</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-tight">
+        Smart contracts audited &amp; non-custodial. Advance never holds your private keys, seed phrases, or deposited treasury.
+      </p>
+</div>
+</div>
+<!-- Primary Sticky Continue Action Container -->
+<div class="flex flex-col gap-spacing-xs">
+<button class="w-full h-14 bg-primary-container text-on-primary font-headline-sm text-headline-sm rounded-xl shadow-md flex items-center justify-center gap-2 active:scale-[0.98] transition-transform" id="submit-flow-btn" onclick="handleContinue()" type="button">
+<span>Continue to Identity Verification</span>
+<span class="material-symbols-outlined text-lg">arrow_forward</span>
+</button>
+<p class="font-label-sm text-label-sm text-on-surface-variant text-center px-4 leading-normal mt-1">
+      By continuing, you agree to the Advance Investor Terms of Service and Agrarian Capital Risk Framework.
+    </p>
+</div>
+</div>
+<script>
+  function selectTier(element) {
+    const buttons = document.querySelectorAll('#tier-selector .tier-btn');
+    buttons.forEach(btn => {
+      btn.classList.remove('bg-secondary-container', 'text-on-secondary-container', 'active-tier');
+      btn.classList.add('bg-surface-container', 'text-on-surface-variant');
+      const icon = btn.querySelector('.tier-check');
+      if (icon) icon.classList.add('hidden');
+    });
+
+    element.classList.remove('bg-surface-container', 'text-on-surface-variant');
+    element.classList.add('bg-secondary-container', 'text-on-secondary-container', 'active-tier');
+    const activeIcon = element.querySelector('.tier-check');
+    if (activeIcon) activeIcon.classList.remove('hidden');
+  }
+
+  let selectedWallet = 'a';
+
+  function chooseWallet(type) {
+    selectedWallet = type;
+    const cardA = document.getElementById('wallet-card-a');
+    const cardB = document.getElementById('wallet-card-b');
+    const badgeA = document.getElementById('badge-a');
+    const badgeB = document.getElementById('badge-b');
+    const submitBtn = document.getElementById('submit-flow-btn');
+
+    if (type === 'a') {
+      cardA.className = 'wallet-card cursor-pointer relative bg-primary-container text-on-primary rounded-xl p-spacing-md shadow-md transition-all transform active:scale-[0.99] flex flex-col gap-3';
+      cardB.className = 'wallet-card cursor-pointer relative bg-surface-container-lowest text-on-surface rounded-xl p-spacing-md shadow-sm transition-all transform active:scale-[0.99] flex flex-col gap-3';
+      badgeA.classList.remove('hidden');
+      badgeA.classList.add('flex');
+      badgeB.classList.add('hidden');
+      badgeB.classList.remove('flex');
+      submitBtn.querySelector('span:first-child').innerText = 'Create Smart Wallet & Continue';
+    } else {
+      cardB.className = 'wallet-card cursor-pointer relative bg-primary-container text-on-primary rounded-xl p-spacing-md shadow-md transition-all transform active:scale-[0.99] flex flex-col gap-3';
+      cardA.className = 'wallet-card cursor-pointer relative bg-surface-container-lowest text-on-surface rounded-xl p-spacing-md shadow-sm transition-all transform active:scale-[0.99] flex flex-col gap-3';
+      badgeB.classList.remove('hidden');
+      badgeB.classList.add('flex');
+      badgeA.classList.add('hidden');
+      badgeA.classList.remove('flex');
+      submitBtn.querySelector('span:first-child').innerText = 'Connect Web3 Signer';
+    }
+  }
+
+  function handleContinue() {
+    const emailInput = document.getElementById('lender-email');
+    if (!emailInput.value || !emailInput.value.includes('@')) {
+      emailInput.classList.add('ring-2', 'ring-error');
+      emailInput.focus();
+      setTimeout(() => {
+        emailInput.classList.remove('ring-2', 'ring-error');
+      }, 1800);
+      return;
+    }
+    const btn = document.getElementById('submit-flow-btn');
+    btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-xl">sync</span><span>Preparing Liquidity Vault...</span>';
+    setTimeout(() => {
+      btn.innerHTML = '<span class="material-symbols-outlined text-xl">check_circle</span><span>Proceeding to Step 2</span>';
+    }, 1000);
+  }
+</script></main></body></html>

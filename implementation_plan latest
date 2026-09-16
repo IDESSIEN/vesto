@@ -1,0 +1,148 @@
+# Implementation Plan - Advance (Modern Agrarian Capital)
+
+Wiring all 19 provided UI screens from `/design` (covering Seller, Lender, and Admin portals) into a fully functional, interactive Decentralized Invoice Financing & Micro-Liquidity dApp targeting the Monad blockchain ecosystem.
+
+## User Review Required
+
+> [!IMPORTANT]
+> - **Zero Redesign Guarantee**: All 19 screens will preserve exact typography (`Plus Jakarta Sans`, `Inter`), color palette (`#16324f` Deep Space Blue, `#475569` Blue Slate, `#e08a00` Amber Earth, `#faf8f5` Bright Snow, `#059669` Shamrock Green), layout structure, and micro-interactions specified in `design.md` and the HTML files.
+> - **Unified State Engine**: Actions in any portal (e.g. Seller submits invoice, Admin approves KYC/Invoice, Lender funds invoice/batch) immediately cascade across all three portals in real-time.
+> - **Monad Blockchain Readiness**: Includes Monad testnet wallet connection support and contract abstraction for invoice tokenization and pool funding.
+
+## Open Questions
+
+> [!NOTE]
+> No blocking open questions at this time. Default mock seed data will be pre-populated for immediate demonstration of active marketplace invoices, lender portfolios, and admin verification queues.
+
+---
+
+## Proposed Changes
+
+### Design System & Root Configuration
+
+#### [NEW] [package.json](file:///c:/Users/User/Documents/Advance/package.json)
+- Project dependencies including React, Vite, Lucide/Material icons, Tailwind CSS, Lucide-react, Chart.js/Recharts (or custom SVG financial charts matching screen 5 analytics), and Wagmi/Viem web3 utilities.
+
+#### [NEW] [vite.config.ts](file:///c:/Users/User/Documents/Advance/vite.config.ts)
+- Vite bundle configuration with Tailwind support.
+
+#### [NEW] [.monskills](file:///c:/Users/User/Documents/Advance/.monskills)
+- Metadata declaring Monad testnet target (`built-with=monskills`, `chain=monad-testnet`).
+
+---
+
+### Core State & Data Architecture
+
+#### [NEW] [src/types/index.ts](file:///c:/Users/User/Documents/Advance/src/types/index.ts)
+- Type definitions for `Seller`, `Lender`, `Admin`, `Invoice`, `VerificationRequest`, `BatchFunding`, `PortfolioPosition`, and `PlatformAnalytics`.
+
+#### [NEW] [src/context/AppContext.tsx](file:///c:/Users/User/Documents/Advance/src/context/AppContext.tsx)
+- Centralized reactive state provider powering cross-role workflows:
+  - Seller onboarding, document upload, credit limit calculation ($500 Tier 1 -> $5,000 Tier 2), invoice submission.
+  - Admin verification queue approvals/rejections, invoice oversight approval/audit, dispute resolution actions.
+  - Lender marketplace filtering, single/batch invoice funding, yield calculation, portfolio auto-invest settings, withdrawal requests.
+  - Live system stats calculation for Admin analytics.
+
+---
+
+### Seller Portal Components
+
+#### [NEW] [src/components/seller/SellerSignUp.tsx](file:///c:/Users/User/Documents/Advance/src/components/seller/SellerSignUp.tsx)
+- Step 1 Seller onboarding form with name, phone with country code selector, business name, operating jurisdiction, and category selection.
+
+#### [NEW] [src/components/seller/Tier1Verification.tsx](file:///c:/Users/User/Documents/Advance/src/components/seller/Tier1Verification.tsx)
+- Step 2 instant $500 limit unlock with ID document camera upload, photo preview, extraction simulation, and selfie verification.
+
+#### [NEW] [src/components/seller/Tier2Verification.tsx](file:///c:/Users/User/Documents/Advance/src/components/seller/Tier2Verification.tsx)
+- Step 3 $5,000 limit tier unlock with Tax ID, Business Registration, and Bank Statement document dropzone.
+
+#### [NEW] [src/components/seller/VerificationInProgress.tsx](file:///c:/Users/User/Documents/Advance/src/components/seller/VerificationInProgress.tsx)
+- Status screen tracking review progress for Tier 1 and Tier 2 submissions with estimated turnaround and notification toggles.
+
+#### [NEW] [src/components/seller/SellerOnboardingTutorial.tsx](file:///c:/Users/User/Documents/Advance/src/components/seller/SellerOnboardingTutorial.tsx)
+- Interactive guided tour explaining invoice upload, instant discount advance, buyer repayment, and limit growth milestones.
+
+#### [NEW] [src/components/seller/SubmitInvoice.tsx](file:///c:/Users/User/Documents/Advance/src/components/seller/SubmitInvoice.tsx)
+- Invoice submission form with buyer details, invoice amount, due date selector, PDF/image document dropzone with preview, real-time advance rate/fee calculator, and submission trigger.
+
+#### [NEW] [src/components/seller/SellerDashboard.tsx](file:///c:/Users/User/Documents/Advance/src/components/seller/SellerDashboard.tsx)
+- Seller hub featuring dynamic limit gauge bar, available payout balance, withdraw modal, active invoices status table, quick actions, and milestone unlocked badges.
+
+---
+
+### Lender Portal Components
+
+#### [NEW] [src/components/lender/LenderSignUp.tsx](file:///c:/Users/User/Documents/Advance/src/components/lender/LenderSignUp.tsx)
+- Lender registration with account type selection (Individual vs Institutional), investor tier, target pool allocation, and risk preference setting.
+
+#### [NEW] [src/components/lender/RiskDisclosure.tsx](file:///c:/Users/User/Documents/Advance/src/components/lender/RiskDisclosure.tsx)
+- Plain language risk disclosure overview, default protection explanation, loss waterfall breakdown, and digital signature acknowledgment.
+
+#### [NEW] [src/components/lender/MarketplaceGuidedTour.tsx](file:///c:/Users/User/Documents/Advance/src/components/lender/MarketplaceGuidedTour.tsx)
+- Interactive walk-through of liquidity pools, invoice risk tiers, yield calculation (APY %), and automated funding strategies.
+
+#### [NEW] [src/components/lender/MarketplaceBrowse.tsx](file:///c:/Users/User/Documents/Advance/src/components/lender/MarketplaceBrowse.tsx)
+- Live invoice marketplace with risk score filters, yield sorting, term duration filters, detail modal, single-click funding, and multi-select batch builder.
+
+#### [NEW] [src/components/lender/FundInvoiceBatch.tsx](file:///c:/Users/User/Documents/Advance/src/components/lender/FundInvoiceBatch.tsx)
+- Batch funding wizard summarizing selected invoices, aggregate capital deployment, blended APY %, maturity spread, and 1-click execution.
+
+#### [NEW] [src/components/lender/LenderPortfolio.tsx](file:///c:/Users/User/Documents/Advance/src/components/lender/LenderPortfolio.tsx)
+- Portfolio management dashboard showing Total Invested, Total Yield Earned, Active Pool Positions, upcoming Repayment Schedule, Auto-Invest strategy controls, and Fund Withdrawal drawer.
+
+---
+
+### Admin Portal Components
+
+#### [NEW] [src/components/admin/AdminLogin2FA.tsx](file:///c:/Users/User/Documents/Advance/src/components/admin/AdminLogin2FA.tsx)
+- Institutional Admin authentication screen with credential input and TOTP / 2FA code verification.
+
+#### [NEW] [src/components/admin/VerificationQueue.tsx](file:///c:/Users/User/Documents/Advance/src/components/admin/VerificationQueue.tsx)
+- KYC & Business Verification queue for reviewing pending Seller submissions, document image previewer, risk score assignment, and Approve / Reject controls.
+
+#### [NEW] [src/components/admin/InvoiceOversightTable.tsx](file:///c:/Users/User/Documents/Advance/src/components/admin/InvoiceOversightTable.tsx)
+- Central invoice monitoring grid with risk flag filters, buyer verification checks, manual approval for marketplace publishing, audit flag, and force-freeze controls.
+
+#### [NEW] [src/components/admin/DisputeResolution.tsx](file:///c:/Users/User/Documents/Advance/src/components/admin/DisputeResolution.tsx)
+- Overdue invoice dispute resolution interface showing default grace periods, buyer contact logs, reserve pool payouts, and manual settlement triggers.
+
+#### [NEW] [src/components/admin/AnalyticsOverview.tsx](file:///c:/Users/User/Documents/Advance/src/components/admin/AnalyticsOverview.tsx)
+- Master platform performance dashboard with real-time total volume metrics, default rate trends, active liquidity gauges, sector breakdown, and system health status.
+
+---
+
+### Header Navigation & App Shell
+
+#### [NEW] [src/components/common/Navbar.tsx](file:///c:/Users/User/Documents/Advance/src/components/common/Navbar.tsx)
+- Universal navigation bar featuring the Advance logo, active role switcher (Seller / Lender / Admin), Monad wallet connection pill, and quick notification drawer.
+
+#### [NEW] [src/App.tsx](file:///c:/Users/User/Documents/Advance/src/App.tsx)
+- Main application shell rendering active role view and sub-navigation tabs.
+
+---
+
+## Verification Plan
+
+### Automated Tests
+- Build verification via Vite compiler (`npm run build`) ensuring zero TypeScript or CSS errors.
+- Dynamic layout & reactivity verification across all 19 screens.
+
+### Manual Verification
+- **Seller Flow Test**:
+  1. Complete Seller Sign Up -> Navigate to Tier 1 Verification -> Upload ID document -> Submit.
+  2. Complete Tier 2 Verification -> Submit Tax/Bank documents.
+  3. Submit a new invoice for $1,200 to buyer "Metro Supermarkets".
+  4. Verify invoice calculation (85% advance = $1,020, 2% fee = $24).
+- **Admin Flow Test**:
+  1. Login as Admin.
+  2. Open Verification Queue -> Approve Seller's Tier 1 & Tier 2 KYC.
+  3. Open Invoice Oversight Table -> Approve Seller's $1,200 invoice.
+  4. Inspect Analytics Overview -> Confirm total volume and active metrics update.
+- **Lender Flow Test**:
+  1. Complete Lender Sign Up & Risk Disclosure.
+  2. Open Marketplace Browse -> Find Seller's approved $1,200 invoice -> Click Fund Invoice (or Select Batch).
+  3. Confirm funding transaction.
+  4. Open Lender Portfolio -> Verify active position, expected yield, and updated balance.
+- **Cross-Role Settlement Test**:
+  1. In Seller Dashboard, verify $1,020 advance payout available for withdrawal.
+  2. Simulate invoice repayment from buyer -> Observe Seller limit growth and Lender yield realization.

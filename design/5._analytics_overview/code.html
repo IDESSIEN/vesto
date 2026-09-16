@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "border-subtle": "#e2e8f0",
+          "on-tertiary-container": "#d88500",
+          "surface-container-highest": "#e4e2df",
+          "on-error-container": "#93000a",
+          "primary-container": "#16324f",
+          "on-primary": "#ffffff",
+          "outline-variant": "#c3c6ce",
+          "secondary-container": "#d5e3fc",
+          "on-tertiary-fixed": "#2b1700",
+          "surface-dim": "#dbdad7",
+          "surface-variant": "#e4e2df",
+          "tertiary-fixed": "#ffddbb",
+          "on-error": "#ffffff",
+          "surface-container-lowest": "#ffffff",
+          "on-secondary-container": "#57657a",
+          "on-secondary": "#ffffff",
+          "on-surface-variant": "#43474d",
+          "on-secondary-fixed-variant": "#3a485b",
+          "surface": "#fbf9f6",
+          "surface-container-low": "#f5f3f0",
+          "on-primary-container": "#809abd",
+          "primary-fixed-dim": "#aec9ed",
+          "error-container": "#ffdad6",
+          "error": "#ba1a1a",
+          "inverse-primary": "#aec9ed",
+          "primary-fixed": "#d2e4ff",
+          "primary": "#001d37",
+          "secondary-fixed": "#d5e3fc",
+          "background": "#fbf9f6",
+          "surface-tint": "#466080",
+          "secondary-fixed-dim": "#b9c7df",
+          "warning-amber-soft": "#fef3c7",
+          "inverse-on-surface": "#f2f0ed",
+          "on-tertiary": "#ffffff",
+          "inverse-surface": "#30312f",
+          "tertiary": "#2c1700",
+          "on-surface": "#1b1c1a",
+          "border-strong": "#cbd5e1",
+          "on-background": "#1b1c1a",
+          "on-secondary-fixed": "#0d1c2e",
+          "tertiary-fixed-dim": "#ffb868",
+          "surface-card": "#ffffff",
+          "on-tertiary-fixed-variant": "#673d00",
+          "secondary": "#515f74",
+          "success-shamrock": "#059669",
+          "surface-container": "#efeeeb",
+          "surface-container-high": "#eae8e5",
+          "on-primary-fixed-variant": "#2e4867",
+          "tertiary-container": "#482900",
+          "surface-bright": "#fbf9f6",
+          "outline": "#74777e",
+          "on-primary-fixed": "#001d37"
+        },
+        "borderRadius": {
+          "DEFAULT": "0.25rem",
+          "lg": "0.5rem",
+          "xl": "0.75rem",
+          "full": "9999px"
+        },
+        "spacing": {
+          "margin-mobile": "1rem",
+          "spacing-2xl": "2rem",
+          "spacing-md": "1rem",
+          "spacing-xl": "1.5rem",
+          "spacing-2xs": "0.25rem",
+          "spacing-lg": "1.25rem",
+          "gutter-mobile": "1rem",
+          "spacing-sm": "0.75rem",
+          "spacing-xs": "0.5rem",
+          "margin-desktop": "2rem",
+          "gutter-desktop": "1.5rem",
+          "spacing-3xl": "2.5rem"
+        },
+        "fontFamily": {
+          "body-md": [
+            "Inter"
+          ],
+          "body-lg": [
+            "Inter"
+          ],
+          "label-lg": [
+            "Inter"
+          ],
+          "headline-md": [
+            "Plus Jakarta Sans"
+          ],
+          "numeric-metric-mobile": [
+            "Plus Jakarta Sans"
+          ],
+          "headline-sm": [
+            "Plus Jakarta Sans"
+          ],
+          "numeric-metric": [
+            "Plus Jakarta Sans"
+          ],
+          "body-sm": [
+            "Inter"
+          ],
+          "label-sm": [
+            "Inter"
+          ],
+          "label-md": [
+            "Inter"
+          ],
+          "headline-xl-mobile": [
+            "Plus Jakarta Sans"
+          ],
+          "headline-xl": [
+            "Plus Jakarta Sans"
+          ],
+          "headline-lg": [
+            "Plus Jakarta Sans"
+          ]
+        },
+        "fontSize": {
+          "body-md": [
+            "14px",
+            {
+              "lineHeight": "20px",
+              "fontWeight": "400"
+            }
+          ],
+          "body-lg": [
+            "16px",
+            {
+              "lineHeight": "24px",
+              "fontWeight": "400"
+            }
+          ],
+          "label-lg": [
+            "14px",
+            {
+              "lineHeight": "20px",
+              "fontWeight": "600"
+            }
+          ],
+          "headline-md": [
+            "20px",
+            {
+              "lineHeight": "28px",
+              "fontWeight": "600"
+            }
+          ],
+          "numeric-metric-mobile": [
+            "30px",
+            {
+              "lineHeight": "36px",
+              "fontWeight": "800"
+            }
+          ],
+          "headline-sm": [
+            "18px",
+            {
+              "lineHeight": "24px",
+              "fontWeight": "600"
+            }
+          ],
+          "numeric-metric": [
+            "36px",
+            {
+              "lineHeight": "44px",
+              "fontWeight": "800"
+            }
+          ],
+          "body-sm": [
+            "12px",
+            {
+              "lineHeight": "16px",
+              "fontWeight": "400"
+            }
+          ],
+          "label-sm": [
+            "11px",
+            {
+              "lineHeight": "14px",
+              "letterSpacing": "0.04em",
+              "fontWeight": "600"
+            }
+          ],
+          "label-md": [
+            "12px",
+            {
+              "lineHeight": "16px",
+              "fontWeight": "600"
+            }
+          ],
+          "headline-xl-mobile": [
+            "26px",
+            {
+              "lineHeight": "32px",
+              "fontWeight": "700"
+            }
+          ],
+          "headline-xl": [
+            "32px",
+            {
+              "lineHeight": "40px",
+              "fontWeight": "700"
+            }
+          ],
+          "headline-lg": [
+            "24px",
+            {
+              "lineHeight": "32px",
+              "fontWeight": "700"
+            }
+          ]
+        }
+      },
+    },
+  }</script></head><body class="bg-surface font-body-md text-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-72 bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-50 flex flex-col justify-between select-none"><div class="flex flex-col flex-1 overflow-y-auto"><div class="h-16 px-spacing-xl flex items-center justify-between"><div class="flex items-center gap-spacing-xs"><img alt="Brand logo. - Primary color: #16324f
+- Font: plusJakartaSans
+- Mode: light
+- Roundness: rounded-md
+" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1XkZniit_VHuFtiy4Afn4UrwAF0e_yMaTFEAW732zaDaxY0TY1_yGv_EIKxB3WyxBZckRkkVndquZ9xP8ID7VRKiGMu7c5GysYOInlzfftkMbihCulCCfpuJ_BbuOZs9uA2wrFewOZskiXwAnTKHTz2_gZ2mX0E-Kur6MDBPCb4uKNUnKPKV_JbspBCYvRG-_bnlW10Pyoj6cjYoyzz8OSzdMoCO1249XNQ9mx_s-Q4b_jlsfi8caqkWijN"/><span class="font-headline-sm text-headline-sm tracking-tight text-primary">Advance</span></div><span class="px-spacing-xs py-spacing-2xs rounded bg-surface-container-high text-secondary font-label-sm text-label-sm uppercase tracking-wider">Admin</span></div><div class="px-spacing-md py-spacing-xs"><div class="p-spacing-sm rounded-lg bg-surface-container-low"><div class="flex items-center justify-between mb-spacing-2xs"><span class="font-label-sm text-label-sm text-on-surface-variant">Admin Console</span><span class="flex h-2 w-2 relative"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-success-shamrock opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-success-shamrock"></span></span></div><div class="font-label-md text-label-md text-primary truncate">Senior Risk Admin</div><div class="font-body-sm text-body-sm text-secondary">Ops Tier 1 Verification</div></div></div><nav class="flex-1 px-spacing-md py-spacing-xs space-y-spacing-2xs" data-active-classes="bg-primary-container text-on-primary font-label-md"><a class="flex items-center justify-between px-spacing-md py-spacing-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all group" data-path="overview-analytics" href="#"><div class="flex items-center gap-spacing-sm"><span class="material-symbols-outlined text-[20px]">analytics</span><span class="font-label-md text-label-md">Overview / Analytics</span></div></a><a class="flex items-center justify-between px-spacing-md py-spacing-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all group" data-path="verification-queue" href="#"><div class="flex items-center gap-spacing-sm"><span class="material-symbols-outlined text-[20px]">verified_user</span><span class="font-label-md text-label-md">Verification Queue</span></div><span class="px-spacing-xs py-spacing-2xs rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm">9 Pending</span></a><a class="flex items-center justify-between px-spacing-md py-spacing-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all group" data-path="invoice-oversight" href="#"><div class="flex items-center gap-spacing-sm"><span class="material-symbols-outlined text-[20px]">receipt_long</span><span class="font-label-md text-label-md">Invoice Oversight</span></div><span class="px-spacing-xs py-spacing-2xs rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm">3 Flagged</span></a><a class="flex items-center justify-between px-spacing-md py-spacing-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all group" data-path="dispute-resolution" href="#"><div class="flex items-center gap-spacing-sm"><span class="material-symbols-outlined text-[20px]">gavel</span><span class="font-label-md text-label-md">Dispute Resolution</span></div><span class="px-spacing-xs py-spacing-2xs rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm">2 Active</span></a><a class="flex items-center justify-between px-spacing-md py-spacing-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all group" data-path="audit-compliance-logs" href="#"><div class="flex items-center gap-spacing-sm"><span class="material-symbols-outlined text-[20px]">history_edu</span><span class="font-label-md text-label-md">Audit &amp; Compliance Logs</span></div></a><a class="flex items-center justify-between px-spacing-md py-spacing-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all group" data-path="system-settings" href="#"><div class="flex items-center gap-spacing-sm"><span class="material-symbols-outlined text-[20px]">settings</span><span class="font-label-md text-label-md">Settings</span></div></a></nav></div><div class="p-spacing-md bg-surface-container-low/60 m-spacing-md rounded-xl"><div class="flex items-center gap-spacing-xs mb-spacing-xs"><span class="material-symbols-outlined text-success-shamrock text-[16px]">cloud_done</span><span class="font-label-sm text-label-sm text-on-surface font-bold uppercase tracking-wider">System Health</span></div><div class="flex items-center justify-between"><span class="font-body-sm text-body-sm text-on-surface-variant">Protocol Status</span><span class="font-label-sm text-label-sm text-success-shamrock font-bold">99.98% Operational</span></div><div class="w-full bg-surface-container-highest h-1 rounded-full mt-spacing-xs overflow-hidden"><div class="bg-success-shamrock h-full w-[99.98%]"></div></div></div></aside><div class="pl-72"><header class="fixed top-0 left-72 right-0 h-16 bg-surface/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-spacing-xl"><div class="flex items-center gap-spacing-md flex-1 max-w-lg"><div class="relative w-full"><span class="material-symbols-outlined absolute left-spacing-sm top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">search</span><input class="w-full h-10 pl-10 pr-spacing-md rounded-lg bg-surface-container-low text-on-surface placeholder:text-on-surface-variant/60 font-body-sm text-body-sm focus:outline-none focus:bg-surface-container-lowest transition-colors" placeholder="Search trade facility, buyer, counterparty, tax ID..." type="text"/></div></div><div class="flex items-center gap-spacing-md"><div class="hidden lg:flex items-center gap-spacing-xs px-spacing-sm py-spacing-2xs rounded-lg bg-surface-container"><span class="material-symbols-outlined text-success-shamrock text-[16px]">shield</span><span class="font-label-sm text-label-sm text-on-surface-variant">Automated Underwriting: <strong class="text-on-surface">Strict Mode</strong></span></div><div class="flex items-center gap-spacing-xs"><button class="w-9 h-9 flex items-center justify-center rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors relative" type="button"><span class="material-symbols-outlined text-[20px]">notifications</span><span class="absolute top-2 right-2 w-2 h-2 rounded-full bg-error"></span></button><button class="w-9 h-9 flex items-center justify-center rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" type="button"><span class="material-symbols-outlined text-[20px]">tune</span></button></div><div class="h-6 w-px bg-surface-container-highest"></div><div class="flex items-center gap-spacing-sm"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div><div class="hidden sm:flex flex-col text-left"><span class="font-label-sm text-label-sm text-on-surface">Ops Admin #408</span><span class="font-body-sm text-body-sm text-on-surface-variant">Duty Desk Alpha</span></div></div></div></header><main class="relative pt-16 bg-surface w-full px-spacing-xl"><div class="flex flex-col w-full">
+<div class="w-full pb-spacing-3xl pt-spacing-lg">
+<!-- Header Block & Executive Control Bar -->
+<div class="flex flex-col xl:flex-row xl:items-end justify-between gap-spacing-lg mb-spacing-2xl">
+<div class="space-y-spacing-2xs max-w-3xl">
+<div class="flex items-center gap-spacing-xs">
+<span class="inline-flex items-center px-spacing-xs py-spacing-2xs rounded bg-surface-container-high text-secondary font-label-sm text-label-sm uppercase tracking-wider">Risk Telemetry • v4.19</span>
+<span class="h-1.5 w-1.5 rounded-full bg-success-shamrock"></span>
+<span class="font-body-sm text-body-sm text-success-shamrock font-medium">Real-Time Ledger Synced</span>
+</div>
+<h1 class="font-headline-xl text-headline-xl text-primary tracking-tight">Executive Analytics &amp; Portfolio Performance Overview</h1>
+<p class="font-body-md text-body-md text-secondary">High-level financial KPIs, capital turnover, loss provisions, and active ecosystem participants.</p>
+</div>
+<!-- Top Action Controls -->
+<div class="flex flex-wrap items-center gap-spacing-sm">
+<div class="inline-flex p-1 rounded-lg bg-surface-container-low shadow-sm">
+<button class="px-spacing-sm py-1.5 rounded-md font-label-md text-label-md bg-surface-card text-primary shadow-sm transition-all" type="button">Last 30 Days</button>
+<button class="px-spacing-sm py-1.5 rounded-md font-label-md text-label-md text-secondary hover:text-primary transition-all" type="button">Quarter-to-Date</button>
+<button class="px-spacing-sm py-1.5 rounded-md font-label-md text-label-md text-secondary hover:text-primary transition-all" type="button">Year-to-Date</button>
+<button class="px-spacing-sm py-1.5 rounded-md font-label-md text-label-md text-secondary hover:text-primary transition-all flex items-center gap-1" type="button">
+<span>Custom Range</span>
+<span class="material-symbols-outlined text-[16px]">calendar_today</span>
+</button>
+</div>
+<button class="flex items-center gap-spacing-xs px-spacing-md py-2.5 rounded-lg bg-primary text-on-primary font-label-md text-label-md shadow hover:bg-primary/95 transition-all" id="exportBtn" type="button">
+<span class="material-symbols-outlined text-[18px]">download</span>
+<span>Export Comprehensive Regulatory CSV</span>
+</button>
+</div>
+</div>
+<!-- Primary Metric KPI Cards Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-spacing-lg mb-spacing-2xl">
+<!-- Card 1: Total Volume Funded -->
+<div class="relative overflow-hidden bg-surface-card rounded-xl p-spacing-lg shadow-sm hover:shadow-md transition-shadow">
+<div class="absolute top-0 left-0 bottom-0 w-1 bg-primary"></div>
+<div class="flex items-center justify-between mb-spacing-xs pl-spacing-xs">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider">Total Volume Funded</span>
+<span class="w-8 h-8 rounded-lg bg-surface-container-low flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[18px]">payments</span>
+</span>
+</div>
+<div class="pl-spacing-xs">
+<div class="font-numeric-metric text-numeric-metric text-primary tracking-tight mb-spacing-2xs">$1,842,500 <span class="text-[16px] font-label-md text-secondary align-baseline">USDC</span></div>
+<div class="flex items-center gap-spacing-xs">
+<span class="inline-flex items-center gap-0.5 px-spacing-xs py-0.5 rounded bg-success-shamrock/10 text-success-shamrock font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">arrow_upward</span> +24.8%
+            </span>
+<span class="font-body-sm text-body-sm text-secondary">vs. prior month (142 batches)</span>
+</div>
+</div>
+<div class="mt-spacing-md pt-spacing-sm bg-surface-container-low/50 rounded-lg p-spacing-xs flex items-center justify-between">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Batch velocity index</span>
+<span class="font-label-sm text-label-sm text-primary font-semibold">4.73 batches / day</span>
+</div>
+</div>
+<!-- Card 2: Total Volume Repaid -->
+<div class="relative overflow-hidden bg-surface-card rounded-xl p-spacing-lg shadow-sm hover:shadow-md transition-shadow">
+<div class="absolute top-0 left-0 bottom-0 w-1 bg-success-shamrock"></div>
+<div class="flex items-center justify-between mb-spacing-xs pl-spacing-xs">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider">Total Volume Repaid</span>
+<span class="w-8 h-8 rounded-lg bg-surface-container-low flex items-center justify-center text-success-shamrock">
+<span class="material-symbols-outlined text-[18px]">task_alt</span>
+</span>
+</div>
+<div class="pl-spacing-xs">
+<div class="font-numeric-metric text-numeric-metric text-primary tracking-tight mb-spacing-2xs">$1,429,200 <span class="text-[16px] font-label-md text-secondary align-baseline">USDC</span></div>
+<div class="flex items-center gap-spacing-xs">
+<span class="inline-flex items-center gap-0.5 px-spacing-xs py-0.5 rounded bg-success-shamrock/10 text-success-shamrock font-label-sm text-label-sm font-semibold">
+              100% On-Time
+            </span>
+<span class="font-body-sm text-body-sm text-secondary">118 batches matured</span>
+</div>
+</div>
+<div class="mt-spacing-md pt-spacing-sm bg-surface-container-low/50 rounded-lg p-spacing-xs flex items-center justify-between">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Delinquency delay log</span>
+<span class="font-label-sm text-label-sm text-success-shamrock font-semibold">0 Delays recorded</span>
+</div>
+</div>
+<!-- Card 3: Protocol Default Rate -->
+<div class="relative overflow-hidden bg-surface-card rounded-xl p-spacing-lg shadow-sm hover:shadow-md transition-shadow">
+<div class="absolute top-0 left-0 bottom-0 w-1 bg-on-tertiary-container"></div>
+<div class="flex items-center justify-between mb-spacing-xs pl-spacing-xs">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider">Protocol Default Rate</span>
+<span class="w-8 h-8 rounded-lg bg-surface-container-low flex items-center justify-center text-on-tertiary-container">
+<span class="material-symbols-outlined text-[18px]">shield_lock</span>
+</span>
+</div>
+<div class="pl-spacing-xs">
+<div class="font-numeric-metric text-numeric-metric text-primary tracking-tight mb-spacing-2xs">0.12% <span class="text-[13px] font-label-md text-secondary align-baseline">v 2.8% bench</span></div>
+<p class="font-body-sm text-body-sm text-secondary line-clamp-1">Protected by 15% escrow reserve</p>
+</div>
+<div class="mt-spacing-md pt-spacing-sm bg-surface-container-low/50 rounded-lg p-spacing-xs flex items-center justify-between">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Lender Capital Impairment</span>
+<span class="font-label-sm text-label-sm text-success-shamrock font-semibold">0.00% Lost</span>
+</div>
+</div>
+<!-- Card 4: Active Platform Users -->
+<div class="relative overflow-hidden bg-surface-card rounded-xl p-spacing-lg shadow-sm hover:shadow-md transition-shadow">
+<div class="absolute top-0 left-0 bottom-0 w-1 bg-secondary"></div>
+<div class="flex items-center justify-between mb-spacing-xs pl-spacing-xs">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider">Active Ecosystem</span>
+<span class="w-8 h-8 rounded-lg bg-surface-container-low flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[18px]">hub</span>
+</span>
+</div>
+<div class="pl-spacing-xs">
+<div class="font-numeric-metric text-numeric-metric text-primary tracking-tight mb-spacing-2xs">1,420 <span class="text-[14px] font-label-md text-secondary align-baseline">Total Entities</span></div>
+<div class="flex items-center gap-spacing-xs font-body-sm text-body-sm text-secondary">
+<span>890 Sellers</span>
+<span>•</span>
+<span>530 LPs &amp; Buyers</span>
+</div>
+</div>
+<div class="mt-spacing-md pt-spacing-sm bg-surface-container-low/50 rounded-lg p-spacing-xs flex items-center justify-between">
+<span class="font-body-sm text-body-sm text-on-surface-variant">KYB / AML Compliance</span>
+<span class="font-label-sm text-label-sm text-primary font-semibold">99.4% Tier-1 Verified</span>
+</div>
+</div>
+</div>
+<!-- Visual Analytics Grid: 2 Large Diagnostic Modules -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-spacing-lg mb-spacing-2xl">
+<!-- Chart Left (7 Cols): Capital Flow & Repayment Waterfall -->
+<div class="lg:col-span-7 bg-surface-card rounded-xl p-spacing-xl shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex flex-wrap items-center justify-between gap-spacing-sm mb-spacing-lg">
+<div>
+<div class="flex items-center gap-2">
+<h3 class="font-headline-md text-headline-md text-primary">Capital Flow &amp; Repayment Waterfall</h3>
+<span class="px-spacing-xs py-0.5 rounded bg-surface-container-high text-on-surface font-label-sm text-label-sm">Past 6 Months</span>
+</div>
+<p class="font-body-sm text-body-sm text-secondary mt-1">Comparing total capital deployed vs. buyer repayments realized, with annual net yield trajectory.</p>
+</div>
+<!-- Chart Legend -->
+<div class="flex items-center gap-spacing-md font-label-sm text-label-sm">
+<div class="flex items-center gap-1.5">
+<span class="w-3 h-3 rounded-sm bg-primary"></span>
+<span class="text-on-surface-variant">Funded Capital</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-3 h-3 rounded-sm bg-success-shamrock"></span>
+<span class="text-on-surface-variant">Buyer Settlements</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-3 h-0.5 bg-on-tertiary-container"></span>
+<span class="text-on-surface-variant">Yield (11.8% APY avg)</span>
+</div>
+</div>
+</div>
+<!-- SVG Visual Chart Simulation -->
+<div class="relative w-full h-64 select-none">
+<svg class="w-full h-full" fill="none" preserveaspectratio="none" viewbox="0 0 700 220">
+<defs>
+<lineargradient id="yieldGrad" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#d88500" stop-opacity="0.25"></stop>
+<stop offset="100%" stop-color="#d88500" stop-opacity="0.0"></stop>
+</lineargradient>
+</defs>
+<!-- Subtle Horizontal Gridlines -->
+<line stroke="#efeeeb" stroke-width="1" x1="40" x2="680" y1="30" y2="30"></line>
+<line stroke="#efeeeb" stroke-width="1" x1="40" x2="680" y1="80" y2="80"></line>
+<line stroke="#efeeeb" stroke-width="1" x1="40" x2="680" y1="130" y2="130"></line>
+<line stroke="#efeeeb" stroke-width="1" x1="40" x2="680" y1="180" y2="180"></line>
+<!-- Y-Axis Labels -->
+<text fill="#515f74" font-family="Inter" font-size="10" x="5" y="34">$400k</text>
+<text fill="#515f74" font-family="Inter" font-size="10" x="5" y="84">$300k</text>
+<text fill="#515f74" font-family="Inter" font-size="10" x="5" y="134">$200k</text>
+<text fill="#515f74" font-family="Inter" font-size="10" x="5" y="184">$100k</text>
+<!-- Month 1: Nov -->
+<rect fill="#001d37" height="80" opacity="0.9" rx="3" width="22" x="75" y="100"></rect>
+<rect fill="#059669" height="55" opacity="0.9" rx="3" width="22" x="100" y="125"></rect>
+<!-- Month 2: Dec -->
+<rect fill="#001d37" height="95" opacity="0.9" rx="3" width="22" x="175" y="85"></rect>
+<rect fill="#059669" height="70" opacity="0.9" rx="3" width="22" x="200" y="110"></rect>
+<!-- Month 3: Jan -->
+<rect fill="#001d37" height="110" opacity="0.9" rx="3" width="22" x="275" y="70"></rect>
+<rect fill="#059669" height="90" opacity="0.9" rx="3" width="22" x="300" y="90"></rect>
+<!-- Month 4: Feb -->
+<rect fill="#001d37" height="125" opacity="0.9" rx="3" width="22" x="375" y="55"></rect>
+<rect fill="#059669" height="108" opacity="0.9" rx="3" width="22" x="400" y="72"></rect>
+<!-- Month 5: Mar -->
+<rect fill="#001d37" height="135" opacity="0.9" rx="3" width="22" x="475" y="45"></rect>
+<rect fill="#059669" height="120" opacity="0.9" rx="3" width="22" x="500" y="60"></rect>
+<!-- Month 6: Current Apr -->
+<rect fill="#001d37" height="148" rx="3" width="22" x="575" y="32"></rect>
+<rect fill="#059669" height="130" rx="3" width="22" x="600" y="50"></rect>
+<!-- Yield Path Overlaid Area & Line -->
+<path d="M 86 115 Q 186 102 286 85 T 486 55 T 611 40 L 611 180 L 86 180 Z" fill="url(#yieldGrad)"></path>
+<path d="M 86 115 Q 186 102 286 85 T 486 55 T 611 40" fill="none" stroke="#d88500" stroke-linecap="round" stroke-width="2.5"></path>
+<!-- Spark Data points -->
+<circle cx="86" cy="115" fill="#ffffff" r="3.5" stroke="#d88500" stroke-width="2"></circle>
+<circle cx="286" cy="85" fill="#ffffff" r="3.5" stroke="#d88500" stroke-width="2"></circle>
+<circle cx="486" cy="55" fill="#ffffff" r="3.5" stroke="#d88500" stroke-width="2"></circle>
+<circle cx="611" cy="40" fill="#ffffff" r="3.5" stroke="#d88500" stroke-width="2"></circle>
+<!-- X-Axis Labels -->
+<text fill="#515f74" font-family="Inter" font-size="11" text-anchor="middle" x="88" y="202">Nov</text>
+<text fill="#515f74" font-family="Inter" font-size="11" text-anchor="middle" x="188" y="202">Dec</text>
+<text fill="#515f74" font-family="Inter" font-size="11" text-anchor="middle" x="288" y="202">Jan</text>
+<text fill="#515f74" font-family="Inter" font-size="11" text-anchor="middle" x="388" y="202">Feb</text>
+<text fill="#515f74" font-family="Inter" font-size="11" text-anchor="middle" x="488" y="202">Mar</text>
+<text fill="#001d37" font-family="Inter" font-size="11" font-weight="600" text-anchor="middle" x="598" y="202">Apr (MTD)</text>
+</svg>
+</div>
+</div>
+<div class="grid grid-cols-3 gap-spacing-sm pt-spacing-md mt-spacing-sm bg-surface-container-low rounded-lg p-spacing-sm">
+<div>
+<span class="block font-body-sm text-body-sm text-secondary">Peak Monthly Outlay</span>
+<span class="font-label-lg text-label-lg text-primary">$382,400 USDC</span>
+</div>
+<div>
+<span class="block font-body-sm text-body-sm text-secondary">Capital Recycle Speed</span>
+<span class="font-label-lg text-label-lg text-primary">1.34x / Quarter</span>
+</div>
+<div>
+<span class="block font-body-sm text-body-sm text-secondary">Gross Yield Generated</span>
+<span class="font-label-lg text-label-lg text-success-shamrock font-bold">+12.4% Net APY</span>
+</div>
+</div>
+</div>
+<!-- Chart Right (5 Cols): Portfolio Health & Exposure by Commodity -->
+<div class="lg:col-span-5 bg-surface-card rounded-xl p-spacing-xl shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-spacing-xs">
+<h3 class="font-headline-md text-headline-md text-primary">Exposure by Commodity</h3>
+<span class="inline-flex items-center gap-1 font-label-sm text-label-sm text-secondary">
+<span class="material-symbols-outlined text-[16px] text-success-shamrock">verified</span> Hedged
+            </span>
+</div>
+<p class="font-body-sm text-body-sm text-secondary mb-spacing-lg">Concentration limits capped at 40% max per commodity cohort.</p>
+<!-- Donut visualization with inner content -->
+<div class="flex items-center justify-center py-spacing-xs">
+<div class="relative w-48 h-48 flex items-center justify-center">
+<svg class="w-full h-full -rotate-90" viewbox="0 0 100 100">
+<!-- Background circle -->
+<circle cx="50" cy="50" fill="none" r="38" stroke="#efeeeb" stroke-width="12"></circle>
+<!-- Maize & Cereals: 38% (Circumference ~ 238.76, dash = 90.7) -->
+<circle cx="50" cy="50" fill="none" r="38" stroke="#001d37" stroke-dasharray="90.7 238.76" stroke-dashoffset="0" stroke-width="12"></circle>
+<!-- Specialty Coffee & Tea: 32% (dash = 76.4) -->
+<circle cx="50" cy="50" fill="none" r="38" stroke="#059669" stroke-dasharray="76.4 238.76" stroke-dashoffset="-90.7" stroke-width="12"></circle>
+<!-- Fresh Horticulture: 20% (dash = 47.75) -->
+<circle cx="50" cy="50" fill="none" r="38" stroke="#d88500" stroke-dasharray="47.75 238.76" stroke-dashoffset="-167.1" stroke-width="12"></circle>
+<!-- Spices & Aromatics: 10% (dash = 23.87) -->
+<circle cx="50" cy="50" fill="none" r="38" stroke="#515f74" stroke-dasharray="23.87 238.76" stroke-dashoffset="-214.85" stroke-width="12"></circle>
+</svg>
+<div class="absolute flex flex-col items-center justify-center text-center pointer-events-none">
+<span class="font-headline-lg text-headline-lg text-primary tracking-tight">4</span>
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-widest">Sectors</span>
+</div>
+</div>
+</div>
+<!-- Breakdown list -->
+<div class="space-y-spacing-xs mt-spacing-md">
+<div class="flex items-center justify-between p-spacing-xs rounded-lg bg-surface-container-low">
+<div class="flex items-center gap-spacing-xs">
+<div class="w-3 h-3 rounded-full bg-primary"></div>
+<span class="font-label-md text-label-md text-on-surface">Maize &amp; Staple Cereals</span>
+</div>
+<div class="flex items-center gap-spacing-sm">
+<span class="font-body-sm text-body-sm text-secondary">$700,150</span>
+<span class="font-label-md text-label-md text-primary font-bold">38%</span>
+</div>
+</div>
+<div class="flex items-center justify-between p-spacing-xs rounded-lg bg-surface-container-low">
+<div class="flex items-center gap-spacing-xs">
+<div class="w-3 h-3 rounded-full bg-success-shamrock"></div>
+<span class="font-label-md text-label-md text-on-surface">Specialty Coffee &amp; Tea</span>
+</div>
+<div class="flex items-center gap-spacing-sm">
+<span class="font-body-sm text-body-sm text-secondary">$589,600</span>
+<span class="font-label-md text-label-md text-primary font-bold">32%</span>
+</div>
+</div>
+<div class="flex items-center justify-between p-spacing-xs rounded-lg bg-surface-container-low">
+<div class="flex items-center gap-spacing-xs">
+<div class="w-3 h-3 rounded-full bg-on-tertiary-container"></div>
+<span class="font-label-md text-label-md text-on-surface">Fresh Horticulture</span>
+</div>
+<div class="flex items-center gap-spacing-sm">
+<span class="font-body-sm text-body-sm text-secondary">$368,500</span>
+<span class="font-label-md text-label-md text-primary font-bold">20%</span>
+</div>
+</div>
+<div class="flex items-center justify-between p-spacing-xs rounded-lg bg-surface-container-low">
+<div class="flex items-center gap-spacing-xs">
+<div class="w-3 h-3 rounded-full bg-secondary"></div>
+<span class="font-label-md text-label-md text-on-surface">Export Grade Spices</span>
+</div>
+<div class="flex items-center gap-spacing-sm">
+<span class="font-body-sm text-body-sm text-secondary">$184,250</span>
+<span class="font-label-md text-label-md text-primary font-bold">10%</span>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-spacing-sm pt-spacing-xs text-center">
+<span class="font-label-sm text-label-sm text-secondary">All commodity facilities insured via Swiss Re Agricultural Consortium.</span>
+</div>
+</div>
+</div>
+<!-- Secondary Modules & Real-Time Settlement Stream Grid -->
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-spacing-lg mb-spacing-2xl">
+<!-- Velocity & Escrow Info Pillars (4 Cols) -->
+<div class="xl:col-span-4 flex flex-col gap-spacing-lg">
+<!-- Pillar 1: Liquidity Velocity & Turnaround -->
+<div class="bg-surface-card rounded-xl p-spacing-lg shadow-sm">
+<div class="flex items-start justify-between mb-spacing-sm">
+<div>
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider">Liquidity Velocity</span>
+<h4 class="font-headline-md text-headline-md text-primary mt-0.5">38.4 Days</h4>
+</div>
+<div class="p-spacing-xs rounded-lg bg-secondary-container text-on-secondary-container">
+<span class="material-symbols-outlined text-[20px]">timelapse</span>
+</div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-spacing-md">Average time from initial warehouse receipt verification and cash payout to final counterparty bank settlement.</p>
+<!-- Stepped Flow representation -->
+<div class="space-y-spacing-xs">
+<div class="flex justify-between items-center text-body-sm">
+<span class="text-secondary">KYC/Doc Underwriting</span>
+<span class="font-label-sm text-label-sm text-primary">1.8 hrs</span>
+</div>
+<div class="w-full bg-surface-container-highest h-1.5 rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[8%]"></div>
+</div>
+<div class="flex justify-between items-center text-body-sm pt-1">
+<span class="text-secondary">In-Transit Freight Period</span>
+<span class="font-label-sm text-label-sm text-primary">28.2 days</span>
+</div>
+<div class="w-full bg-surface-container-highest h-1.5 rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[73%]"></div>
+</div>
+<div class="flex justify-between items-center text-body-sm pt-1">
+<span class="text-secondary">Consignee Acceptance &amp; Wire</span>
+<span class="font-label-sm text-label-sm text-primary">8.4 days</span>
+</div>
+<div class="w-full bg-surface-container-highest h-1.5 rounded-full overflow-hidden">
+<div class="bg-success-shamrock h-full w-[22%]"></div>
+</div>
+</div>
+</div>
+<!-- Pillar 2: Escrow Reserve Vault Balance -->
+<div class="bg-surface-card rounded-xl p-spacing-lg shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-spacing-xs">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider">Escrow Reserve Vault</span>
+<span class="inline-flex items-center gap-1 text-[11px] font-label-sm px-spacing-xs py-0.5 rounded bg-warning-amber-soft text-on-tertiary-fixed-variant">
+                First-Loss Buffer
+              </span>
+</div>
+<div class="font-numeric-metric text-numeric-metric text-primary tracking-tight">$276,375 <span class="text-[14px] font-label-md text-secondary">USDC</span></div>
+<p class="font-body-sm text-body-sm text-secondary mt-1">Autonomous multi-sig smart contracts actively segregating 15% reserve collateral from every trade invoice.</p>
+</div>
+<div class="mt-spacing-md pt-spacing-sm space-y-spacing-xs">
+<div class="flex items-center justify-between p-spacing-xs rounded-lg bg-surface-container-low">
+<div class="flex items-center gap-spacing-xs">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+<span class="font-label-sm text-label-sm text-on-surface">Polygon PoS Contract</span>
+</div>
+<span class="font-label-md text-label-md text-primary font-medium">$182,120</span>
+</div>
+<div class="flex items-center justify-between p-spacing-xs rounded-lg bg-surface-container-low">
+<div class="flex items-center gap-spacing-xs">
+<span class="w-2 h-2 rounded-full bg-surface-tint"></span>
+<span class="font-label-sm text-label-sm text-on-surface">Base L2 Vault</span>
+</div>
+<span class="font-label-md text-label-md text-primary font-medium">$94,255</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Real-Time Settlement Stream (8 Cols) -->
+<div class="xl:col-span-8 bg-surface-card rounded-xl p-spacing-xl shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex flex-wrap items-center justify-between gap-spacing-sm mb-spacing-md">
+<div>
+<div class="flex items-center gap-spacing-xs">
+<span class="relative flex h-2.5 w-2.5">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-success-shamrock opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-success-shamrock"></span>
+</span>
+<h3 class="font-headline-md text-headline-md text-primary">Recent High-Value Settlement Stream</h3>
+</div>
+<p class="font-body-sm text-body-sm text-secondary mt-0.5">Live cryptographic settlement confirmations across institutional buyers and exporter pools.</p>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant bg-surface-container-high px-spacing-sm py-1 rounded">Auto-updating (12s polling)</span>
+</div>
+<!-- Settlements Table / Stream Items -->
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="bg-surface-container-low text-secondary font-label-sm text-label-sm uppercase tracking-wider">
+<th class="py-spacing-sm px-spacing-sm rounded-l-lg">Facility / Batch</th>
+<th class="py-spacing-sm px-spacing-sm">Settlement Party</th>
+<th class="py-spacing-sm px-spacing-sm">Principal Paid</th>
+<th class="py-spacing-sm px-spacing-sm">Net Yield</th>
+<th class="py-spacing-sm px-spacing-sm">Tx Hash</th>
+<th class="py-spacing-sm px-spacing-sm rounded-r-lg text-right">Matured</th>
+</tr>
+</thead>
+<tbody class="divide-y-0 space-y-1">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="py-spacing-sm px-spacing-sm">
+<div class="font-label-md text-label-md text-primary">#FAC-8812</div>
+<div class="font-body-sm text-body-sm text-secondary">Rift Valley Arabica</div>
+</td>
+<td class="py-spacing-sm px-spacing-sm">
+<div class="font-body-sm text-body-sm text-on-surface font-medium">Nordic Roasters Ltd</div>
+<div class="font-body-sm text-body-sm text-secondary">Hamburg Port DC</div>
+</td>
+<td class="py-spacing-sm px-spacing-sm">
+<div class="font-label-lg text-label-lg text-primary">$84,500.00</div>
+<div class="font-body-sm text-body-sm text-secondary">USDC (Base)</div>
+</td>
+<td class="py-spacing-sm px-spacing-sm">
+<span class="inline-flex items-center px-spacing-xs py-0.5 rounded bg-success-shamrock/10 text-success-shamrock font-label-sm text-label-sm font-semibold">
+                      +$2,624.50 (12.4%)
+                    </span>
+</td>
+<td class="py-spacing-sm px-spacing-sm">
+<a class="font-label-sm text-label-sm text-surface-tint hover:underline flex items-center gap-1" href="#">
+<span>0x7a8...c2e1</span>
+<span class="material-symbols-outlined text-[14px]">open_in_new</span>
+</a>
+</td>
+<td class="py-spacing-sm px-spacing-sm text-right">
+<span class="font-body-sm text-body-sm text-secondary">2 mins ago</span>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="py-spacing-sm px-spacing-sm">
+<div class="font-label-md text-label-md text-primary">#FAC-8809</div>
+<div class="font-body-sm text-body-sm text-secondary">Grade A Yellow Maize</div>
+</td>
+<td class="py-spacing-sm px-spacing-sm">
+<div class="font-body-sm text-body-sm text-on-surface font-medium">Kilimo Mills Corp</div>
+<div class="font-body-sm text-body-sm text-secondary">Mombasa Silo 3</div>
+</td>
+<td class="py-spacing-sm px-spacing-sm">
+<div class="font-label-lg text-label-lg text-primary">$112,000.00</div>
+<div class="font-body-sm text-body-sm text-secondary">USDC (Polygon)</div>
+</td>
+<td class="py-spacing-sm px-spacing-sm">
+<span class="inline-flex items-center px-spacing-xs py-0.5 rounded bg-success-shamrock/10 text-success-shamrock font-label-sm text-label-sm font-semibold">
+                      +$3,136.00 (11.2%)
+                    </span>
+</td>
+<td class="py-spacing-sm px-spacing-sm">
+<a class="font-label-sm text-label-sm text-surface-tint hover:underline flex items-center gap-1" href="#">
+<span>0x4f1...982b</span>
+<span class="material-symbols-outlined text-[14px]">open_in_new</span>
+</a>
+</td>
+<td class="py-spacing-sm px-spacing-sm text-right">
+<span class="font-body-sm text-body-sm text-secondary">18 mins ago</span>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="py-spacing-sm px-spacing-sm">
+<div class="font-label-md text-label-md text-primary">#FAC-8805</div>
+<div class="font-body-sm text-body-sm text-secondary">Organic Vanilla Pods</div>
+</td>
+<td class="py-spacing-sm px-spacing-sm">
+<div class="font-body-sm text-body-sm text-on-surface font-medium">Bavarian Flavoring AG</div>
+<div class="font-body-sm text-body-sm text-secondary">Direct Consignment</div>
+</td>
+<td class="py-spacing-sm px-spacing-sm">
+<div class="font-label-lg text-label-lg text-primary">$62,800.00</div>
+<div class="font-body-sm text-body-sm text-secondary">USDC (Base)</div>
+</td>
+<td class="py-spacing-sm px-spacing-sm">
+<span class="inline-flex items-center px-spacing-xs py-0.5 rounded bg-success-shamrock/10 text-success-shamrock font-label-sm text-label-sm font-semibold">
+                      +$2,072.40 (13.2%)
+                    </span>
+</td>
+<td class="py-spacing-sm px-spacing-sm">
+<a class="font-label-sm text-label-sm text-surface-tint hover:underline flex items-center gap-1" href="#">
+<span>0x19c...aa50</span>
+<span class="material-symbols-outlined text-[14px]">open_in_new</span>
+</a>
+</td>
+<td class="py-spacing-sm px-spacing-sm text-right">
+<span class="font-body-sm text-body-sm text-secondary">54 mins ago</span>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="py-spacing-sm px-spacing-sm">
+<div class="font-label-md text-label-md text-primary">#FAC-8798</div>
+<div class="font-body-sm text-body-sm text-secondary">Hass Avocado Export</div>
+</td>
+<td class="py-spacing-sm px-spacing-sm">
+<div class="font-body-sm text-body-sm text-on-surface font-medium">Rotterdam Prime BV</div>
+<div class="font-body-sm text-body-sm text-secondary">Reefer Berth 14</div>
+</td>
+<td class="py-spacing-sm px-spacing-sm">
+<div class="font-label-lg text-label-lg text-primary">$95,300.00</div>
+<div class="font-body-sm text-body-sm text-secondary">USDC (Polygon)</div>
+</td>
+<td class="py-spacing-sm px-spacing-sm">
+<span class="inline-flex items-center px-spacing-xs py-0.5 rounded bg-success-shamrock/10 text-success-shamrock font-label-sm text-label-sm font-semibold">
+                      +$2,859.00 (12.0%)
+                    </span>
+</td>
+<td class="py-spacing-sm px-spacing-sm">
+<a class="font-label-sm text-label-sm text-surface-tint hover:underline flex items-center gap-1" href="#">
+<span>0x90e...11e7</span>
+<span class="material-symbols-outlined text-[14px]">open_in_new</span>
+</a>
+</td>
+<td class="py-spacing-sm px-spacing-sm text-right">
+<span class="font-body-sm text-body-sm text-secondary">2 hrs ago</span>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="py-spacing-sm px-spacing-sm">
+<div class="font-label-md text-label-md text-primary">#FAC-8792</div>
+<div class="font-body-sm text-body-sm text-secondary">Processed Macadamia</div>
+</td>
+<td class="py-spacing-sm px-spacing-sm">
+<div class="font-body-sm text-body-sm text-on-surface font-medium">AeroNut Global Inc</div>
+<div class="font-body-sm text-body-sm text-secondary">Bonded Terminal C</div>
+</td>
+<td class="py-spacing-sm px-spacing-sm">
+<div class="font-label-lg text-label-lg text-primary">$47,900.00</div>
+<div class="font-body-sm text-body-sm text-secondary">USDC (Polygon)</div>
+</td>
+<td class="py-spacing-sm px-spacing-sm">
+<span class="inline-flex items-center px-spacing-xs py-0.5 rounded bg-success-shamrock/10 text-success-shamrock font-label-sm text-label-sm font-semibold">
+                      +$1,437.00 (12.0%)
+                    </span>
+</td>
+<td class="py-spacing-sm px-spacing-sm">
+<a class="font-label-sm text-label-sm text-surface-tint hover:underline flex items-center gap-1" href="#">
+<span>0x33b...77ff</span>
+<span class="material-symbols-outlined text-[14px]">open_in_new</span>
+</a>
+</td>
+<td class="py-spacing-sm px-spacing-sm text-right">
+<span class="font-body-sm text-body-sm text-secondary">3.5 hrs ago</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Ledger Footer Summary -->
+<div class="mt-spacing-md pt-spacing-sm flex flex-wrap items-center justify-between text-body-sm text-secondary">
+<div class="flex items-center gap-spacing-xs">
+<span class="material-symbols-outlined text-[18px] text-success-shamrock">verified_user</span>
+<span>All disbursements cryptographically notarized &amp; reconciled against ERP bill of ladings.</span>
+</div>
+<button class="font-label-sm text-label-sm text-primary font-semibold hover:underline flex items-center gap-1" type="button">
+<span>View Full Ledger Stream</span>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Regulatory Compliance & Capital Assurance Note Banner -->
+<div class="bg-warning-amber-soft rounded-xl p-spacing-lg shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-spacing-md">
+<div class="flex items-start gap-spacing-md">
+<div class="w-10 h-10 rounded-lg bg-surface-card flex items-center justify-center text-on-tertiary-container shadow-sm shrink-0">
+<span class="material-symbols-outlined text-[24px]">balance</span>
+</div>
+<div>
+<div class="font-label-lg text-label-lg text-primary font-semibold">Statutory Risk Oversight &amp; Audit Seal Verified</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant max-w-4xl mt-0.5">
+            Advance Protocol maintains an active dual-custody loss-mitigation protocol. All financed collateral holds enforceable physical possession liens filed under the International Factoring Association standard. Current reserve sufficiency is at 230% of modeled 99th-percentile VaR (Value-at-Risk).
+          </p>
+</div>
+</div>
+<div class="flex items-center gap-spacing-sm shrink-0">
+<button class="px-spacing-md py-2 rounded-lg bg-surface-card text-primary font-label-sm text-label-sm font-semibold shadow-sm hover:bg-surface-container transition-colors" type="button">
+          View Solvency Audit
+        </button>
+</div>
+</div>
+</div>
+</div>
+<script>
+  // Interactive CSV export feedback & micro-interaction
+  document.getElementById('exportBtn')?.addEventListener('click', function() {
+    const btn = this;
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<span class="material-symbols-outlined text-[18px] animate-spin">sync</span><span>Compiling Audit Pack...</span>';
+    btn.classList.add('opacity-90');
+    setTimeout(() => {
+      btn.innerHTML = '<span class="material-symbols-outlined text-[18px]">check_circle</span><span>Export Complete</span>';
+      setTimeout(() => {
+        btn.innerHTML = originalText;
+        btn.classList.remove('opacity-90');
+      }, 2500);
+    }, 1200);
+  });
+</script></main></div></body></html>

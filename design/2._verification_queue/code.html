@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "border-subtle": "#e2e8f0",
+          "on-tertiary-container": "#d88500",
+          "surface-container-highest": "#e4e2df",
+          "on-error-container": "#93000a",
+          "primary-container": "#16324f",
+          "on-primary": "#ffffff",
+          "outline-variant": "#c3c6ce",
+          "secondary-container": "#d5e3fc",
+          "on-tertiary-fixed": "#2b1700",
+          "surface-dim": "#dbdad7",
+          "surface-variant": "#e4e2df",
+          "tertiary-fixed": "#ffddbb",
+          "on-error": "#ffffff",
+          "surface-container-lowest": "#ffffff",
+          "on-secondary-container": "#57657a",
+          "on-secondary": "#ffffff",
+          "on-surface-variant": "#43474d",
+          "on-secondary-fixed-variant": "#3a485b",
+          "surface": "#fbf9f6",
+          "surface-container-low": "#f5f3f0",
+          "on-primary-container": "#809abd",
+          "primary-fixed-dim": "#aec9ed",
+          "error-container": "#ffdad6",
+          "error": "#ba1a1a",
+          "inverse-primary": "#aec9ed",
+          "primary-fixed": "#d2e4ff",
+          "primary": "#001d37",
+          "secondary-fixed": "#d5e3fc",
+          "background": "#fbf9f6",
+          "surface-tint": "#466080",
+          "secondary-fixed-dim": "#b9c7df",
+          "warning-amber-soft": "#fef3c7",
+          "inverse-on-surface": "#f2f0ed",
+          "on-tertiary": "#ffffff",
+          "inverse-surface": "#30312f",
+          "tertiary": "#2c1700",
+          "on-surface": "#1b1c1a",
+          "border-strong": "#cbd5e1",
+          "on-background": "#1b1c1a",
+          "on-secondary-fixed": "#0d1c2e",
+          "tertiary-fixed-dim": "#ffb868",
+          "surface-card": "#ffffff",
+          "on-tertiary-fixed-variant": "#673d00",
+          "secondary": "#515f74",
+          "success-shamrock": "#059669",
+          "surface-container": "#efeeeb",
+          "surface-container-high": "#eae8e5",
+          "on-primary-fixed-variant": "#2e4867",
+          "tertiary-container": "#482900",
+          "surface-bright": "#fbf9f6",
+          "outline": "#74777e",
+          "on-primary-fixed": "#001d37"
+        },
+        "borderRadius": {
+          "DEFAULT": "0.25rem",
+          "lg": "0.5rem",
+          "xl": "0.75rem",
+          "full": "9999px"
+        },
+        "spacing": {
+          "margin-mobile": "1rem",
+          "spacing-2xl": "2rem",
+          "spacing-md": "1rem",
+          "spacing-xl": "1.5rem",
+          "spacing-2xs": "0.25rem",
+          "spacing-lg": "1.25rem",
+          "gutter-mobile": "1rem",
+          "spacing-sm": "0.75rem",
+          "spacing-xs": "0.5rem",
+          "margin-desktop": "2rem",
+          "gutter-desktop": "1.5rem",
+          "spacing-3xl": "2.5rem"
+        },
+        "fontFamily": {
+          "body-md": [
+            "Inter"
+          ],
+          "body-lg": [
+            "Inter"
+          ],
+          "label-lg": [
+            "Inter"
+          ],
+          "headline-md": [
+            "Plus Jakarta Sans"
+          ],
+          "numeric-metric-mobile": [
+            "Plus Jakarta Sans"
+          ],
+          "headline-sm": [
+            "Plus Jakarta Sans"
+          ],
+          "numeric-metric": [
+            "Plus Jakarta Sans"
+          ],
+          "body-sm": [
+            "Inter"
+          ],
+          "label-sm": [
+            "Inter"
+          ],
+          "label-md": [
+            "Inter"
+          ],
+          "headline-xl-mobile": [
+            "Plus Jakarta Sans"
+          ],
+          "headline-xl": [
+            "Plus Jakarta Sans"
+          ],
+          "headline-lg": [
+            "Plus Jakarta Sans"
+          ]
+        },
+        "fontSize": {
+          "body-md": [
+            "14px",
+            {
+              "lineHeight": "20px",
+              "fontWeight": "400"
+            }
+          ],
+          "body-lg": [
+            "16px",
+            {
+              "lineHeight": "24px",
+              "fontWeight": "400"
+            }
+          ],
+          "label-lg": [
+            "14px",
+            {
+              "lineHeight": "20px",
+              "fontWeight": "600"
+            }
+          ],
+          "headline-md": [
+            "20px",
+            {
+              "lineHeight": "28px",
+              "fontWeight": "600"
+            }
+          ],
+          "numeric-metric-mobile": [
+            "30px",
+            {
+              "lineHeight": "36px",
+              "fontWeight": "800"
+            }
+          ],
+          "headline-sm": [
+            "18px",
+            {
+              "lineHeight": "24px",
+              "fontWeight": "600"
+            }
+          ],
+          "numeric-metric": [
+            "36px",
+            {
+              "lineHeight": "44px",
+              "fontWeight": "800"
+            }
+          ],
+          "body-sm": [
+            "12px",
+            {
+              "lineHeight": "16px",
+              "fontWeight": "400"
+            }
+          ],
+          "label-sm": [
+            "11px",
+            {
+              "lineHeight": "14px",
+              "letterSpacing": "0.04em",
+              "fontWeight": "600"
+            }
+          ],
+          "label-md": [
+            "12px",
+            {
+              "lineHeight": "16px",
+              "fontWeight": "600"
+            }
+          ],
+          "headline-xl-mobile": [
+            "26px",
+            {
+              "lineHeight": "32px",
+              "fontWeight": "700"
+            }
+          ],
+          "headline-xl": [
+            "32px",
+            {
+              "lineHeight": "40px",
+              "fontWeight": "700"
+            }
+          ],
+          "headline-lg": [
+            "24px",
+            {
+              "lineHeight": "32px",
+              "fontWeight": "700"
+            }
+          ]
+        }
+      },
+    },
+  }</script></head><body class="bg-surface font-body-md text-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-72 bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-50 flex flex-col justify-between select-none"><div class="flex flex-col flex-1 overflow-y-auto"><div class="h-16 px-spacing-xl flex items-center justify-between"><div class="flex items-center gap-spacing-xs"><img alt="Brand logo. - Primary color: #16324f
+- Font: plusJakartaSans
+- Mode: light
+- Roundness: rounded-md
+" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1XkZniit_VHuFtiy4Afn4UrwAF0e_yMaTFEAW732zaDaxY0TY1_yGv_EIKxB3WyxBZckRkkVndquZ9xP8ID7VRKiGMu7c5GysYOInlzfftkMbihCulCCfpuJ_BbuOZs9uA2wrFewOZskiXwAnTKHTz2_gZ2mX0E-Kur6MDBPCb4uKNUnKPKV_JbspBCYvRG-_bnlW10Pyoj6cjYoyzz8OSzdMoCO1249XNQ9mx_s-Q4b_jlsfi8caqkWijN"/><span class="font-headline-sm text-headline-sm tracking-tight text-primary">Advance</span></div><span class="px-spacing-xs py-spacing-2xs rounded bg-surface-container-high text-secondary font-label-sm text-label-sm uppercase tracking-wider">Admin</span></div><div class="px-spacing-md py-spacing-xs"><div class="p-spacing-sm rounded-lg bg-surface-container-low"><div class="flex items-center justify-between mb-spacing-2xs"><span class="font-label-sm text-label-sm text-on-surface-variant">Admin Console</span><span class="flex h-2 w-2 relative"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-success-shamrock opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-success-shamrock"></span></span></div><div class="font-label-md text-label-md text-primary truncate">Senior Risk Admin</div><div class="font-body-sm text-body-sm text-secondary">Ops Tier 1 Verification</div></div></div><nav class="flex-1 px-spacing-md py-spacing-xs space-y-spacing-2xs" data-active-classes="bg-primary-container text-on-primary font-label-md"><a class="flex items-center justify-between px-spacing-md py-spacing-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all group" data-path="overview-analytics" href="#"><div class="flex items-center gap-spacing-sm"><span class="material-symbols-outlined text-[20px]">analytics</span><span class="font-label-md text-label-md">Overview / Analytics</span></div></a><a aria-current="page" class="flex items-center justify-between px-spacing-md py-spacing-sm rounded-lg transition-all group bg-primary-container text-on-primary font-label-md" data-path="verification-queue" href="#"><div class="flex items-center gap-spacing-sm"><span class="material-symbols-outlined text-[20px]">verified_user</span><span class="font-label-md text-label-md">Verification Queue</span></div><span class="px-spacing-xs py-spacing-2xs rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm">9 Pending</span></a><a class="flex items-center justify-between px-spacing-md py-spacing-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all group" data-path="invoice-oversight" href="#"><div class="flex items-center gap-spacing-sm"><span class="material-symbols-outlined text-[20px]">receipt_long</span><span class="font-label-md text-label-md">Invoice Oversight</span></div><span class="px-spacing-xs py-spacing-2xs rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm">3 Flagged</span></a><a class="flex items-center justify-between px-spacing-md py-spacing-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all group" data-path="dispute-resolution" href="#"><div class="flex items-center gap-spacing-sm"><span class="material-symbols-outlined text-[20px]">gavel</span><span class="font-label-md text-label-md">Dispute Resolution</span></div><span class="px-spacing-xs py-spacing-2xs rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm">2 Active</span></a><a class="flex items-center justify-between px-spacing-md py-spacing-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all group" data-path="audit-compliance-logs" href="#"><div class="flex items-center gap-spacing-sm"><span class="material-symbols-outlined text-[20px]">history_edu</span><span class="font-label-md text-label-md">Audit &amp; Compliance Logs</span></div></a><a class="flex items-center justify-between px-spacing-md py-spacing-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all group" data-path="system-settings" href="#"><div class="flex items-center gap-spacing-sm"><span class="material-symbols-outlined text-[20px]">settings</span><span class="font-label-md text-label-md">Settings</span></div></a></nav></div><div class="p-spacing-md bg-surface-container-low/60 m-spacing-md rounded-xl"><div class="flex items-center gap-spacing-xs mb-spacing-xs"><span class="material-symbols-outlined text-success-shamrock text-[16px]">cloud_done</span><span class="font-label-sm text-label-sm text-on-surface font-bold uppercase tracking-wider">System Health</span></div><div class="flex items-center justify-between"><span class="font-body-sm text-body-sm text-on-surface-variant">Protocol Status</span><span class="font-label-sm text-label-sm text-success-shamrock font-bold">99.98% Operational</span></div><div class="w-full bg-surface-container-highest h-1 rounded-full mt-spacing-xs overflow-hidden"><div class="bg-success-shamrock h-full w-[99.98%]"></div></div></div></aside><div class="pl-72"><header class="fixed top-0 left-72 right-0 h-16 bg-surface/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-spacing-xl"><div class="flex items-center gap-spacing-md flex-1 max-w-lg"><div class="relative w-full"><span class="material-symbols-outlined absolute left-spacing-sm top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">search</span><input class="w-full h-10 pl-10 pr-spacing-md rounded-lg bg-surface-container-low text-on-surface placeholder:text-on-surface-variant/60 font-body-sm text-body-sm focus:outline-none focus:bg-surface-container-lowest transition-colors" placeholder="Search trade facility, buyer, counterparty, tax ID..." type="text"/></div></div><div class="flex items-center gap-spacing-md"><div class="hidden lg:flex items-center gap-spacing-xs px-spacing-sm py-spacing-2xs rounded-lg bg-surface-container"><span class="material-symbols-outlined text-success-shamrock text-[16px]">shield</span><span class="font-label-sm text-label-sm text-on-surface-variant">Automated Underwriting: <strong class="text-on-surface">Strict Mode</strong></span></div><div class="flex items-center gap-spacing-xs"><button class="w-9 h-9 flex items-center justify-center rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors relative" type="button"><span class="material-symbols-outlined text-[20px]">notifications</span><span class="absolute top-2 right-2 w-2 h-2 rounded-full bg-error"></span></button><button class="w-9 h-9 flex items-center justify-center rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" type="button"><span class="material-symbols-outlined text-[20px]">tune</span></button></div><div class="h-6 w-px bg-surface-container-highest"></div><div class="flex items-center gap-spacing-sm"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div><div class="hidden sm:flex flex-col text-left"><span class="font-label-sm text-label-sm text-on-surface">Ops Admin #408</span><span class="font-body-sm text-body-sm text-on-surface-variant">Duty Desk Alpha</span></div></div></div></header><main class="relative pt-16 bg-surface w-full px-spacing-xl"><div class="flex flex-col w-full pb-spacing-3xl">
+<!-- Top Bar / Title Section with Subtitle and Quick Badges -->
+<section class="flex flex-col lg:flex-row lg:items-end justify-between py-spacing-xl gap-spacing-md">
+<div>
+<div class="flex items-center gap-spacing-xs mb-spacing-2xs">
+<span class="inline-flex items-center gap-1.5 px-spacing-sm py-0.5 rounded-full bg-surface-container-high text-secondary font-label-sm text-label-sm uppercase tracking-wider">
+<span class="w-1.5 h-1.5 rounded-full bg-success-shamrock"></span> Ops Desk Active
+        </span>
+<span class="text-on-surface-variant/40 font-body-sm text-body-sm">•</span>
+<span class="text-on-surface-variant font-body-sm text-body-sm">Underwriting SLA Target: &lt;20 min</span>
+</div>
+<h1 class="font-headline-xl text-headline-xl text-primary tracking-tight">Verification Queue — Sellers &amp; Lenders Approval</h1>
+<p class="font-body-md text-body-md text-on-surface-variant mt-spacing-2xs max-w-3xl">
+        Review submitted KYC/KYB records, agricultural registry filings, and bank verifications for non-predatory trade facility disbursement.
+      </p>
+</div>
+<div class="flex items-center gap-spacing-sm self-start lg:self-auto">
+<button class="h-10 px-spacing-md rounded-lg bg-surface-container-low text-on-surface hover:bg-surface-container-high font-label-md text-label-md flex items-center gap-spacing-xs transition-colors shadow-sm">
+<span class="material-symbols-outlined text-[18px]">download</span> Export Audit CSV
+      </button>
+<button class="h-10 px-spacing-md rounded-lg bg-primary text-on-primary hover:bg-primary-container font-label-md text-label-md flex items-center gap-spacing-xs transition-all shadow-sm">
+<span class="material-symbols-outlined text-[18px]">rule</span> Batch Approvals (2)
+      </button>
+</div>
+</section>
+<!-- Metric Strip: 4 High-Rigor Data Tiles with SVG Micro-Visualizations -->
+<section class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-spacing-md mb-spacing-2xl">
+<!-- Metric 1: Pending Reviews -->
+<div class="bg-surface-card rounded-xl p-spacing-lg shadow-sm flex flex-col justify-between relative overflow-hidden group">
+<div class="absolute -right-4 -bottom-4 w-24 h-24 bg-primary/5 rounded-full pointer-events-none transition-transform group-hover:scale-125"></div>
+<div class="flex items-center justify-between mb-spacing-xs">
+<span class="font-label-md text-label-md text-secondary tracking-wide uppercase">Pending Reviews</span>
+<span class="px-spacing-xs py-0.5 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm font-semibold">3 High Priority</span>
+</div>
+<div class="flex items-baseline gap-spacing-xs mt-spacing-2xs">
+<span class="font-numeric-metric text-numeric-metric text-primary">9</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">applicants awaiting sign-off</span>
+</div>
+<div class="mt-spacing-md pt-spacing-sm flex items-center justify-between text-on-surface-variant">
+<div class="flex items-center gap-1.5 font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-[16px] text-tertiary-fixed-dim" style="font-variation-settings: 'FILL' 1;">speed</span>
+<span>4 Tier-2 Sellers queued</span>
+</div>
+<svg class="w-16 h-5 text-primary" fill="none" viewbox="0 0 64 20">
+<path d="M2 14L14 8L26 12L38 4L50 10L62 3" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+</div>
+<!-- Metric 2: Avg Decision Time -->
+<div class="bg-surface-card rounded-xl p-spacing-lg shadow-sm flex flex-col justify-between relative overflow-hidden">
+<div class="flex items-center justify-between mb-spacing-xs">
+<span class="font-label-md text-label-md text-secondary tracking-wide uppercase">Avg Decision Time</span>
+<span class="px-spacing-xs py-0.5 rounded-full bg-secondary-container text-on-secondary-fixed font-label-sm text-label-sm font-semibold">SLA: 20m</span>
+</div>
+<div class="flex items-baseline gap-spacing-xs mt-spacing-2xs">
+<span class="font-numeric-metric text-numeric-metric text-primary">14.2</span>
+<span class="font-label-lg text-label-lg text-secondary">min</span>
+</div>
+<div class="mt-spacing-md pt-spacing-sm flex items-center justify-between text-on-surface-variant">
+<div class="flex items-center gap-1.5 font-body-sm text-body-sm text-success-shamrock">
+<span class="material-symbols-outlined text-[16px]">trending_down</span>
+<span class="font-label-sm text-label-sm font-semibold">2.4 min faster</span>
+<span class="text-on-surface-variant font-body-sm text-body-sm">than 7-day avg</span>
+</div>
+</div>
+</div>
+<!-- Metric 3: Approved Today -->
+<div class="bg-surface-card rounded-xl p-spacing-lg shadow-sm flex flex-col justify-between relative overflow-hidden">
+<div class="flex items-center justify-between mb-spacing-xs">
+<span class="font-label-md text-label-md text-secondary tracking-wide uppercase">Approved Today</span>
+<span class="px-spacing-xs py-0.5 rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm font-semibold">Run Rate 100%</span>
+</div>
+<div class="flex items-baseline gap-spacing-xs mt-spacing-2xs">
+<span class="font-numeric-metric text-numeric-metric text-primary">18</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">($142k limit unlocked)</span>
+</div>
+<div class="mt-spacing-md pt-spacing-sm flex items-center justify-between">
+<div class="w-full bg-surface-container-high rounded-full h-1.5 overflow-hidden">
+<div class="bg-success-shamrock h-full rounded-full w-[78%]"></div>
+</div>
+</div>
+</div>
+<!-- Metric 4: Rejection Rate -->
+<div class="bg-surface-card rounded-xl p-spacing-lg shadow-sm flex flex-col justify-between relative overflow-hidden">
+<div class="flex items-center justify-between mb-spacing-xs">
+<span class="font-label-md text-label-md text-secondary tracking-wide uppercase">Rejection Rate</span>
+<span class="px-spacing-xs py-0.5 rounded-full bg-surface-container-high text-on-surface font-label-sm text-label-sm font-semibold">Low Exposure</span>
+</div>
+<div class="flex items-baseline gap-spacing-xs mt-spacing-2xs">
+<span class="font-numeric-metric text-numeric-metric text-primary">4.1%</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">across 134 reviews</span>
+</div>
+<div class="mt-spacing-md pt-spacing-sm flex items-center gap-1.5 font-body-sm text-body-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px] text-success-shamrock">verified</span>
+<span>Fraud prevention rules effective</span>
+</div>
+</div>
+</section>
+<!-- Filter & Action Controls Bar -->
+<section class="bg-surface-card rounded-xl p-spacing-md shadow-sm mb-spacing-xl flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-spacing-md">
+<!-- Tabs with Badges -->
+<div class="flex flex-wrap items-center gap-spacing-xs" id="queueTabs">
+<button class="px-spacing-md py-spacing-xs rounded-lg bg-primary-container text-on-primary font-label-md text-label-md flex items-center gap-spacing-xs transition-colors" data-tab="all">
+<span>All Pending</span>
+<span class="px-1.5 py-0.2 rounded-full bg-surface-container-lowest text-primary font-label-sm text-label-sm font-bold">9</span>
+</button>
+<button class="px-spacing-md py-spacing-xs rounded-lg bg-surface-container-low text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-label-md text-label-md flex items-center gap-spacing-xs transition-colors" data-tab="sellers">
+<span>Sellers - Tier 1 &amp; 2</span>
+<span class="px-1.5 py-0.2 rounded-full bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm">5</span>
+</button>
+<button class="px-spacing-md py-spacing-xs rounded-lg bg-surface-container-low text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-label-md text-label-md flex items-center gap-spacing-xs transition-colors" data-tab="lenders">
+<span>Institutional Lenders</span>
+<span class="px-1.5 py-0.2 rounded-full bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm">4</span>
+</button>
+<button class="px-spacing-md py-spacing-xs rounded-lg bg-surface-container-low text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-label-md text-label-md flex items-center gap-spacing-xs transition-colors" data-tab="escalated">
+<span>Escalated to Risk</span>
+<span class="px-1.5 py-0.2 rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm font-bold">1</span>
+</button>
+</div>
+<!-- Search & Sort Sub-bar -->
+<div class="flex items-center gap-spacing-sm">
+<div class="relative w-full lg:w-64">
+<span class="material-symbols-outlined absolute left-spacing-sm top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">filter_list</span>
+<input class="w-full h-10 pl-9 pr-spacing-sm rounded-lg bg-surface-container-low text-on-surface placeholder:text-on-surface-variant/60 font-body-sm text-body-sm focus:outline-none focus:bg-surface-container-lowest transition-colors" placeholder="Filter company or PIN..." type="text"/>
+</div>
+<div class="flex items-center gap-1.5 bg-surface-container-low px-spacing-sm py-1.5 rounded-lg text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">sort</span>
+<span class="font-label-sm text-label-sm text-secondary whitespace-nowrap">Sort:</span>
+<select class="bg-transparent font-label-md text-label-md text-on-surface focus:outline-none cursor-pointer">
+<option>Submission Date (Newest)</option>
+<option>Risk Score (Ascending)</option>
+<option>Risk Score (Descending)</option>
+<option>Requested Limit (High-Low)</option>
+</select>
+</div>
+</div>
+</section>
+<!-- Split View Core Area: Featured Expanded Review Candidate (Top) & Remaining Queue (Bottom) -->
+<!-- FEATURED EXPANDED REVIEW CARD (Candidate in Active Underwriting) -->
+<section class="bg-surface-card rounded-2xl shadow-md overflow-hidden mb-spacing-2xl">
+<!-- Header Ribbon of Active Dossier -->
+<div class="bg-primary px-spacing-xl py-spacing-md flex flex-wrap items-center justify-between text-on-primary gap-spacing-md">
+<div class="flex items-center gap-spacing-md">
+<div class="w-10 h-10 rounded-xl bg-surface-container-lowest/15 flex items-center justify-center font-headline-md text-headline-md text-on-primary">
+          KB
+        </div>
+<div>
+<div class="flex items-center gap-spacing-xs">
+<span class="font-headline-sm text-headline-sm tracking-tight text-on-primary">Kilimo Bora Agro-Processors Ltd</span>
+<span class="px-2 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm">Seller • Tier 2</span>
+<span class="px-2 py-0.5 rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-on-tertiary-container animate-pulse"></span> Active Inspection
+            </span>
+</div>
+<p class="font-body-sm text-body-sm text-primary-fixed-dim mt-0.5">Application ID: APPL-NAK-2025-0941 • Submitted 38 minutes ago</p>
+</div>
+</div>
+<div class="flex items-center gap-spacing-lg">
+<div class="text-right">
+<div class="font-label-sm text-label-sm uppercase tracking-wider text-primary-fixed-dim">Requested Credit Limit</div>
+<div class="font-headline-lg text-headline-lg text-on-primary leading-tight">$5,000 USD</div>
+</div>
+<div class="h-8 w-px bg-surface-container-highest/20"></div>
+<div class="text-right">
+<div class="font-label-sm text-label-sm uppercase tracking-wider text-primary-fixed-dim">Assigned Officer</div>
+<div class="font-label-md text-label-md text-on-primary leading-tight">Admin #408 (You)</div>
+</div>
+</div>
+</div>
+<!-- Main Review Body (Two-Column Ledger Layout) -->
+<div class="p-spacing-xl grid grid-cols-1 lg:grid-cols-12 gap-spacing-2xl">
+<!-- Left Column: Business Profile, Verified Identifiers & Automated Risk Checks (7 Cols) -->
+<div class="lg:col-span-7 space-y-spacing-xl">
+<!-- Business Attributes Matrix -->
+<div class="bg-surface-container-low rounded-xl p-spacing-lg">
+<div class="flex items-center justify-between mb-spacing-md">
+<h2 class="font-headline-sm text-headline-sm text-primary flex items-center gap-spacing-xs">
+<span class="material-symbols-outlined text-primary text-[22px]">corporate_fare</span>
+              Entity Legal Profile &amp; Incorporation
+            </h2>
+<span class="px-2 py-0.5 rounded bg-success-shamrock/10 text-success-shamrock font-label-sm text-label-sm font-semibold">BRS Cross-Checked</span>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-spacing-md">
+<div>
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider block">Registered Jurisdiction</span>
+<span class="font-label-md text-label-md text-on-surface block mt-0.5">Nakuru Industrial Area, Kenya</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Plot 44B Commercial Ave</span>
+</div>
+<div>
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider block">Company Registration #</span>
+<span class="font-label-md text-label-md text-on-surface block mt-0.5">CPR/2021/89402</span>
+<span class="font-body-sm text-body-sm text-success-shamrock flex items-center gap-1 mt-0.5">
+<span class="material-symbols-outlined text-[14px]">check_circle</span> Active (Incorp. 14 Apr 2021)
+              </span>
+</div>
+<div>
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider block">Tax PIN (KRA e-TIMS)</span>
+<span class="font-label-md text-label-md text-on-surface block mt-0.5">P051283749K</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">VAT Compliance Valid to Nov 2025</span>
+</div>
+<div>
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider block">Primary Commodity Focus</span>
+<span class="font-label-md text-label-md text-on-surface block mt-0.5">White Maize &amp; Dry Grain Sift</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Annual Throughput: 1,200 MT</span>
+</div>
+</div>
+</div>
+<!-- Risk Score Engine Analysis Panel -->
+<div class="bg-surface-card rounded-xl p-spacing-lg shadow-sm">
+<div class="flex items-center justify-between mb-spacing-md">
+<div>
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider">Automated Underwriting Engine</span>
+<div class="flex items-baseline gap-spacing-xs mt-0.5">
+<span class="font-headline-lg text-headline-lg text-success-shamrock">Low Risk</span>
+<span class="font-label-lg text-label-lg text-on-surface font-bold">(Score: 88/100)</span>
+</div>
+</div>
+<div class="text-right">
+<span class="px-spacing-sm py-1 rounded-full bg-success-shamrock/10 text-success-shamrock font-label-md text-label-md font-bold inline-flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px]">verified</span> Recommended for Approval
+              </span>
+</div>
+</div>
+<!-- Automated Verification Checks List -->
+<div class="space-y-spacing-xs">
+<div class="flex items-center justify-between p-spacing-sm rounded-lg bg-surface-container-low">
+<div class="flex items-center gap-spacing-sm">
+<div class="w-7 h-7 rounded-full bg-success-shamrock text-on-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[16px]">check</span>
+</div>
+<div>
+<div class="font-label-md text-label-md text-on-surface">Director Identity &amp; Biometric Scan</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">David K. Langat (ID 24890182) — Match confidence 99.4%</div>
+</div>
+</div>
+<span class="font-label-sm text-label-sm text-success-shamrock font-bold uppercase">Verified</span>
+</div>
+<div class="flex items-center justify-between p-spacing-sm rounded-lg bg-surface-container-low">
+<div class="flex items-center gap-spacing-sm">
+<div class="w-7 h-7 rounded-full bg-success-shamrock text-on-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[16px]">check</span>
+</div>
+<div>
+<div class="font-label-md text-label-md text-on-surface">KRA e-TIMS Realtime Tax Standing</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">Valid Tax Compliance Certificate TCC2025019842</div>
+</div>
+</div>
+<span class="font-label-sm text-label-sm text-success-shamrock font-bold uppercase">Active</span>
+</div>
+<div class="flex items-center justify-between p-spacing-sm rounded-lg bg-surface-container-low">
+<div class="flex items-center gap-spacing-sm">
+<div class="w-7 h-7 rounded-full bg-success-shamrock text-on-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[16px]">check</span>
+</div>
+<div>
+<div class="font-label-md text-label-md text-on-surface">Agricultural Warehouse Registry &amp; Cereal Board</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">Physical Nakuru silo registered with NCPB accredited license</div>
+</div>
+</div>
+<span class="font-label-sm text-label-sm text-success-shamrock font-bold uppercase">Passed</span>
+</div>
+<div class="flex items-center justify-between p-spacing-sm rounded-lg bg-warning-amber-soft/40">
+<div class="flex items-center gap-spacing-sm">
+<div class="w-7 h-7 rounded-full bg-tertiary text-on-tertiary flex items-center justify-center">
+<span class="material-symbols-outlined text-[16px]">info</span>
+</div>
+<div>
+<div class="font-label-md text-label-md text-on-surface">Anchor Buyer Offtake Validation</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">Unga Group Ltd invoice match. Offtaker payment history: Grade A (100% on-time)</div>
+</div>
+</div>
+<span class="font-label-sm text-label-sm text-on-tertiary-container font-bold uppercase">Buyer Confirmed</span>
+</div>
+</div>
+</div>
+<!-- Field Photo Verification Anchor Preview -->
+<div class="bg-surface-container-low rounded-xl p-spacing-md">
+<div class="flex items-center justify-between mb-spacing-xs">
+<span class="font-label-md text-label-md text-primary font-bold">Field Inspection Geo-Tagged Images</span>
+<span class="font-body-sm text-body-sm text-secondary">GPS: -0.3031, 36.0800 (Nakuru West)</span>
+</div>
+<div class="grid grid-cols-2 gap-spacing-sm">
+<div class="relative rounded-lg overflow-hidden h-36 group">
+<img class="w-full h-full object-cover" data-alt="Clear daytime photograph of a commercial grain storage warehouse and processing facility in Nakuru Kenya with stacked agricultural produce, clean concrete floors, deep navy and slate accents under bright sunlit daylight." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDHCWXoePA9RgZhVY0bFyCynLwuiEFicbV3ywfgUATqUpK8k6mUWybhTAtEda0nUe1b3RnwMIfFjmo2PWZDGb7iThVK4_0S97Uq8M-msSKEMSXpmydxLgmBOfrzbVW5EsotRq-elAQSp1MNKnTtRjPcw6d0V8183F6x2sGca2ZiAGXr-oXTNkTJuf9hwxqckJ4uC4v648mXuyffO6Y6CiWgyxgaDWuC_bKS2gfY-HmfoOdzoBc7OcF4mQ"/>
+<div class="absolute bottom-2 left-2 px-2 py-0.5 rounded bg-inverse-surface/80 text-inverse-on-surface font-label-sm text-label-sm">
+                Facility Silo Unit #2
+              </div>
+</div>
+<div class="relative rounded-lg overflow-hidden h-36 group">
+<img class="w-full h-full object-cover" data-alt="Agricultural quality inspection officer inspecting sacks of harvested Kenyan white maize grains with official clipboard, bright outdoor morning ambient light, warm earthy tones and professional institutional framing." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDFwn29NM_78lykrqHfjWTbxnt99dI19L39SNTmCNXVsLor9q4PkSh5b3RtXr-Sq8YwXJldBtjw65v0ResBOcnSzTwpsm8u3hmMIdvvWA6OeIm-fs3zMO-uQ7oJOgl5bw9SJlj1TPwPiVYYgJyGxEkxyxEKv6dPUpYgfDgNI9ercFOv2Umr-Dfv9cPKd0fA5QYpC8qGW8hUmRJ8JH6l9BVWSlVRL_IKPu-ErIlGO1pju1RiwQLaWz3Vow"/>
+<div class="absolute bottom-2 left-2 px-2 py-0.5 rounded bg-inverse-surface/80 text-inverse-on-surface font-label-sm text-label-sm">
+                Batch Weight Audit
+              </div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Submitted Documents Gallery Inspector & Action Center (5 Cols) -->
+<div class="lg:col-span-5 flex flex-col justify-between space-y-spacing-xl">
+<!-- Documents Gallery Section -->
+<div>
+<div class="flex items-center justify-between mb-spacing-md">
+<div>
+<h3 class="font-headline-sm text-headline-sm text-primary">Submitted Documents Gallery</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">4 compliance filings inspected &amp; hash-indexed</p>
+</div>
+<span class="px-spacing-xs py-1 rounded bg-secondary-container text-on-secondary-fixed font-label-sm text-label-sm font-bold">4 of 4 Ready</span>
+</div>
+<div class="space-y-spacing-sm">
+<!-- Doc 1: Certificate of Incorp -->
+<div class="bg-surface-container-lowest p-spacing-md rounded-xl shadow-sm hover:shadow-md transition-shadow flex items-start gap-spacing-md cursor-pointer group">
+<div class="w-10 h-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0 group-hover:bg-primary group-hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined text-[22px]">description</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between gap-spacing-xs">
+<span class="font-label-md text-label-md text-on-surface truncate">Certificate of Incorporation</span>
+<span class="px-2 py-0.5 rounded-full bg-success-shamrock/10 text-success-shamrock font-label-sm text-label-sm font-semibold shrink-0">Validated</span>
+</div>
+<div class="flex items-center gap-spacing-xs mt-0.5 text-on-surface-variant font-body-sm text-body-sm">
+<span>KRA_Inc_Cert.pdf</span>
+<span>•</span>
+<span>2.4 MB</span>
+<span>•</span>
+<span class="text-success-shamrock font-medium">Digital Hash Match</span>
+</div>
+</div>
+<button class="p-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors shrink-0">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</button>
+</div>
+<!-- Doc 2: Physical Warehouse Lease -->
+<div class="bg-surface-container-lowest p-spacing-md rounded-xl shadow-sm hover:shadow-md transition-shadow flex items-start gap-spacing-md cursor-pointer group">
+<div class="w-10 h-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0 group-hover:bg-primary group-hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined text-[22px]">home_work</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between gap-spacing-xs">
+<span class="font-label-md text-label-md text-on-surface truncate">Warehouse Lease &amp; Inspection Record</span>
+<span class="px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-fixed font-label-sm text-label-sm font-semibold shrink-0">Britam Insured</span>
+</div>
+<div class="flex items-center gap-spacing-xs mt-0.5 text-on-surface-variant font-body-sm text-body-sm">
+<span>Inspection_Record.pdf</span>
+<span>•</span>
+<span>4.1 MB</span>
+<span>•</span>
+<span>Coverage $120k</span>
+</div>
+</div>
+<button class="p-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors shrink-0">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</button>
+</div>
+<!-- Doc 3: Countersigned Offtake Agreement -->
+<div class="bg-surface-container-lowest p-spacing-md rounded-xl shadow-sm hover:shadow-md transition-shadow flex items-start gap-spacing-md cursor-pointer group">
+<div class="w-10 h-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0 group-hover:bg-primary group-hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined text-[22px]">handshake</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between gap-spacing-xs">
+<span class="font-label-md text-label-md text-on-surface truncate">Unga Group Countersigned Offtake Agrmt</span>
+<span class="px-2 py-0.5 rounded-full bg-success-shamrock/10 text-success-shamrock font-label-sm text-label-sm font-semibold shrink-0">Buyer Confirmed</span>
+</div>
+<div class="flex items-center gap-spacing-xs mt-0.5 text-on-surface-variant font-body-sm text-body-sm">
+<span>Unga_Offtake_2025.pdf</span>
+<span>•</span>
+<span>1.8 MB</span>
+<span>•</span>
+<span>Term: 12 Mos</span>
+</div>
+</div>
+<button class="p-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors shrink-0">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</button>
+</div>
+<!-- Doc 4: Director KRA & ID -->
+<div class="bg-surface-container-lowest p-spacing-md rounded-xl shadow-sm hover:shadow-md transition-shadow flex items-start gap-spacing-md cursor-pointer group">
+<div class="w-10 h-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0 group-hover:bg-primary group-hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined text-[22px]">badge</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between gap-spacing-xs">
+<span class="font-label-md text-label-md text-on-surface truncate">Director KRA PIN &amp; National ID (Front/Back)</span>
+<span class="px-2 py-0.5 rounded-full bg-success-shamrock/10 text-success-shamrock font-label-sm text-label-sm font-semibold shrink-0">OCR Matched</span>
+</div>
+<div class="flex items-center gap-spacing-xs mt-0.5 text-on-surface-variant font-body-sm text-body-sm">
+<span>DL_ID_Card_Dual.pdf</span>
+<span>•</span>
+<span>890 KB</span>
+<span>•</span>
+<span>IPRS Pass</span>
+</div>
+</div>
+<button class="p-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors shrink-0">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Dedicated Action Center / Decision Panel -->
+<div class="bg-surface-container-high rounded-xl p-spacing-lg">
+<div class="flex items-center justify-between mb-spacing-sm">
+<span class="font-label-md text-label-md text-primary font-bold uppercase tracking-wider">Underwriter Determination</span>
+<span class="font-body-sm text-body-sm text-secondary">Decision logged to immutable ledger</span>
+</div>
+<!-- Prominent Action Toolbar -->
+<div class="flex flex-col gap-spacing-sm">
+<!-- Green Button: Approve & Issue $5,000 Limit -->
+<button class="w-full h-12 rounded-lg bg-success-shamrock hover:bg-success-shamrock/90 text-on-primary font-label-lg text-label-lg flex items-center justify-center gap-spacing-xs shadow-md transition-all active:scale-[0.99]" onclick="alert('Application Approved: $5,000 credit limit facility activated for Kilimo Bora Agro-Processors Ltd.')">
+<span class="material-symbols-outlined text-[20px]">check_circle</span>
+              Approve &amp; Issue $5,000 Limit
+            </button>
+<!-- Amber Button: Request More Info / Additional Proof -->
+<button class="w-full h-11 rounded-lg bg-warning-amber-soft text-on-tertiary-container hover:bg-warning-amber-soft/80 font-label-md text-label-md flex items-center justify-center gap-spacing-xs transition-colors" onclick="alert('Request dispatched to applicant SMS &amp; Email: Specific clarification requested.')">
+<span class="material-symbols-outlined text-[18px]">help_outline</span>
+              Request More Info / Additional Proof
+            </button>
+<!-- Rejection Segment with Reasons Selector -->
+<div class="pt-spacing-xs flex items-center gap-spacing-xs">
+<div class="flex-1">
+<select class="w-full h-10 px-spacing-sm rounded-lg bg-surface-container-lowest text-on-surface font-body-sm text-body-sm focus:outline-none cursor-pointer">
+<option disabled="" selected="">Select Rejection Reason...</option>
+<option>Expired or Incomplete Tax Pin (KRA)</option>
+<option>Warehouse Inspection Deficit / Uninsured Sump</option>
+<option>Anchor Buyer Confirmation Failure</option>
+<option>Suspicious Entity Registration Match (KYB AML)</option>
+</select>
+</div>
+<button class="h-10 px-spacing-md rounded-lg bg-error-container text-on-error-container hover:bg-error hover:text-on-error font-label-md text-label-md flex items-center gap-1 transition-colors shrink-0" onclick="alert('Applicant flagged for rejection under selected criterion.')">
+<span class="material-symbols-outlined text-[16px]">block</span>
+                Reject Application
+              </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- SECONDARY QUEUE LEDGER ROWS (Comprehensive applicant candidates awaiting triage) -->
+<section class="bg-surface-card rounded-2xl shadow-sm p-spacing-xl">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between pb-spacing-md mb-spacing-md gap-spacing-sm">
+<div>
+<h3 class="font-headline-md text-headline-md text-primary">Pending Verification Ledger</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">8 remaining applications queued in strict chronological arrival</p>
+</div>
+<div class="flex items-center gap-spacing-xs">
+<span class="font-body-sm text-body-sm text-secondary">Showing 1-4 of 8</span>
+<button class="w-8 h-8 rounded-lg bg-surface-container-low text-on-surface-variant flex items-center justify-center hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[16px]">chevron_left</span>
+</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container-low text-on-surface flex items-center justify-center hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+</button>
+</div>
+</div>
+<!-- Candidate Row 1 -->
+<div class="bg-surface-container-low/60 hover:bg-surface-container-low rounded-xl p-spacing-md mb-spacing-sm transition-all flex flex-col xl:flex-row xl:items-center justify-between gap-spacing-md group">
+<div class="flex items-center gap-spacing-md flex-1 min-w-0">
+<div class="w-10 h-10 rounded-lg bg-secondary-container text-on-secondary-fixed flex items-center justify-center font-label-lg text-label-lg font-bold shrink-0">
+          EA
+        </div>
+<div class="min-w-0 flex-1">
+<div class="flex flex-wrap items-center gap-spacing-xs">
+<h4 class="font-headline-sm text-headline-sm text-on-surface truncate">East Africa Sesame Traders Ltd</h4>
+<span class="px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-fixed font-label-sm text-label-sm">Seller • Tier 1</span>
+<span class="px-2 py-0.5 rounded-full bg-success-shamrock/10 text-success-shamrock font-label-sm text-label-sm font-semibold">Risk: 92 (Minimal)</span>
+</div>
+<div class="flex flex-wrap items-center gap-spacing-sm text-on-surface-variant font-body-sm text-body-sm mt-0.5">
+<span>Mombasa, Port Branch</span>
+<span>•</span>
+<span>Reg: CPR/2020/48911</span>
+<span>•</span>
+<span>Tax PIN: P051992013B</span>
+<span>•</span>
+<span class="text-primary font-medium">3 Docs attached</span>
+</div>
+</div>
+</div>
+<div class="flex flex-wrap items-center gap-spacing-lg shrink-0">
+<div class="text-left xl:text-right">
+<div class="font-label-sm text-label-sm text-secondary uppercase">Facility Request</div>
+<div class="font-label-lg text-label-lg text-primary font-bold">$2,500 Limit</div>
+</div>
+<div class="text-left xl:text-right">
+<div class="font-label-sm text-label-sm text-secondary uppercase">Wait Time</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">12 min ago</div>
+</div>
+<div class="flex items-center gap-spacing-xs">
+<button class="h-9 px-spacing-sm rounded-lg bg-success-shamrock text-on-primary font-label-md text-label-md hover:bg-success-shamrock/90 transition-colors flex items-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-[16px]">check</span> Quick Approve
+          </button>
+<button class="h-9 px-spacing-sm rounded-lg bg-surface-container-high text-on-surface font-label-md text-label-md hover:bg-surface-container-highest transition-colors flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">contact_support</span> Query
+          </button>
+<button class="w-9 h-9 rounded-lg bg-surface-container-high text-on-surface-variant hover:text-error hover:bg-error-container transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Candidate Row 2 -->
+<div class="bg-surface-container-low/60 hover:bg-surface-container-low rounded-xl p-spacing-md mb-spacing-sm transition-all flex flex-col xl:flex-row xl:items-center justify-between gap-spacing-md group">
+<div class="flex items-center gap-spacing-md flex-1 min-w-0">
+<div class="w-10 h-10 rounded-lg bg-primary-container text-on-primary flex items-center justify-center font-label-lg text-label-lg font-bold shrink-0">
+          AF
+        </div>
+<div class="min-w-0 flex-1">
+<div class="flex flex-wrap items-center gap-spacing-xs">
+<h4 class="font-headline-sm text-headline-sm text-on-surface truncate">AgriFund Liquidity Pool SACCO</h4>
+<span class="px-2 py-0.5 rounded-full bg-primary-container text-on-primary font-label-sm text-label-sm">Institutional Lender</span>
+<span class="px-2 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm font-semibold">Risk: 84 (Moderate)</span>
+</div>
+<div class="flex flex-wrap items-center gap-spacing-sm text-on-surface-variant font-body-sm text-body-sm mt-0.5">
+<span>Eldoret Regional Office</span>
+<span>•</span>
+<span>SASRA Licensed #SC-2018-09</span>
+<span>•</span>
+<span>Audited Accounts FY24</span>
+<span>•</span>
+<span class="text-primary font-medium">6 Docs attached</span>
+</div>
+</div>
+</div>
+<div class="flex flex-wrap items-center gap-spacing-lg shrink-0">
+<div class="text-left xl:text-right">
+<div class="font-label-sm text-label-sm text-secondary uppercase">Capital Facility</div>
+<div class="font-label-lg text-label-lg text-primary font-bold">$100,000 Facility</div>
+</div>
+<div class="text-left xl:text-right">
+<div class="font-label-sm text-label-sm text-secondary uppercase">Wait Time</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">29 min ago</div>
+</div>
+<div class="flex items-center gap-spacing-xs">
+<button class="h-9 px-spacing-sm rounded-lg bg-primary text-on-primary font-label-md text-label-md hover:bg-primary-container transition-colors flex items-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-[16px]">visibility</span> Deep Review
+          </button>
+<button class="h-9 px-spacing-sm rounded-lg bg-surface-container-high text-on-surface font-label-md text-label-md hover:bg-surface-container-highest transition-colors flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">contact_support</span> Query
+          </button>
+<button class="w-9 h-9 rounded-lg bg-surface-container-high text-on-surface-variant hover:text-error hover:bg-error-container transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Candidate Row 3 (Escalated Flag) -->
+<div class="bg-warning-amber-soft/30 hover:bg-warning-amber-soft/50 rounded-xl p-spacing-md mb-spacing-sm transition-all flex flex-col xl:flex-row xl:items-center justify-between gap-spacing-md group">
+<div class="flex items-center gap-spacing-md flex-1 min-w-0">
+<div class="w-10 h-10 rounded-lg bg-tertiary-fixed text-on-tertiary-fixed flex items-center justify-center font-label-lg text-label-lg font-bold shrink-0">
+          VT
+        </div>
+<div class="min-w-0 flex-1">
+<div class="flex flex-wrap items-center gap-spacing-xs">
+<h4 class="font-headline-sm text-headline-sm text-on-surface truncate">Victoria Tropical Exporters Co.</h4>
+<span class="px-2 py-0.5 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm font-semibold">Escalated to Risk</span>
+<span class="px-2 py-0.5 rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm font-semibold">Risk: 61 (Caution)</span>
+</div>
+<div class="flex flex-wrap items-center gap-spacing-sm text-on-surface-variant font-body-sm text-body-sm mt-0.5">
+<span>Kisumu Lakeside Hub</span>
+<span>•</span>
+<span>Reg: CPR/2023/11820</span>
+<span>•</span>
+<span class="text-error font-medium">KRA Tax Return Delta Detected</span>
+<span>•</span>
+<span class="text-primary font-medium">5 Docs attached</span>
+</div>
+</div>
+</div>
+<div class="flex flex-wrap items-center gap-spacing-lg shrink-0">
+<div class="text-left xl:text-right">
+<div class="font-label-sm text-label-sm text-secondary uppercase">Requested Limit</div>
+<div class="font-label-lg text-label-lg text-primary font-bold">$15,000 Limit</div>
+</div>
+<div class="text-left xl:text-right">
+<div class="font-label-sm text-label-sm text-secondary uppercase">Wait Time</div>
+<div class="font-body-sm text-body-sm text-error font-semibold">47 min (Escalated)</div>
+</div>
+<div class="flex items-center gap-spacing-xs">
+<button class="h-9 px-spacing-sm rounded-lg bg-surface-container-high text-on-surface font-label-md text-label-md hover:bg-surface-container-highest transition-colors flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">manage_search</span> Examine Flag
+          </button>
+<button class="h-9 px-spacing-sm rounded-lg bg-error-container text-on-error-container font-label-md text-label-md hover:bg-error hover:text-on-error transition-colors flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">security</span> Audit Dossier
+          </button>
+</div>
+</div>
+</div>
+<!-- Candidate Row 4 -->
+<div class="bg-surface-container-low/60 hover:bg-surface-container-low rounded-xl p-spacing-md transition-all flex flex-col xl:flex-row xl:items-center justify-between gap-spacing-md group">
+<div class="flex items-center gap-spacing-md flex-1 min-w-0">
+<div class="w-10 h-10 rounded-lg bg-secondary-fixed-dim text-on-secondary-fixed flex items-center justify-center font-label-lg text-label-lg font-bold shrink-0">
+          MS
+        </div>
+<div class="min-w-0 flex-1">
+<div class="flex flex-wrap items-center gap-spacing-xs">
+<h4 class="font-headline-sm text-headline-sm text-on-surface truncate">Mwea Scented Grain Millers</h4>
+<span class="px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-fixed font-label-sm text-label-sm">Seller • Tier 2</span>
+<span class="px-2 py-0.5 rounded-full bg-success-shamrock/10 text-success-shamrock font-label-sm text-label-sm font-semibold">Risk: 89 (Low)</span>
+</div>
+<div class="flex flex-wrap items-center gap-spacing-sm text-on-surface-variant font-body-sm text-body-sm mt-0.5">
+<span>Kirinyaga County</span>
+<span>•</span>
+<span>Reg: CPR/2019/33091</span>
+<span>•</span>
+<span>Tax PIN: P051029482X</span>
+<span>•</span>
+<span class="text-primary font-medium">4 Docs attached</span>
+</div>
+</div>
+</div>
+<div class="flex flex-wrap items-center gap-spacing-lg shrink-0">
+<div class="text-left xl:text-right">
+<div class="font-label-sm text-label-sm text-secondary uppercase">Facility Request</div>
+<div class="font-label-lg text-label-lg text-primary font-bold">$5,000 Limit</div>
+</div>
+<div class="text-left xl:text-right">
+<div class="font-label-sm text-label-sm text-secondary uppercase">Wait Time</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">52 min ago</div>
+</div>
+<div class="flex items-center gap-spacing-xs">
+<button class="h-9 px-spacing-sm rounded-lg bg-success-shamrock text-on-primary font-label-md text-label-md hover:bg-success-shamrock/90 transition-colors flex items-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-[16px]">check</span> Quick Approve
+          </button>
+<button class="h-9 px-spacing-sm rounded-lg bg-surface-container-high text-on-surface font-label-md text-label-md hover:bg-surface-container-highest transition-colors flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">contact_support</span> Query
+          </button>
+<button class="w-9 h-9 rounded-lg bg-surface-container-high text-on-surface-variant hover:text-error hover:bg-error-container transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Interactive Client Side Micro-script for Filter Switching -->
+<script>
+    document.querySelectorAll('#queueTabs button').forEach(button => {
+      button.addEventListener('click', () => {
+        document.querySelectorAll('#queueTabs button').forEach(b => {
+          b.classList.remove('bg-primary-container', 'text-on-primary');
+          b.classList.add('bg-surface-container-low', 'text-on-surface-variant');
+        });
+        button.classList.remove('bg-surface-container-low', 'text-on-surface-variant');
+        button.classList.add('bg-primary-container', 'text-on-primary');
+      });
+    });
+  </script>
+</div></main></div></body></html>

@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "border-subtle": "#e2e8f0",
+          "on-tertiary-container": "#d88500",
+          "surface-container-highest": "#e4e2df",
+          "on-error-container": "#93000a",
+          "primary-container": "#16324f",
+          "on-primary": "#ffffff",
+          "outline-variant": "#c3c6ce",
+          "secondary-container": "#d5e3fc",
+          "on-tertiary-fixed": "#2b1700",
+          "surface-dim": "#dbdad7",
+          "surface-variant": "#e4e2df",
+          "tertiary-fixed": "#ffddbb",
+          "on-error": "#ffffff",
+          "surface-container-lowest": "#ffffff",
+          "on-secondary-container": "#57657a",
+          "on-secondary": "#ffffff",
+          "on-surface-variant": "#43474d",
+          "on-secondary-fixed-variant": "#3a485b",
+          "surface": "#fbf9f6",
+          "surface-container-low": "#f5f3f0",
+          "on-primary-container": "#809abd",
+          "primary-fixed-dim": "#aec9ed",
+          "error-container": "#ffdad6",
+          "error": "#ba1a1a",
+          "inverse-primary": "#aec9ed",
+          "primary-fixed": "#d2e4ff",
+          "primary": "#001d37",
+          "secondary-fixed": "#d5e3fc",
+          "background": "#fbf9f6",
+          "surface-tint": "#466080",
+          "secondary-fixed-dim": "#b9c7df",
+          "warning-amber-soft": "#fef3c7",
+          "inverse-on-surface": "#f2f0ed",
+          "on-tertiary": "#ffffff",
+          "inverse-surface": "#30312f",
+          "tertiary": "#2c1700",
+          "on-surface": "#1b1c1a",
+          "border-strong": "#cbd5e1",
+          "on-background": "#1b1c1a",
+          "on-secondary-fixed": "#0d1c2e",
+          "tertiary-fixed-dim": "#ffb868",
+          "surface-card": "#ffffff",
+          "on-tertiary-fixed-variant": "#673d00",
+          "secondary": "#515f74",
+          "success-shamrock": "#059669",
+          "surface-container": "#efeeeb",
+          "surface-container-high": "#eae8e5",
+          "on-primary-fixed-variant": "#2e4867",
+          "tertiary-container": "#482900",
+          "surface-bright": "#fbf9f6",
+          "outline": "#74777e",
+          "on-primary-fixed": "#001d37"
+        },
+        "borderRadius": {
+          "DEFAULT": "0.25rem",
+          "lg": "0.5rem",
+          "xl": "0.75rem",
+          "full": "9999px"
+        },
+        "spacing": {
+          "margin-mobile": "1rem",
+          "spacing-2xl": "2rem",
+          "spacing-md": "1rem",
+          "spacing-xl": "1.5rem",
+          "spacing-2xs": "0.25rem",
+          "spacing-lg": "1.25rem",
+          "gutter-mobile": "1rem",
+          "spacing-sm": "0.75rem",
+          "spacing-xs": "0.5rem",
+          "margin-desktop": "2rem",
+          "gutter-desktop": "1.5rem",
+          "spacing-3xl": "2.5rem"
+        },
+        "fontFamily": {
+          "body-md": [
+            "Inter"
+          ],
+          "body-lg": [
+            "Inter"
+          ],
+          "label-lg": [
+            "Inter"
+          ],
+          "headline-md": [
+            "Plus Jakarta Sans"
+          ],
+          "numeric-metric-mobile": [
+            "Plus Jakarta Sans"
+          ],
+          "headline-sm": [
+            "Plus Jakarta Sans"
+          ],
+          "numeric-metric": [
+            "Plus Jakarta Sans"
+          ],
+          "body-sm": [
+            "Inter"
+          ],
+          "label-sm": [
+            "Inter"
+          ],
+          "label-md": [
+            "Inter"
+          ],
+          "headline-xl-mobile": [
+            "Plus Jakarta Sans"
+          ],
+          "headline-xl": [
+            "Plus Jakarta Sans"
+          ],
+          "headline-lg": [
+            "Plus Jakarta Sans"
+          ]
+        },
+        "fontSize": {
+          "body-md": [
+            "14px",
+            {
+              "lineHeight": "20px",
+              "fontWeight": "400"
+            }
+          ],
+          "body-lg": [
+            "16px",
+            {
+              "lineHeight": "24px",
+              "fontWeight": "400"
+            }
+          ],
+          "label-lg": [
+            "14px",
+            {
+              "lineHeight": "20px",
+              "fontWeight": "600"
+            }
+          ],
+          "headline-md": [
+            "20px",
+            {
+              "lineHeight": "28px",
+              "fontWeight": "600"
+            }
+          ],
+          "numeric-metric-mobile": [
+            "30px",
+            {
+              "lineHeight": "36px",
+              "fontWeight": "800"
+            }
+          ],
+          "headline-sm": [
+            "18px",
+            {
+              "lineHeight": "24px",
+              "fontWeight": "600"
+            }
+          ],
+          "numeric-metric": [
+            "36px",
+            {
+              "lineHeight": "44px",
+              "fontWeight": "800"
+            }
+          ],
+          "body-sm": [
+            "12px",
+            {
+              "lineHeight": "16px",
+              "fontWeight": "400"
+            }
+          ],
+          "label-sm": [
+            "11px",
+            {
+              "lineHeight": "14px",
+              "letterSpacing": "0.04em",
+              "fontWeight": "600"
+            }
+          ],
+          "label-md": [
+            "12px",
+            {
+              "lineHeight": "16px",
+              "fontWeight": "600"
+            }
+          ],
+          "headline-xl-mobile": [
+            "26px",
+            {
+              "lineHeight": "32px",
+              "fontWeight": "700"
+            }
+          ],
+          "headline-xl": [
+            "32px",
+            {
+              "lineHeight": "40px",
+              "fontWeight": "700"
+            }
+          ],
+          "headline-lg": [
+            "24px",
+            {
+              "lineHeight": "32px",
+              "fontWeight": "700"
+            }
+          ]
+        }
+      },
+    },
+  }</script></head><body class="bg-surface font-body-md text-body-md text-on-surface antialiased min-h-screen flex items-center justify-center"><main class="w-full max-w-lg mx-auto p-spacing-xl"><div class="flex flex-col w-full">
+<div class="relative w-full max-w-xl mx-auto flex flex-col items-center">
+<!-- Institutional Compliance Ribbon -->
+<div class="w-full flex items-center justify-between px-spacing-md py-spacing-xs bg-surface-container rounded-lg mb-spacing-lg shadow-sm">
+<div class="flex items-center gap-spacing-xs">
+<span class="material-symbols-outlined text-success-shamrock text-body-lg" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary">SEC &amp; CMA Compliant Agricultural Trade Settlement Gateway</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="inline-block w-2 h-2 rounded-full bg-success-shamrock animate-pulse"></span>
+<span class="font-label-sm text-label-sm text-secondary">Node: KE-OPS-01</span>
+</div>
+</div>
+<!-- Main Auth Card Container -->
+<div class="w-full bg-surface-card rounded-xl shadow-xl p-spacing-2xl relative overflow-hidden">
+<!-- Top Decorative Ambient Glow -->
+<div class="absolute -top-16 -right-16 w-44 h-44 bg-secondary-container rounded-full blur-3xl opacity-50 pointer-events-none"></div>
+<div class="absolute -bottom-16 -left-16 w-44 h-44 bg-tertiary-fixed rounded-full blur-3xl opacity-30 pointer-events-none"></div>
+<!-- Brand Presentation -->
+<div class="flex flex-col items-center text-center relative z-10 mb-spacing-xl">
+<div class="w-16 h-16 rounded-xl bg-surface-container-low p-2 shadow-sm mb-spacing-sm flex items-center justify-center">
+<img alt="Advance Trade Finance Logo" class="w-full h-full object-contain rounded-lg" src="https://lh3.googleusercontent.com/aida/AEtjO1XkZniit_VHuFtiy4Afn4UrwAF0e_yMaTFEAW732zaDaxY0TY1_yGv_EIKxB3WyxBZckRkkVndquZ9xP8ID7VRKiGMu7c5GysYOInlzfftkMbihCulCCfpuJ_BbuOZs9uA2wrFewOZskiXwAnTKHTz2_gZ2mX0E-Kur6MDBPCb4uKNUnKPKV_JbspBCYvRG-_bnlW10Pyoj6cjYoyzz8OSzdMoCO1249XNQ9mx_s-Q4b_jlsfi8caqkWijN"/>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-primary tracking-tight">Advance Trade Finance</h1>
+<p class="font-body-sm text-body-sm text-secondary mt-1">Institutional Liquidity &amp; Export Admin Portal</p>
+</div>
+<!-- Step Indicator Bar -->
+<div class="grid grid-cols-2 gap-spacing-xs mb-spacing-xl relative z-10">
+<div class="flex items-center gap-2 p-2 rounded-lg bg-surface-container-low">
+<span class="w-5 h-5 rounded-full bg-success-shamrock text-on-primary font-label-sm text-label-sm flex items-center justify-center">✓</span>
+<span class="font-label-sm text-label-sm text-on-surface truncate">1. Credentials</span>
+</div>
+<div class="flex items-center gap-2 p-2 rounded-lg bg-primary-container text-on-primary">
+<span class="w-5 h-5 rounded-full bg-on-tertiary-container text-on-primary font-label-sm text-label-sm flex items-center justify-center">2</span>
+<span class="font-label-sm text-label-sm text-on-primary font-semibold truncate">2. Multi-Factor (TOTP)</span>
+</div>
+</div>
+<!-- Step 1 Collapsed Summary State -->
+<div class="w-full bg-surface-container-low rounded-lg p-spacing-sm mb-spacing-xl flex items-center justify-between">
+<div class="flex items-center gap-spacing-sm min-w-0">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-body-lg">shield_person</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md text-on-surface truncate">admin@advance.finance</span>
+<div class="flex items-center gap-2">
+<span class="font-body-sm text-body-sm text-secondary tracking-widest leading-none">••••••••••••</span>
+<span class="inline-flex items-center gap-1 font-label-sm text-label-sm text-secondary bg-surface px-1.5 py-0.5 rounded">
+<span class="material-symbols-outlined text-body-sm" style="font-variation-settings: 'FILL' 1;">key</span> FIDO2 Key
+              </span>
+</div>
+</div>
+</div>
+<span class="material-symbols-outlined text-success-shamrock text-headline-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<!-- Step 2: 2FA Active Interaction Module -->
+<div class="relative z-10 flex flex-col">
+<div class="flex items-center justify-between mb-spacing-xs">
+<h2 class="font-headline-sm text-headline-sm text-primary">Two-Factor Authentication</h2>
+<span class="inline-flex items-center gap-1 font-label-sm text-label-sm bg-warning-amber-soft text-on-tertiary-container px-2 py-0.5 rounded-full">
+<span class="w-1.5 h-1.5 rounded-full bg-on-tertiary-container"></span> TOTP Active
+          </span>
+</div>
+<p class="font-body-md text-body-md text-secondary mb-spacing-lg">Enter the 6-digit cryptographic verification code generated by your assigned authenticator application.</p>
+<!-- 6-Digit Verification Inputs -->
+<div class="grid grid-cols-6 gap-spacing-xs mb-spacing-lg" id="pin-grid">
+<div class="h-14 bg-surface-container-low rounded-lg flex items-center justify-center text-primary font-numeric-metric-mobile text-numeric-metric-mobile shadow-sm">4</div>
+<div class="h-14 bg-surface-container-low rounded-lg flex items-center justify-center text-primary font-numeric-metric-mobile text-numeric-metric-mobile shadow-sm">8</div>
+<div class="h-14 bg-surface-container-low rounded-lg flex items-center justify-center text-primary font-numeric-metric-mobile text-numeric-metric-mobile shadow-sm">2</div>
+<div class="h-14 bg-surface-container-low rounded-lg flex items-center justify-center text-primary font-numeric-metric-mobile text-numeric-metric-mobile shadow-sm">1</div>
+<div class="h-14 bg-surface-container-low rounded-lg flex items-center justify-center text-primary font-numeric-metric-mobile text-numeric-metric-mobile shadow-sm">9</div>
+<div class="h-14 bg-surface-card rounded-lg flex items-center justify-center text-primary font-numeric-metric-mobile text-numeric-metric-mobile shadow-md bg-secondary-container/20">
+<span class="inline-block w-2.5 h-7 bg-primary rounded-full animate-pulse"></span>
+</div>
+</div>
+<!-- Verified Device Meta Strip -->
+<div class="flex items-center gap-spacing-xs p-spacing-sm bg-surface-container-low rounded-lg mb-spacing-lg">
+<span class="material-symbols-outlined text-secondary text-body-lg">laptop_mac</span>
+<div class="font-body-sm text-body-sm text-on-surface-variant truncate">
+<span class="font-semibold text-primary">MacBook Pro</span> • Nairobi HQ Office • <span class="font-mono text-label-sm text-secondary">197.232.44.12</span>
+</div>
+</div>
+<!-- Primary Verification CTA -->
+<button class="w-full h-13 py-3 px-spacing-md bg-primary hover:bg-primary-container text-on-primary rounded-xl font-label-lg text-label-lg shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2 group active:scale-[0.99]" type="button">
+<span>Verify &amp; Access Ops Portal</span>
+<span class="material-symbols-outlined text-body-lg transition-transform group-hover:translate-x-1">arrow_forward</span>
+</button>
+<!-- Secondary Navigation / Fallbacks -->
+<div class="flex items-center justify-between mt-spacing-md">
+<button class="inline-flex items-center gap-1.5 font-label-md text-label-md text-primary hover:text-on-tertiary-container transition-colors" type="button">
+<span class="material-symbols-outlined text-body-md">usb</span>
+<span>Use Hardware YubiKey / Backup Token</span>
+</button>
+<a class="font-label-md text-label-md text-secondary hover:text-primary transition-colors" href="#">
+            Cancel &amp; Sign Out
+          </a>
+</div>
+<!-- Hardware Freeze Enforcement Warning -->
+<div class="mt-spacing-xl p-spacing-sm bg-error-container/60 rounded-lg flex items-start gap-spacing-xs">
+<span class="material-symbols-outlined text-error text-body-lg flex-shrink-0 mt-0.5">lock_clock</span>
+<p class="font-body-sm text-body-sm text-on-error-container">
+<strong class="font-semibold">Security Protocol:</strong> 3 failed attempts will trigger an automated hardware freeze and notify the Chief Risk Officer (CRO) immediately.
+          </p>
+</div>
+</div>
+</div>
+<!-- Bottom Security Footprint -->
+<div class="mt-spacing-lg flex flex-col items-center text-center gap-spacing-2xs text-secondary">
+<div class="flex flex-wrap items-center justify-center gap-x-spacing-sm gap-y-1 font-label-sm text-label-sm">
+<span class="inline-flex items-center gap-1">
+<span class="material-symbols-outlined text-body-sm">lock</span>
+          256-bit TLS 1.3
+        </span>
+<span>•</span>
+<span class="inline-flex items-center gap-1">
+<span class="material-symbols-outlined text-body-sm">fact_check</span>
+          SOC-2 Type II Certified
+        </span>
+<span>•</span>
+<span class="inline-flex items-center gap-1">
+<span class="material-symbols-outlined text-body-sm">timer</span>
+          Multi-sig Session: 15m
+        </span>
+</div>
+<p class="font-body-sm text-body-sm text-outline">Advance Trade Finance Infrastructure • All Access Attempts Logged • ID #SEC-8921</p>
+</div>
+</div>
+</div></main></body></html>
