@@ -164,20 +164,22 @@ export const SubmitInvoice: React.FC = () => {
         </div>
 
         {/* Live Calculation Ribbon */}
-        <div className="bg-primary text-white rounded-xl p-5 shadow-sm flex flex-col gap-3">
-          <div className="flex items-center justify-between text-xs text-primary-fixed-dim">
-            <span>Advance Rate Tier</span>
-            <span className="font-bold text-white">{advanceRatePct}% Advance</span>
-          </div>
-
-          <div className="flex items-baseline justify-between border-t border-primary-container pt-3">
-            <div>
-              <span className="text-xs text-primary-fixed-dim uppercase tracking-wider">Immediate Payout Cash</span>
-              <div className="font-headline text-3xl font-extrabold text-white">${netPayout.toLocaleString()}</div>
+        <div className="vesto-hero rounded-2xl p-5 text-white relative overflow-hidden shadow-hero">
+          <div className="h-[3px] absolute top-0 left-0 right-0" style={{ background: 'linear-gradient(90deg,#C9922A,#E8B96A)' }} />
+          <div className="relative">
+            <div className="flex items-center justify-between text-xs mb-3" style={{ color: 'rgba(255,255,255,0.5)' }}>
+              <span>Advance Rate · Tier {seller.verificationTier}</span>
+              <span className="font-bold text-white">{advanceRatePct}%</span>
             </div>
-            <div className="text-right">
-              <span className="text-[11px] text-primary-fixed-dim block">Platform Fee (2%): ${feeAmount}</span>
-              <span className="text-[11px] text-success-shamrock font-bold">100% Guaranteed Settlement</span>
+            <div className="flex items-baseline justify-between border-t pt-3" style={{ borderColor: 'rgba(255,255,255,0.12)' }}>
+              <div>
+                <span className="text-[10px] uppercase tracking-wider font-semibold block mb-1" style={{ color: 'rgba(255,255,255,0.5)' }}>Immediate Payout</span>
+                <div className="font-headline text-3xl font-extrabold text-white font-tnum" style={{ letterSpacing: '-0.02em' }}>${netPayout.toLocaleString()}</div>
+              </div>
+              <div className="text-right">
+                <span className="text-[11px] block mb-0.5" style={{ color: 'rgba(255,255,255,0.5)' }}>Platform Fee (2%): ${feeAmount}</span>
+                <span className="text-[11px] font-bold" style={{ color: 'var(--gold-light)' }}>100% Guaranteed Settlement</span>
+              </div>
             </div>
           </div>
         </div>
@@ -185,7 +187,8 @@ export const SubmitInvoice: React.FC = () => {
         {/* Submit Button */}
         <button
           type="submit"
-          className="w-full h-13 bg-success-shamrock text-white font-label-lg font-bold rounded-xl hover:bg-success-shamrock/90 shadow-md transition-all active:scale-[0.98] flex items-center justify-center gap-2 py-3"
+          className="w-full h-13 font-bold rounded-xl shadow-gold transition-all active:scale-[0.98] flex items-center justify-center gap-2 py-3 text-white"
+          style={{ background: 'linear-gradient(135deg, #C9922A 0%, #E8B96A 100%)' }}
         >
           <span className="material-symbols-outlined text-lg">payments</span>
           <span>Submit Invoice to Vesto Marketplace</span>

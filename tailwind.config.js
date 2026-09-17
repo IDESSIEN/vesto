@@ -8,96 +8,126 @@ export default {
   theme: {
     extend: {
       colors: {
-        "border-strong": "#cbd5e1",
-        "inverse-on-surface": "#f2f0ed",
-        "secondary-fixed-dim": "#b9c7df",
-        "surface-container-low": "#f5f3f0",
-        "primary-container": "#16324f",
-        "outline": "#74777e",
-        "on-primary-container": "#809abd",
-        "inverse-primary": "#aec9ed",
-        "background": "#fbf9f6",
-        "tertiary-container": "#482900",
-        "surface-card": "#ffffff",
-        "surface": "#fbf9f6",
-        "tertiary-fixed": "#ffddbb",
-        "tertiary": "#2c1700",
-        "on-primary-fixed": "#001d37",
-        "tertiary-fixed-dim": "#ffb868",
-        "error-container": "#ffdad6",
-        "surface-dim": "#dbdad7",
-        "on-primary-fixed-variant": "#2e4867",
-        "on-secondary": "#ffffff",
-        "on-secondary-fixed-variant": "#3a485b",
-        "on-secondary-container": "#57657a",
-        "on-error": "#ffffff",
-        "primary-fixed-dim": "#aec9ed",
-        "secondary": "#515f74",
-        "on-background": "#1b1c1a",
-        "primary": "#001d37",
-        "on-surface": "#1b1c1a",
-        "secondary-fixed": "#d5e3fc",
-        "surface-variant": "#e4e2df",
-        "surface-container-high": "#eae8e5",
-        "border-subtle": "#e2e8f0",
-        "surface-tint": "#466080",
-        "primary-fixed": "#d2e4ff",
-        "on-tertiary-container": "#d88500",
-        "success-shamrock": "#059669",
-        "surface-container": "#efeeeb",
-        "error": "#ba1a1a",
-        "surface-container-lowest": "#ffffff",
-        "on-tertiary-fixed": "#2b1700",
-        "on-surface-variant": "#43474d",
-        "inverse-surface": "#30312f",
-        "surface-bright": "#fbf9f6",
-        "secondary-container": "#d5e3fc",
-        "on-tertiary": "#ffffff",
-        "on-primary": "#ffffff",
-        "on-error-container": "#93000a",
-        "on-secondary-fixed": "#0d1c2e",
-        "surface-container-highest": "#e4e2df",
-        "outline-variant": "#c3c6ce",
-        "on-tertiary-fixed-variant": "#673d00",
-        "warning-amber-soft": "#fef3c7"
+        // ── Vesto Rich Palette ──────────────────────────────────
+        // Ink / Navy (primary)
+        "primary":                "#0A1628",   // deep ink navy
+        "primary-container":      "#112240",   // midnight blue
+        "on-primary":             "#FFFFFF",
+        "on-primary-container":   "#7A9CC4",
+        "primary-fixed":          "#D2E4FF",
+        "primary-fixed-dim":      "#A8C4E8",
+        "on-primary-fixed":       "#001d37",
+        "on-primary-fixed-variant":"#2E4867",
+        "inverse-primary":        "#A8C4E8",
+
+        // Gold accent
+        "tertiary":               "#7A4800",
+        "tertiary-container":     "#5C3200",
+        "tertiary-fixed":         "#FDF0D5",   // aged parchment
+        "tertiary-fixed-dim":     "#E8B96A",   // warm gold light
+        "on-tertiary":            "#FFFFFF",
+        "on-tertiary-container":  "#C9922A",   // 18k gold
+        "on-tertiary-fixed":      "#2B1700",
+        "on-tertiary-fixed-variant":"#7A4800",
+
+        // Secondary / slate
+        "secondary":              "#4A5568",   // warmer slate
+        "secondary-container":    "#E8EEF6",
+        "secondary-fixed":        "#D5E3FC",
+        "secondary-fixed-dim":    "#B9C7DF",
+        "on-secondary":           "#FFFFFF",
+        "on-secondary-container": "#3A485B",
+        "on-secondary-fixed":     "#0d1c2e",
+        "on-secondary-fixed-variant":"#3a485b",
+
+        // Surfaces — warm parchment tones
+        "background":             "#F8F6F1",   // warm parchment
+        "surface":                "#F8F6F1",
+        "surface-bright":         "#FEFCF8",   // cream
+        "surface-card":           "#FEFCF8",   // cream cards
+        "surface-container-lowest":"#FFFFFF",
+        "surface-container-low":  "#F4F1EA",
+        "surface-container":      "#EDE9DF",
+        "surface-container-high": "#E6E2D8",
+        "surface-container-highest":"#DDD9CF",
+        "surface-variant":        "#E4E2D8",
+        "surface-dim":            "#D8D5CB",
+        "surface-tint":           "#3D5A80",
+        "inverse-surface":        "#2C2C28",
+        "inverse-on-surface":     "#F2F0E8",
+
+        // Text
+        "on-surface":             "#1A1A18",
+        "on-surface-variant":     "#42464C",
+        "on-background":          "#1A1A18",
+
+        // Semantic
+        "success-shamrock":       "#047857",   // deeper forest green
+        "error":                  "#BA1A1A",
+        "error-container":        "#FFDAD6",
+        "on-error":               "#FFFFFF",
+        "on-error-container":     "#93000A",
+
+        // Borders & outline
+        "outline":                "#74777E",
+        "outline-variant":        "#C3C6C8",
+        "border-subtle":          "#E8E4DA",   // warm border
+        "border-strong":          "#C8C4BA",
+
+        // Gold amber warning
+        "warning-amber-soft":     "#FDF0D5",   // matches tertiary-fixed
       },
       borderRadius: {
-        "DEFAULT": "0.25rem",
-        "lg": "0.5rem",
-        "xl": "0.75rem",
+        "DEFAULT": "0.375rem",
+        "lg":  "0.625rem",
+        "xl":  "0.875rem",
+        "2xl": "1.125rem",
+        "3xl": "1.5rem",
         "full": "9999px"
+      },
+      boxShadow: {
+        "card":  "0 1px 4px rgba(10,22,40,0.06), 0 4px 16px rgba(10,22,40,0.04)",
+        "card-hover": "0 4px 16px rgba(10,22,40,0.10), 0 1px 4px rgba(10,22,40,0.06)",
+        "nav":   "0 1px 0 rgba(10,22,40,0.10), 0 2px 8px rgba(10,22,40,0.06)",
+        "hero":  "0 8px 32px rgba(10,22,40,0.18), 0 2px 8px rgba(10,22,40,0.12)",
+        "gold":  "0 2px 12px rgba(201,146,42,0.18)",
+        "xs":    "0 1px 2px rgba(10,22,40,0.05)",
       },
       spacing: {
         "spacing-2xs": "0.25rem",
-        "spacing-xs": "0.5rem",
-        "spacing-sm": "0.75rem",
-        "spacing-md": "1rem",
-        "spacing-lg": "1.25rem",
-        "spacing-xl": "1.5rem",
+        "spacing-xs":  "0.5rem",
+        "spacing-sm":  "0.75rem",
+        "spacing-md":  "1rem",
+        "spacing-lg":  "1.25rem",
+        "spacing-xl":  "1.5rem",
         "spacing-2xl": "2rem",
         "spacing-3xl": "2.5rem",
-        "gutter-mobile": "1rem",
-        "margin-mobile": "1rem",
-        "gutter-desktop": "1.5rem",
-        "margin-desktop": "2rem"
+        "13": "3.25rem",
+        "18": "4.5rem",
       },
       fontFamily: {
-        sans: ["DM Sans", "sans-serif"],
-        "headline": ["Space Grotesk", "sans-serif"],
+        sans:        ["DM Sans", "sans-serif"],
+        "headline":  ["Space Grotesk", "sans-serif"],
+        "mono":      ["JetBrains Mono", "Menlo", "monospace"],
+        "numeric-metric":        ["Space Grotesk", "sans-serif"],
         "numeric-metric-mobile": ["Space Grotesk", "sans-serif"],
-        "label-sm": ["DM Sans", "sans-serif"],
-        "label-lg": ["DM Sans", "sans-serif"],
+        "label-sm":  ["DM Sans", "sans-serif"],
+        "label-lg":  ["DM Sans", "sans-serif"],
+        "label-md":  ["DM Sans", "sans-serif"],
         "headline-md": ["Space Grotesk", "sans-serif"],
-        "body-md": ["DM Sans", "sans-serif"],
-        "body-lg": ["DM Sans", "sans-serif"],
         "headline-xl": ["Space Grotesk", "sans-serif"],
-        "numeric-metric": ["Space Grotesk", "sans-serif"],
         "headline-xl-mobile": ["Space Grotesk", "sans-serif"],
         "headline-lg": ["Space Grotesk", "sans-serif"],
         "headline-sm": ["Space Grotesk", "sans-serif"],
-        "body-sm": ["DM Sans", "sans-serif"],
-        "label-md": ["DM Sans", "sans-serif"]
-      }
+        "body-md":   ["DM Sans", "sans-serif"],
+        "body-lg":   ["DM Sans", "sans-serif"],
+        "body-sm":   ["DM Sans", "sans-serif"],
+      },
+      backgroundImage: {
+        "hero-gradient": "linear-gradient(135deg, #0A1628 0%, #112240 55%, #0F1E3A 100%)",
+        "gold-gradient": "linear-gradient(135deg, #C9922A 0%, #E8B96A 100%)",
+        "parchment":     "linear-gradient(180deg, #F8F6F1 0%, #FEFCF8 100%)",
+      },
     }
   },
   plugins: [],

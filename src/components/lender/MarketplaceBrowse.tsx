@@ -4,117 +4,213 @@ import { ConnectKitButton } from 'connectkit';
 import { useApp } from '../../context/AppContext';
 import { Invoice } from '../../types';
 import { useFundInvoice, useUSDCBalance } from '../../hooks/useVestoEscrow';
-import { formatUSDC, explorerTxUrl, USDC_DECIMALS } from '../../config/contracts';
+import { formatUSDC, explorerTxUrl } from '../../config/contracts';
+
+const RiskBar: React.FC<{ score: number }> = ({ score }) => {
+  const color = score >= 75 ? '#10B981' : score >= 50 ? '#E8B96A' : '#EF4444';
+  return (
+    <div className="flex items-center gap-2">
+      <div className="flex-1 h-1 rounded-full overflow-hidden" style={{ background: 'var(--border)' }}>
+        <div className="h-full rounded-full transition-all" style={{ width: `${score}%`, background: color }} />
+      </div>
+      <span className="text-[10px] font-bold font-tnum" style={{ color }}>{score}</span>
+    </div>
+  );
+};
 
 export const MarketplaceBrowse: React.FC = () => {
   const { invoices, fundInvoiceLender, setLenderView } = useApp();
-  const { address, isConnected } = useAccount();
+  const { address: _address, isConnected } = useAccount();
   const { raw: usdcBalance } = useUSDCBalance();
   const { execute, step, txHash, isConfirming, isSuccess, errorMsg, reset } = useFundInvoice();
 
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedInvoices, setSelectedInvoices] = useState<string[]>([]);
-  const [fundingModalInvoice, setFundingModalInvoice] = useState<Invoice | null>(null);
+  const [fundingModal, setFundingModal] = useState<Invoice | null>(null);
 
-  const openInvoices = invoices.filter((i) => i.status === 'published_marketplace' || i.status === 'pending_admin_approval');
+  const openInvoices = invoices.filter(i => i.status === 'published_marketplace' || i.status === 'pending_admin_approval');
+  const totalPool = openInvoices.reduce((s, i) => s + i.amount, 0);
+  const avgYield = openInvoices.length
+    ? (openInvoices.reduce((s, i) => s + i.expectedYieldPct, 0) / openInvoices.length).toFixed(1)
+    : '—';
+  const avgRisk = openInvoices.length
+    ? Math.round(openInvoices.reduce((s, i) => s + i.riskScore, 0) / openInvoices.length)
+    : 0;
 
-  const filteredInvoices = openInvoices.filter((inv) => {
-    const matchesSearch =
-      inv.sellerBusinessName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      inv.buyerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      inv.id.toLowerCase().includes(searchTerm.toLowerCase());
-    if (selectedCategory === 'All') return matchesSearch;
-    if (selectedCategory === 'High Yield') return matchesSearch && inv.expectedYieldPct >= 15;
-    if (selectedCategory === 'Short Term') return matchesSearch && inv.termDays <= 45;
-    return matchesSearch && inv.sellerCategory.toLowerCase().includes(selectedCategory.toLowerCase());
+  const filteredInvoices = openInvoices.filter(inv => {
+    const q = searchTerm.toLowerCase();
+    const match = inv.sellerBusinessName.toLowerCase().includes(q) ||
+      inv.buyerName.toLowerCase().includes(q) || inv.id.toLowerCase().includes(q);
+    if (selectedCategory === 'All') return match;
+    if (selectedCategory === 'High Yield') return match && inv.expectedYieldPct >= 15;
+    if (selectedCategory === 'Short Term') return match && inv.termDays <= 45;
+    return match && inv.sellerCategory.toLowerCase().includes(selectedCategory.toLowerCase());
   });
 
-  const toggleSelectInvoice = (id: string) => {
-    setSelectedInvoices((prev) =>
-      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
-    );
-  };
+  const toggleSelect = (id: string) =>
+    setSelectedInvoices(p => p.includes(id) ? p.filter(x => x !== id) : [...p, id]);
 
-  const handleFundOnChain = async (inv: Invoice) => {
+  const handleFund = async (inv: Invoice) => {
     if (!isConnected) return;
-    // Also update local state for UI consistency
     fundInvoiceLender(inv.id);
-    // Fire real on-chain tx
     const sellerAddr = ('0x' + inv.sellerId.replace(/[^a-fA-F0-9]/g, '').padStart(40, '0')) as `0x${string}`;
     await execute(inv.id, sellerAddr, inv.advanceAmount);
   };
 
-  return (
-    <div className="max-w-4xl mx-auto py-6 px-4 flex flex-col gap-6 pb-32">
-      {/* Header Banner */}
-      <div className="bg-primary-container text-on-primary rounded-2xl p-5 shadow-sm relative overflow-hidden flex flex-col gap-2">
-        <div className="flex items-center justify-between">
-          <span className="font-label-sm text-xs text-on-primary-container uppercase tracking-wider font-semibold">
-            Vesto Marketplace — Arc Testnet
-          </span>
-          <span className="bg-success-shamrock/20 text-success-shamrock px-2.5 py-0.5 rounded-full text-xs font-bold flex items-center gap-1">
-            <span className="w-2 h-2 rounded-full bg-success-shamrock animate-pulse" />
-            <span>{openInvoices.length} Active Batches</span>
-          </span>
-        </div>
+  const categories = ['All', 'Agri Exporter', 'High Yield', 'Short Term', 'Cold Chain'];
 
-        <div className="flex items-baseline justify-between mt-1">
-          <div>
-            <span className="text-xs text-on-primary-container block">Total Pool Volume</span>
-            <span className="font-headline text-3xl font-extrabold text-white font-tnum">
-              ${openInvoices.reduce((s, i) => s + i.amount, 0).toLocaleString()} USDC
+  return (
+    <div className="max-w-4xl mx-auto py-8 px-4 flex flex-col gap-6 pb-32">
+
+      {/* ── Hero Pool Banner ─────────────────────────────────── */}
+      <section
+        className="relative rounded-3xl overflow-hidden text-white"
+        style={{
+          background: 'linear-gradient(135deg,#0A1628 0%,#0D1F3C 50%,#112240 100%)',
+          boxShadow: '0 20px 60px rgba(10,22,40,0.45), 0 0 0 1px rgba(201,146,42,0.18)',
+        }}
+      >
+        {/* Gold strip */}
+        <div className="absolute top-0 left-0 right-0 h-[3px]"
+          style={{ background: 'linear-gradient(90deg,transparent 0%,#C9922A 20%,#E8B96A 50%,#C9922A 80%,transparent 100%)' }}
+        />
+        {/* Glow */}
+        <div className="absolute top-0 left-0 w-[600px] h-[600px] rounded-full pointer-events-none"
+          style={{ background: 'radial-gradient(circle,rgba(201,146,42,0.06) 0%,transparent 60%)', transform: 'translate(-25%,-40%)' }}
+        />
+        {/* Dot matrix */}
+        <div className="absolute inset-0 opacity-[0.025]"
+          style={{ backgroundImage: 'radial-gradient(circle,#fff 1px,transparent 1px)', backgroundSize: '24px 24px' }}
+        />
+
+        <div className="relative p-7">
+          {/* Live badge */}
+          <div className="flex items-center gap-2 mb-4">
+            <span className="text-[10px] uppercase tracking-[0.14em] font-semibold" style={{ color: 'rgba(255,255,255,0.4)' }}>
+              Vesto Marketplace · Arc Testnet
+            </span>
+            <span
+              className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold"
+              style={{ background: 'rgba(16,185,129,0.15)', color: '#6EE7B7', border: '1px solid rgba(16,185,129,0.25)' }}
+            >
+              <span className="relative flex h-1.5 w-1.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-60" />
+                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-400" />
+              </span>
+              {openInvoices.length} Live Opportunities
             </span>
           </div>
-          <div className="text-right">
+
+          {/* Pool volume */}
+          <div className="mb-1" style={{ color: 'rgba(255,255,255,0.4)', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.12em', fontWeight: 600 }}>
+            Total Pool Volume
+          </div>
+          <div className="flex items-end gap-3 mb-5">
+            <span
+              className="font-headline font-extrabold text-white font-tnum leading-none"
+              style={{ fontSize: 'clamp(38px,7vw,58px)', letterSpacing: '-0.04em' }}
+            >
+              ${totalPool.toLocaleString()}
+            </span>
+            <span className="text-lg font-medium mb-1" style={{ color: 'rgba(255,255,255,0.3)' }}>USDC</span>
+          </div>
+
+          {/* Pool health bar */}
+          <div className="mb-5">
+            <div className="flex justify-between text-[10px] mb-1.5" style={{ color: 'rgba(255,255,255,0.35)' }}>
+              <span>Pool deployment</span>
+              <span className="font-tnum">{openInvoices.length > 0 ? Math.round((openInvoices.filter(i=>i.status==='funded').length/openInvoices.length)*100) : 0}% funded</span>
+            </div>
+            <div className="h-2 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.07)' }}>
+              <div
+                className="h-full rounded-full"
+                style={{
+                  width: `${openInvoices.length > 0 ? Math.round((openInvoices.filter(i=>i.status==='funded').length/openInvoices.length)*100) : 0}%`,
+                  background: 'linear-gradient(90deg,#10B981,#6EE7B7)',
+                  transition: 'width 0.8s cubic-bezier(0.22,1,0.36,1)',
+                }}
+              />
+            </div>
+          </div>
+
+          {/* Perforation */}
+          <div className="relative mb-5">
+            <div className="absolute -left-7 w-5 h-5 rounded-full" style={{ background: 'var(--canvas)', top: '-10px' }} />
+            <div className="absolute -right-7 w-5 h-5 rounded-full" style={{ background: 'var(--canvas)', top: '-10px' }} />
+            <div className="border-t border-dashed" style={{ borderColor: 'rgba(255,255,255,0.10)' }} />
+          </div>
+
+          {/* Stats strip */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-6">
+              <div>
+                <div className="text-[9px] uppercase tracking-widest font-semibold mb-0.5" style={{ color: 'rgba(255,255,255,0.35)' }}>Avg APY</div>
+                <div className="font-headline font-extrabold text-lg font-tnum" style={{ color: '#E8B96A' }}>{avgYield}%</div>
+              </div>
+              <div>
+                <div className="text-[9px] uppercase tracking-widest font-semibold mb-0.5" style={{ color: 'rgba(255,255,255,0.35)' }}>Avg Risk</div>
+                <div className="font-headline font-extrabold text-lg text-white font-tnum">{avgRisk}/100</div>
+              </div>
+              <div>
+                <div className="text-[9px] uppercase tracking-widest font-semibold mb-0.5" style={{ color: 'rgba(255,255,255,0.35)' }}>Finality</div>
+                <div className="font-headline font-extrabold text-lg text-white">&lt;1s</div>
+              </div>
+            </div>
             {isConnected ? (
-              <>
-                <span className="text-xs text-on-primary-container block">Your USDC Balance</span>
-                <span className="font-headline text-xl font-bold text-success-shamrock font-tnum">
-                  {usdcBalance !== undefined ? formatUSDC(usdcBalance) : '—'}
-                </span>
-              </>
+              <div className="text-right">
+                <div className="text-[9px] uppercase tracking-widest font-semibold mb-0.5" style={{ color: 'rgba(255,255,255,0.35)' }}>Your Balance</div>
+                <div className="font-headline font-bold text-base text-white font-tnum">
+                  {usdcBalance !== undefined ? formatUSDC(usdcBalance) : '—'} <span style={{ color: 'rgba(255,255,255,0.35)', fontSize: '11px' }}>USDC</span>
+                </div>
+              </div>
             ) : (
               <ConnectKitButton label="Connect Wallet" />
             )}
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Search & Filter */}
+      {/* ── Search + Filters ─────────────────────────────────── */}
       <div className="flex flex-col gap-3">
         <div className="flex gap-2">
           <div className="relative flex-1">
-            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-secondary text-lg">search</span>
+            <span className="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-secondary text-lg pointer-events-none">search</span>
             <input
               type="text"
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Search seller, buyer, category..."
-              className="w-full h-11 pl-10 pr-3 rounded-xl bg-surface-card font-body-md text-sm text-primary border border-border-subtle focus:outline-none focus:ring-2 focus:ring-primary shadow-xs"
+              onChange={e => setSearchTerm(e.target.value)}
+              placeholder="Search seller, buyer, invoice ID…"
+              className="w-full h-12 pl-11 pr-4 rounded-2xl text-sm text-primary border transition-all focus:outline-none focus:ring-2"
+              style={{
+                background: 'var(--surface-card)',
+                borderColor: 'var(--border)',
+                boxShadow: '0 1px 3px rgba(10,22,40,0.04)',
+              }}
             />
           </div>
           {selectedInvoices.length > 0 && (
             <button
               onClick={() => setLenderView('batch')}
-              className="px-4 py-2 bg-on-tertiary-container hover:bg-tertiary-fixed-dim text-white font-label-md text-xs font-bold rounded-xl shadow-md flex items-center gap-1.5 shrink-0"
+              className="px-4 h-12 rounded-2xl text-xs font-bold text-white flex items-center gap-1.5 shrink-0 transition-all active:scale-[0.98]"
+              style={{ background: 'linear-gradient(135deg,#C9922A,#E8B96A)', boxShadow: '0 6px 16px rgba(201,146,42,0.30)' }}
             >
               <span className="material-symbols-outlined text-base">layers</span>
-              <span>Batch ({selectedInvoices.length})</span>
+              Batch ({selectedInvoices.length})
             </button>
           )}
         </div>
 
-        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
-          {['All', 'Agri Exporter', 'High Yield', 'Short Term', 'Cold Chain'].map((cat) => (
+        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-0.5">
+          {categories.map(cat => (
             <button
               key={cat}
               onClick={() => setSelectedCategory(cat)}
-              className={`px-3 py-1.5 rounded-full text-xs font-semibold shrink-0 transition-all ${
-                selectedCategory === cat
-                  ? 'bg-primary text-white shadow-sm'
-                  : 'bg-surface-card text-secondary hover:text-primary border border-border-subtle'
-              }`}
+              className="px-4 py-2 rounded-full text-xs font-bold shrink-0 transition-all"
+              style={selectedCategory === cat
+                ? { background: 'linear-gradient(135deg,#C9922A,#E8B96A)', color: '#fff', boxShadow: '0 4px 12px rgba(201,146,42,0.25)' }
+                : { background: 'var(--surface-card)', color: 'var(--secondary)', border: '1px solid var(--border)' }
+              }
             >
               {cat}
             </button>
@@ -122,76 +218,111 @@ export const MarketplaceBrowse: React.FC = () => {
         </div>
       </div>
 
-      {/* Invoice List */}
+      {/* ── Invoice Cards ─────────────────────────────────────── */}
       <div className="flex flex-col gap-4">
         {filteredInvoices.length === 0 ? (
-          <div className="text-center py-12 bg-surface-card rounded-xl border border-border-subtle text-secondary text-xs">
-            No active invoices match your filter.
+          <div
+            className="flex flex-col items-center justify-center py-20 rounded-2xl"
+            style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}
+          >
+            <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-3" style={{ background: 'rgba(201,146,42,0.08)' }}>
+              <span className="material-symbols-outlined text-2xl" style={{ color: '#C9922A' }}>search_off</span>
+            </div>
+            <p className="text-sm font-semibold text-primary mb-1">No opportunities found</p>
+            <p className="text-xs text-secondary">Try a different filter or search term.</p>
           </div>
         ) : (
-          filteredInvoices.map((inv) => {
+          filteredInvoices.map(inv => {
             const isSelected = selectedInvoices.includes(inv.id);
             return (
               <div
                 key={inv.id}
-                className={`bg-surface-card rounded-2xl p-5 shadow-sm border transition-all flex flex-col gap-3 relative overflow-hidden ${
-                  isSelected ? 'border-primary ring-2 ring-primary/20' : 'border-border-subtle hover:border-primary/40'
-                }`}
+                className="relative rounded-2xl overflow-hidden transition-all"
+                style={{
+                  background: 'var(--surface-card)',
+                  border: isSelected ? '1.5px solid #C9922A' : '1px solid var(--border)',
+                  boxShadow: isSelected ? '0 0 0 3px rgba(201,146,42,0.10)' : '0 1px 4px rgba(10,22,40,0.05)',
+                  transition: 'box-shadow 0.2s ease, transform 0.2s ease',
+                }}
+                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.boxShadow = '0 8px 28px rgba(10,22,40,0.10)'; (e.currentTarget as HTMLElement).style.transform = 'translateY(-2px)'; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.boxShadow = isSelected ? '0 0 0 3px rgba(201,146,42,0.10)' : '0 1px 4px rgba(10,22,40,0.05)'; (e.currentTarget as HTMLElement).style.transform = 'translateY(0)'; }}
               >
-                <div className="absolute top-0 left-0 bottom-0 w-1.5 bg-success-shamrock" />
+                {/* Gold top accent */}
+                <div className="h-[3px]" style={{ background: 'linear-gradient(90deg,#C9922A,#E8B96A)' }} />
 
-                <div className="flex items-start justify-between pl-2">
-                  <div className="flex items-center gap-3">
-                    <input
-                      type="checkbox"
-                      checked={isSelected}
-                      onChange={() => toggleSelectInvoice(inv.id)}
-                      className="w-4 h-4 rounded text-primary focus:ring-primary cursor-pointer"
-                    />
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <span className="font-headline font-bold text-base text-primary">{inv.sellerBusinessName}</span>
-                        <span className="material-symbols-outlined text-success-shamrock text-base">verified</span>
+                <div className="p-5">
+                  {/* Top row */}
+                  <div className="flex items-start justify-between gap-3 mb-4">
+                    <div className="flex items-start gap-3">
+                      <input
+                        type="checkbox"
+                        checked={isSelected}
+                        onChange={() => toggleSelect(inv.id)}
+                        className="mt-1 w-4 h-4 rounded cursor-pointer"
+                        style={{ accentColor: '#C9922A' }}
+                      />
+                      <div>
+                        <div className="flex items-center gap-2 flex-wrap mb-0.5">
+                          <span className="font-headline font-extrabold text-base text-primary" style={{ letterSpacing: '-0.01em' }}>
+                            {inv.sellerBusinessName}
+                          </span>
+                          <span className="material-symbols-outlined text-[15px]" style={{ color: '#10B981' }}>verified</span>
+                        </div>
+                        <span className="text-[11px] text-secondary">{inv.sellerCategory}</span>
+                        <div className="mt-1.5 w-32">
+                          <RiskBar score={inv.riskScore} />
+                        </div>
                       </div>
-                      <span className="text-xs text-secondary">{inv.sellerCategory} · Risk Score: {inv.riskScore}/100</span>
+                    </div>
+                    {/* APY badge */}
+                    <div
+                      className="shrink-0 flex flex-col items-center justify-center px-4 py-3 rounded-2xl"
+                      style={{ background: 'linear-gradient(135deg,rgba(201,146,42,0.10) 0%,rgba(232,185,106,0.06) 100%)', border: '1px solid rgba(201,146,42,0.20)' }}
+                    >
+                      <span className="font-headline font-extrabold text-xl font-tnum" style={{ color: '#C9922A', letterSpacing: '-0.02em' }}>
+                        {inv.expectedYieldPct}%
+                      </span>
+                      <span className="text-[9px] uppercase tracking-widest font-bold" style={{ color: 'rgba(201,146,42,0.7)' }}>APY</span>
                     </div>
                   </div>
-                  <span className="bg-success-shamrock/10 text-success-shamrock px-3 py-1 rounded-full font-headline font-bold text-xs">
-                    {inv.expectedYieldPct}% APY
-                  </span>
-                </div>
 
-                <div className="pl-9 grid grid-cols-2 sm:grid-cols-4 gap-3 bg-surface-container-low p-3 rounded-xl border border-border-subtle text-xs">
-                  <div>
-                    <span className="text-secondary block text-[11px]">Buyer Offtaker</span>
-                    <span className="font-semibold text-primary truncate block">{inv.buyerName}</span>
+                  {/* Metrics grid */}
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4">
+                    {[
+                      { label: 'Buyer', value: inv.buyerName },
+                      { label: 'Invoice Total', value: `$${inv.amount.toLocaleString()}`, mono: true },
+                      { label: 'Advance', value: `$${inv.advanceAmount.toLocaleString()} (${inv.advanceRatePct}%)`, mono: true },
+                      { label: 'Term', value: `${inv.termDays}d · ${inv.dueDate}` },
+                    ].map(({ label, value, mono }) => (
+                      <div
+                        key={label}
+                        className="flex flex-col gap-0.5 px-3 py-2.5 rounded-xl"
+                        style={{ background: 'var(--canvas)', border: '1px solid var(--border)' }}
+                      >
+                        <span className="text-[9px] text-secondary uppercase tracking-widest font-semibold">{label}</span>
+                        <span className={`text-xs font-bold text-primary truncate ${mono ? 'font-tnum' : ''}`}>{value}</span>
+                      </div>
+                    ))}
                   </div>
-                  <div>
-                    <span className="text-secondary block text-[11px]">Invoice Total</span>
-                    <span className="font-bold text-primary font-tnum block">${inv.amount.toLocaleString()}</span>
-                  </div>
-                  <div>
-                    <span className="text-secondary block text-[11px]">Advance Capital</span>
-                    <span className="font-bold text-success-shamrock font-tnum block">${inv.advanceAmount.toLocaleString()} ({inv.advanceRatePct}%)</span>
-                  </div>
-                  <div>
-                    <span className="text-secondary block text-[11px]">Term Duration</span>
-                    <span className="font-semibold text-primary block">{inv.termDays}d · {inv.dueDate}</span>
-                  </div>
-                </div>
 
-                <div className="pl-9 flex items-center justify-between pt-1">
-                  <span className="text-[11px] text-secondary flex items-center gap-1">
-                    <span className="material-symbols-outlined text-xs">description</span>
-                    <span>{inv.docName || 'commercial_invoice.pdf'}</span>
-                  </span>
-                  <button
-                    onClick={() => setFundingModalInvoice(inv)}
-                    className="px-4 py-2 bg-primary hover:bg-primary-container text-white text-xs font-bold rounded-xl shadow-sm transition-all flex items-center gap-1"
-                  >
-                    <span className="font-tnum">Fund ${inv.advanceAmount.toLocaleString()}</span>
-                    <span className="material-symbols-outlined text-sm">arrow_forward</span>
-                  </button>
+                  {/* Bottom row */}
+                  <div className="flex items-center justify-between pt-1">
+                    <span className="text-[11px] text-secondary flex items-center gap-1.5">
+                      <span className="material-symbols-outlined text-[13px]">description</span>
+                      {inv.docName || 'commercial_invoice.pdf'}
+                    </span>
+                    <button
+                      onClick={() => setFundingModal(inv)}
+                      className="px-5 py-2.5 rounded-xl text-xs font-extrabold text-white transition-all active:scale-[0.97] flex items-center gap-2"
+                      style={{
+                        background: 'linear-gradient(135deg,#C9922A,#E8B96A)',
+                        boxShadow: '0 4px 14px rgba(201,146,42,0.28)',
+                      }}
+                    >
+                      Fund ${inv.advanceAmount.toLocaleString()} USDC
+                      <span className="material-symbols-outlined text-sm">bolt</span>
+                    </button>
+                  </div>
                 </div>
               </div>
             );
@@ -199,93 +330,153 @@ export const MarketplaceBrowse: React.FC = () => {
         )}
       </div>
 
-      {/* Funding Confirmation Modal */}
-      {fundingModalInvoice && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-surface-card rounded-2xl max-w-md w-full p-6 shadow-xl border border-border-subtle animate-in fade-in zoom-in duration-200">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-headline font-bold text-lg text-primary">Confirm Funding on Arc</h3>
-              <button onClick={() => { setFundingModalInvoice(null); reset(); }} className="text-secondary hover:text-primary">
-                <span className="material-symbols-outlined text-xl">close</span>
-              </button>
-            </div>
+      {/* ── Funding Modal ─────────────────────────────────────── */}
+      {fundingModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4"
+          style={{ background: 'rgba(5,12,25,0.75)', backdropFilter: 'blur(8px)' }}
+        >
+          <div
+            className="w-full max-w-md rounded-3xl overflow-hidden"
+            style={{
+              background: 'var(--surface-card)',
+              boxShadow: '0 32px 80px rgba(5,12,25,0.6), 0 0 0 1px rgba(201,146,42,0.20)',
+            }}
+          >
+            {/* Gold strip */}
+            <div className="h-[3px]" style={{ background: 'linear-gradient(90deg,#C9922A,#E8B96A)' }} />
 
-            <div className="flex flex-col gap-4 text-xs">
-              <div className="bg-surface-container-low p-4 rounded-xl border border-border-subtle flex flex-col gap-2">
-                <div className="flex justify-between">
-                  <span className="text-secondary">Seller:</span>
-                  <span className="font-bold text-primary">{fundingModalInvoice.sellerBusinessName}</span>
+            <div className="p-6 flex flex-col gap-5">
+              {/* Header */}
+              <div className="flex items-start justify-between">
+                <div>
+                  <h3 className="font-headline font-extrabold text-lg text-primary" style={{ letterSpacing: '-0.025em' }}>
+                    Confirm Funding
+                  </h3>
+                  <p className="text-xs text-secondary mt-0.5">{fundingModal.sellerBusinessName} · {fundingModal.sellerCategory}</p>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-secondary">Buyer:</span>
-                  <span className="font-bold text-primary">{fundingModalInvoice.buyerName}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-secondary">Expected Yield:</span>
-                  <span className="font-bold text-success-shamrock">{fundingModalInvoice.expectedYieldPct}% APY</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-secondary">Term:</span>
-                  <span className="font-semibold text-primary">{fundingModalInvoice.termDays} days</span>
+                <button
+                  onClick={() => { setFundingModal(null); reset(); }}
+                  className="w-9 h-9 rounded-full flex items-center justify-center text-secondary transition-all hover:text-primary"
+                  style={{ background: 'var(--canvas)', border: '1px solid var(--border)' }}
+                >
+                  <span className="material-symbols-outlined text-base">close</span>
+                </button>
+              </div>
+
+              {/* Deal rows */}
+              <div className="flex flex-col divide-y rounded-2xl overflow-hidden" style={{ borderColor: 'var(--border)', border: '1px solid var(--border)' }}>
+                {[
+                  ['Buyer Offtaker', fundingModal.buyerName],
+                  ['Expected Yield', `${fundingModal.expectedYieldPct}% APY`],
+                  ['Term Duration', `${fundingModal.termDays} days · due ${fundingModal.dueDate}`],
+                  ['Risk Score', `${fundingModal.riskScore}/100`],
+                ].map(([label, value]) => (
+                  <div key={label} className="flex items-center justify-between px-4 py-3">
+                    <span className="text-xs text-secondary">{label}</span>
+                    <span
+                      className="text-xs font-bold text-primary"
+                      style={label === 'Expected Yield' ? { color: '#C9922A' } : {}}
+                    >{value}</span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Capital card */}
+              <div
+                className="relative rounded-2xl p-5 overflow-hidden"
+                style={{
+                  background: 'linear-gradient(135deg,#0A1628 0%,#112240 100%)',
+                  boxShadow: '0 0 0 1px rgba(201,146,42,0.20)',
+                }}
+              >
+                <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: 'linear-gradient(90deg,#C9922A,#E8B96A)' }} />
+                <div className="absolute inset-0 opacity-[0.025]"
+                  style={{ backgroundImage: 'radial-gradient(circle,#fff 1px,transparent 1px)', backgroundSize: '20px 20px' }}
+                />
+                <div className="relative flex items-end justify-between">
+                  <div>
+                    <div className="text-[9px] uppercase tracking-widest font-semibold mb-1 text-white/40">Capital Required</div>
+                    <div className="font-headline font-extrabold text-white font-tnum" style={{ fontSize: '32px', letterSpacing: '-0.03em' }}>
+                      ${fundingModal.advanceAmount.toLocaleString()}
+                      <span className="text-base font-medium ml-2 text-white/35">USDC</span>
+                    </div>
+                  </div>
+                  {isConnected && usdcBalance !== undefined && (
+                    <div className="text-right">
+                      <div className="text-[9px] uppercase tracking-widest font-semibold mb-1 text-white/40">Your Balance</div>
+                      <div className="font-bold text-white font-tnum text-sm">{formatUSDC(usdcBalance)}</div>
+                    </div>
+                  )}
                 </div>
               </div>
 
-              <div className="bg-primary text-white p-4 rounded-xl flex items-center justify-between">
-                <div>
-                  <span className="text-primary-fixed-dim text-[11px] uppercase tracking-wider block">Capital Required</span>
-                  <span className="font-headline font-extrabold text-2xl font-tnum">${fundingModalInvoice.advanceAmount.toLocaleString()} USDC</span>
-                </div>
-                <div className="text-right">
-                  <span className="text-primary-fixed-dim text-[11px] block">Your Balance</span>
-                  <span className="font-bold text-success-shamrock font-tnum">
-                    {usdcBalance !== undefined ? formatUSDC(usdcBalance) : '—'}
+              {/* Transaction state */}
+              {(step === 'approving' || step === 'funding' || isConfirming) && (
+                <div
+                  className="flex items-center gap-3 px-4 py-3 rounded-xl"
+                  style={{ background: 'rgba(99,102,241,0.06)', border: '1px solid rgba(99,102,241,0.15)' }}
+                >
+                  <span className="material-symbols-outlined text-sm animate-spin" style={{ color: '#818CF8' }}>progress_activity</span>
+                  <span className="text-xs font-semibold" style={{ color: '#818CF8' }}>
+                    {step === 'approving' ? 'Step 1 of 2 — Approve USDC spend in wallet…'
+                      : step === 'funding' ? 'Step 2 of 2 — Confirm funding transaction…'
+                      : 'Waiting for Arc block confirmation…'}
                   </span>
                 </div>
-              </div>
-
-              {/* Transaction State */}
-              {step === 'approving' && (
-                <p className="text-center text-xs text-secondary">Step 1/2: Approve USDC spend in your wallet...</p>
-              )}
-              {step === 'funding' && (
-                <p className="text-center text-xs text-secondary">Step 2/2: Confirm funding transaction...</p>
-              )}
-              {isConfirming && (
-                <p className="text-center text-xs text-secondary">Waiting for confirmation on Arc...</p>
               )}
               {isSuccess && txHash && (
-                <div className="bg-success-shamrock/10 border border-success-shamrock/30 p-3 rounded-xl text-center">
-                  <p className="text-success-shamrock font-bold text-xs mb-1">Funded on Arc!</p>
+                <div
+                  className="flex flex-col items-center gap-2 py-4 rounded-2xl"
+                  style={{ background: 'rgba(16,185,129,0.06)', border: '1px solid rgba(16,185,129,0.20)' }}
+                >
+                  <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ background: 'rgba(16,185,129,0.15)' }}>
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                      <path d="M3 9L7 13L15 5" stroke="#10B981" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </div>
+                  <span className="text-sm font-bold" style={{ color: '#10B981' }}>Invoice Funded on Arc</span>
                   <a
                     href={explorerTxUrl(txHash)}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-[11px] text-primary underline font-mono"
+                    className="mono text-[11px] underline text-secondary hover:text-primary"
                   >
-                    View on explorer
+                    View transaction on ArcScan ↗
                   </a>
                 </div>
               )}
               {step === 'error' && (
-                <p className="text-xs text-error text-center">{errorMsg || 'Transaction failed. Please try again.'}</p>
+                <div className="text-xs text-center font-semibold py-2 rounded-xl" style={{ color: '#EF4444', background: 'rgba(239,68,68,0.06)', border: '1px solid rgba(239,68,68,0.15)' }}>
+                  {errorMsg || 'Transaction failed. Please try again.'}
+                </div>
               )}
 
+              {/* CTA */}
               {!isConnected ? (
                 <div className="flex justify-center">
                   <ConnectKitButton label="Connect Wallet to Fund" />
                 </div>
               ) : step === 'idle' || step === 'error' ? (
                 <button
-                  onClick={() => handleFundOnChain(fundingModalInvoice)}
-                  className="w-full h-12 bg-success-shamrock hover:bg-success-shamrock/90 text-white font-label-lg font-bold rounded-xl shadow-md transition-all flex items-center justify-center gap-2"
+                  onClick={() => handleFund(fundingModal)}
+                  className="w-full h-14 rounded-2xl text-sm font-extrabold text-white flex items-center justify-center gap-2 transition-all active:scale-[0.98]"
+                  style={{
+                    background: 'linear-gradient(135deg,#C9922A 0%,#E8B96A 100%)',
+                    boxShadow: '0 8px 24px rgba(201,146,42,0.35)',
+                  }}
                 >
                   <span className="material-symbols-outlined text-lg">bolt</span>
-                  <span>Fund on Arc</span>
+                  Fund on Arc · ${fundingModal.advanceAmount.toLocaleString()} USDC
                 </button>
               ) : (
-                <button disabled className="w-full h-12 bg-success-shamrock/50 text-white font-label-lg font-bold rounded-xl flex items-center justify-center gap-2 cursor-not-allowed">
+                <button
+                  disabled
+                  className="w-full h-14 rounded-2xl text-sm font-extrabold text-white/60 flex items-center justify-center gap-2 cursor-not-allowed"
+                  style={{ background: 'var(--accent)', opacity: 0.6 }}
+                >
                   <span className="material-symbols-outlined text-lg animate-spin">progress_activity</span>
-                  <span>Processing...</span>
+                  Processing on Arc…
                 </button>
               )}
             </div>

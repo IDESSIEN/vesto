@@ -37,21 +37,24 @@ export const AppContent: React.FC = () => {
   const navBtn = (active: boolean, onClick: () => void, label: string) => (
     <button
       onClick={onClick}
-      className={`px-3 py-1.5 rounded-lg font-semibold whitespace-nowrap transition-all text-xs ${
-        active ? 'bg-primary text-white' : 'text-secondary hover:text-primary'
+      className={`px-3.5 py-1.5 rounded-full font-semibold whitespace-nowrap transition-all duration-150 text-xs relative ${
+        active
+          ? 'text-primary font-bold shadow-xs'
+          : 'text-secondary hover:text-primary'
       }`}
+      style={active ? { background: 'linear-gradient(135deg, #C9922A 0%, #E8B96A 100%)', color: '#FFFFFF' } : {}}
     >
       {label}
     </button>
   );
 
   return (
-    <div className="min-h-screen flex flex-col bg-surface text-on-surface">
+    <div className="min-h-dvh flex flex-col bg-surface text-on-surface">
       <Navbar />
 
       {/* Sub-Navigation */}
-      <div className="bg-surface-card border-b border-border-subtle">
-        <div className="max-w-7xl mx-auto px-4 flex items-center justify-end gap-2 overflow-x-auto py-2">
+      <div className="border-b border-border-subtle" style={{ background: 'var(--surface-strong)', backdropFilter: 'blur(8px)' }}>
+        <div className="max-w-7xl mx-auto px-4 flex items-center justify-end gap-1 overflow-x-auto py-2 no-scrollbar">
           {currentRole === 'seller' && (
             <>
               {navBtn(sellerView === 'dashboard',     () => setSellerView('dashboard'),     'Dashboard')}

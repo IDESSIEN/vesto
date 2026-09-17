@@ -5,42 +5,118 @@
 @layer base {
   html, body {
     width: 100%;
-    min-height: 100vh;
+    min-height: 100dvh;
     margin: 0;
     padding: 0;
-    background-color: #fbf9f6;
+    background-color: #F8F6F1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
-  
+
   body {
+    font-family: 'DM Sans', sans-serif;
     overscroll-behavior: none;
+    color: #1A1A18;
+  }
+
+  /* Arc CSS custom properties */
+  :root {
+    --bg: #F8F6F1;
+    --bg-gradient: linear-gradient(180deg, #F8F6F1 0%, #FEFCF8 100%);
+    --surface: rgba(254, 252, 248, 0.80);
+    --surface-strong: rgba(254, 252, 248, 0.95);
+    --surface-muted: #F4F1EA;
+    --ink: #0A1628;
+    --ink-2: #2C3E50;
+    --muted: #4A5568;
+    --subtle: #7A8899;
+    --border: rgba(10, 22, 40, 0.10);
+    --border-strong: rgba(10, 22, 40, 0.22);
+    --accent: #0A1628;
+    --accent-hover: #112240;
+    --gold: #C9922A;
+    --gold-light: #E8B96A;
+    --gold-bg: #FDF0D5;
+    --focus: #7A9CC4;
+    --success: #047857;
+    --danger: #BA1A1A;
   }
 
   .pb-safe {
     padding-bottom: env(safe-area-inset-bottom, 0px);
   }
-
   .pt-safe {
     padding-top: env(safe-area-inset-top, 0px);
   }
+
+  /* Typography helpers */
+  .display {
+    font-family: 'Space Grotesk', sans-serif;
+    letter-spacing: -0.03em;
+  }
+  .mono {
+    font-family: 'JetBrains Mono', Menlo, monospace;
+  }
+  h1, h2, h3 {
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
 }
 
-/* Custom scrollbars */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-::-webkit-scrollbar-track {
-  background: #fbf9f6;
-}
+/* ── Scrollbars ─────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: rgba(10,22,40,0.12);
   border-radius: 9999px;
 }
-::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+::-webkit-scrollbar-thumb:hover { background: rgba(10,22,40,0.22); }
+
+/* ── Utility classes ────────────────────────────────────────── */
+.font-tnum   { font-variant-numeric: tabular-nums; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ── Glass surfaces ─────────────────────────────────────────── */
+.glass-card {
+  background: rgba(254, 252, 248, 0.80);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(10, 22, 40, 0.08);
+}
+.glass-inner {
+  background: rgba(248, 246, 241, 0.70);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(10, 22, 40, 0.07);
 }
 
-/* Tabular figures for numbers */
-.font-tnum {
-  font-variant-numeric: tabular-nums;
+/* ── Gold accent strip (top of hero cards) ──────────────────── */
+.gold-strip::before {
+  content: '';
+  display: block;
+  height: 3px;
+  border-radius: 9999px 9999px 0 0;
+  background: linear-gradient(90deg, #C9922A 0%, #E8B96A 60%, #C9922A 100%);
+  margin: -1.5rem -1.5rem 1.25rem;
+}
+
+/* ── Vesto hero card ────────────────────────────────────────── */
+.vesto-hero {
+  background: linear-gradient(135deg, #0A1628 0%, #112240 55%, #0F1E3A 100%);
+  box-shadow: 0 8px 32px rgba(10,22,40,0.22), 0 2px 8px rgba(10,22,40,0.12);
+}
+
+/* ── Shimmer skeleton ───────────────────────────────────────── */
+@keyframes shimmer {
+  0% { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+.shimmer {
+  background: linear-gradient(90deg, #EDE9DF 25%, #F4F1EA 50%, #EDE9DF 75%);
+  background-size: 800px 100%;
+  animation: shimmer 1.4s infinite;
 }

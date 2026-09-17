@@ -6,101 +6,96 @@ export const SellerOnboardingTutorial: React.FC = () => {
   const [currentStep, setCurrentStep] = useState(0);
 
   const steps = [
-    {
-      title: 'Submit Unpaid Invoices',
-      icon: 'description',
-      description: 'Upload invoices issued to buyers with 30-90 day payment terms. Get instant AI validation.',
-      detail: 'Advance accepts commercial invoices, bills of lading, and delivery receipts.',
-    },
-    {
-      title: 'Receive Instant Cash Advance',
-      icon: 'payments',
-      description: 'Get up to 85% of your invoice value transferred to your Mobile Money or Bank within minutes.',
-      detail: 'Zero debt created on your balance sheet — this is immediate factoring liquidity.',
-    },
-    {
-      title: 'Buyer Settles directly on Arc',
-      icon: 'account_balance',
-      description: 'Your buyer pays the invoice on due date. The remaining 15% balance (minus minor fee) is released to you.',
-      detail: 'Fully transparent liquidity pools managed by smart contracts on Arc.',
-    },
-    {
-      title: 'Grow Your Credit Limit',
-      icon: 'trending_up',
-      description: 'Each on-time invoice settlement increases your credit limit automatically up to $5,000+.',
-      detail: 'Unlock Tier 2 and institutional credit lines as your trading history grows.',
-    },
+    { title: 'Submit Unpaid Invoices',      icon: 'description',    description: 'Upload invoices issued to buyers with 30–90 day payment terms. Get instant AI validation.',               detail: 'Vesto accepts commercial invoices, bills of lading, and delivery receipts.' },
+    { title: 'Receive Instant Cash Advance', icon: 'payments',       description: 'Get up to 85% of your invoice value advanced to your bank or mobile money within minutes.',             detail: 'Zero debt on your balance sheet — this is immediate factoring liquidity.' },
+    { title: 'Buyer Settles on Arc',          icon: 'account_balance', description: 'Your buyer pays the invoice on due date. The remaining 15% (minus fee) is released to your wallet.', detail: 'Fully transparent liquidity pools governed by smart contracts on Arc.' },
+    { title: 'Grow Your Credit Limit',       icon: 'trending_up',    description: 'Each on-time settlement increases your credit limit automatically up to $5,000+.',                      detail: 'Unlock Tier 2 and institutional credit lines as your history grows.' },
   ];
 
+  const step = steps[currentStep];
+  const isLast = currentStep === steps.length - 1;
+
   return (
-    <div className="max-w-xl mx-auto py-6 px-4">
-      {/* Navigation */}
-      <div className="flex items-center justify-between mb-6">
+    <div className="max-w-lg mx-auto py-8 px-4">
+      {/* Top nav */}
+      <div className="flex items-center justify-between mb-8">
         <button
           onClick={() => setSellerView('dashboard')}
-          className="text-xs font-semibold text-secondary hover:text-primary"
+          className="text-xs font-semibold text-secondary hover:text-primary transition-colors"
         >
           Skip Tutorial
         </button>
-        <span className="font-label-sm text-xs text-primary font-bold">
-          Step {currentStep + 1} of {steps.length}
+        <span className="text-xs font-bold text-primary mono">
+          {currentStep + 1} / {steps.length}
         </span>
       </div>
 
-      {/* Step Card */}
-      <div className="bg-surface-card rounded-2xl p-6 shadow-md border border-border-subtle mb-6 text-center flex flex-col items-center">
-        <div className="w-16 h-16 rounded-2xl bg-primary-container text-white flex items-center justify-center mb-4 shadow-sm">
-          <span className="material-symbols-outlined text-3xl">{steps[currentStep].icon}</span>
-        </div>
-
-        <h2 className="font-headline text-xl font-bold text-primary mb-2">
-          {steps[currentStep].title}
-        </h2>
-        <p className="font-body-md text-sm text-secondary mb-4 leading-relaxed">
-          {steps[currentStep].description}
-        </p>
-
-        <div className="w-full bg-surface-container-low p-3 rounded-xl border border-border-subtle text-left text-xs text-on-surface-variant flex items-center gap-2">
-          <span className="material-symbols-outlined text-success-shamrock text-base shrink-0">check_circle</span>
-          <span>{steps[currentStep].detail}</span>
-        </div>
-      </div>
-
-      {/* Step indicator dots */}
-      <div className="flex justify-center items-center gap-2 mb-6">
-        {steps.map((_, idx) => (
+      {/* Progress track */}
+      <div className="flex gap-1.5 mb-8">
+        {steps.map((_, i) => (
           <div
-            key={idx}
-            onClick={() => setCurrentStep(idx)}
-            className={`h-2 rounded-full cursor-pointer transition-all duration-300 ${
-              idx === currentStep ? 'w-8 bg-primary' : 'w-2 bg-surface-container-high'
-            }`}
+            key={i}
+            className="flex-1 h-1 rounded-full cursor-pointer transition-all duration-300"
+            style={i <= currentStep
+              ? { background: 'linear-gradient(90deg, #C9922A, #E8B96A)' }
+              : { background: 'var(--surface-muted)', border: '1px solid var(--border)' }
+            }
+            onClick={() => setCurrentStep(i)}
           />
         ))}
       </div>
 
-      {/* Action Buttons */}
+      {/* Card */}
+      <div className="bg-surface-card rounded-2xl shadow-card border border-border-subtle overflow-hidden mb-6">
+        {/* Gold strip */}
+        <div className="h-[3px]" style={{ background: 'linear-gradient(90deg, #C9922A, #E8B96A)' }} />
+        <div className="p-8 flex flex-col items-center text-center">
+          <div
+            className="w-16 h-16 rounded-2xl flex items-center justify-center mb-5 shadow-gold"
+            style={{ background: 'linear-gradient(135deg, #C9922A 0%, #E8B96A 100%)' }}
+          >
+            <span className="material-symbols-outlined text-3xl text-white">{step.icon}</span>
+          </div>
+          <h2 className="font-headline text-2xl font-bold text-primary mb-3" style={{ letterSpacing: '-0.02em' }}>
+            {step.title}
+          </h2>
+          <p className="text-sm text-secondary leading-relaxed mb-5 max-w-sm text-pretty">
+            {step.description}
+          </p>
+          <div
+            className="w-full p-3 rounded-xl text-left text-xs flex items-center gap-2"
+            style={{ background: 'var(--surface-muted)', border: '1px solid var(--border)' }}
+          >
+            <span className="material-symbols-outlined text-success-shamrock text-base shrink-0">check_circle</span>
+            <span className="text-secondary">{step.detail}</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Buttons */}
       <div className="flex gap-3">
         {currentStep > 0 && (
           <button
-            onClick={() => setCurrentStep((prev) => prev - 1)}
-            className="flex-1 h-12 bg-surface-container text-primary font-label-lg font-bold rounded-xl hover:bg-surface-variant transition-all"
+            onClick={() => setCurrentStep(p => p - 1)}
+            className="flex-1 h-12 rounded-xl text-sm font-bold text-primary border border-border-strong transition-all hover:border-border-strong/60 active:scale-[0.98]"
+            style={{ background: 'var(--surface-strong)' }}
           >
             Previous
           </button>
         )}
-
-        {currentStep < steps.length - 1 ? (
+        {!isLast ? (
           <button
-            onClick={() => setCurrentStep((prev) => prev + 1)}
-            className="flex-1 h-12 bg-primary text-white font-label-lg font-bold rounded-xl hover:bg-primary-container transition-all"
+            onClick={() => setCurrentStep(p => p + 1)}
+            className="flex-1 h-12 rounded-xl text-sm font-bold text-white shadow-gold transition-all active:scale-[0.98]"
+            style={{ background: 'var(--accent)' }}
           >
             Next Step
           </button>
         ) : (
           <button
             onClick={() => setSellerView('submit_invoice')}
-            className="flex-1 h-12 bg-success-shamrock text-white font-label-lg font-bold rounded-xl hover:bg-success-shamrock/90 transition-all flex items-center justify-center gap-2"
+            className="flex-1 h-12 rounded-xl text-sm font-bold text-white shadow-gold transition-all active:scale-[0.98] flex items-center justify-center gap-2"
+            style={{ background: 'linear-gradient(135deg, #C9922A 0%, #E8B96A 100%)' }}
           >
             <span>Submit First Invoice</span>
             <span className="material-symbols-outlined text-lg">arrow_forward</span>
