@@ -19,7 +19,7 @@ export const LenderSignUp: React.FC = () => {
   const blurStyle  = { borderColor: 'var(--border)', boxShadow: '0 1px 2px rgba(10,22,40,0.04)' };
 
   return (
-    <div className="min-h-screen flex items-stretch" style={{ background: 'var(--canvas)' }}>
+    <div className="flex items-stretch" style={{ background: 'var(--canvas)', minHeight: 'calc(100dvh - 96px)' }}>
 
       {/* ── Left editorial panel ─────────────────────────────── */}
       <div
@@ -100,8 +100,17 @@ export const LenderSignUp: React.FC = () => {
       </div>
 
       {/* ── Right form panel ─────────────────────────────────── */}
-      <div className="flex-1 flex items-center justify-center px-6 py-12">
+      <div className="flex-1 flex items-center justify-center px-4 sm:px-6 py-8 sm:py-12">
         <div className="w-full max-w-sm">
+
+          {/* Mobile logo */}
+          <div className="flex items-center gap-2 mb-6 lg:hidden">
+            <div
+              className="w-8 h-8 rounded-xl flex items-center justify-center font-headline font-extrabold text-sm text-white"
+              style={{ background: 'linear-gradient(135deg,#C9922A,#E8B96A)' }}
+            >V</div>
+            <span className="font-headline font-extrabold text-primary text-lg" style={{ letterSpacing: '-0.02em' }}>Vesto</span>
+          </div>
 
           {/* Step indicator */}
           <div className="flex items-center gap-3 mb-8">

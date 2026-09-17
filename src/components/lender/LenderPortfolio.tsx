@@ -25,7 +25,7 @@ export const LenderPortfolio: React.FC = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto py-6 px-4 flex flex-col gap-5 pb-28">
+    <div className="max-w-4xl mx-auto py-6 px-3 sm:px-4 flex flex-col gap-5 pb-28">
 
       {/* ── Header ────────────────────────────────────────────── */}
       <header className="flex items-center justify-between">

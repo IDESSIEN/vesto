@@ -7,7 +7,7 @@ export const AnalyticsOverview: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto py-6 px-4 flex flex-col gap-6 pb-28">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h1 className="font-headline text-2xl font-bold text-primary tracking-tight">Platform Analytics Overview</h1>
           <span className="text-xs text-secondary">Real-Time Macro Performance & System Health</span>
@@ -112,7 +112,7 @@ export const AnalyticsOverview: React.FC = () => {
       </div>
 
       {/* System & Arc Network Health */}
-      <div className="bg-primary-container text-on-primary rounded-2xl p-5 shadow-sm flex items-center justify-between">
+      <div className="bg-primary-container text-on-primary rounded-2xl p-5 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-success-shamrock text-white flex items-center justify-center font-bold">
             <span className="material-symbols-outlined text-xl">bolt</span>

@@ -37,7 +37,7 @@ export const AppContent: React.FC = () => {
   const navBtn = (active: boolean, onClick: () => void, label: string) => (
     <button
       onClick={onClick}
-      className={`px-3.5 py-1.5 rounded-full font-semibold whitespace-nowrap transition-all duration-150 text-xs relative ${
+      className={`px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-full font-semibold whitespace-nowrap transition-all duration-150 text-[11px] sm:text-xs relative ${
         active
           ? 'text-primary font-bold shadow-xs'
           : 'text-secondary hover:text-primary'
@@ -54,7 +54,7 @@ export const AppContent: React.FC = () => {
 
       {/* Sub-Navigation */}
       <div className="border-b border-border-subtle" style={{ background: 'var(--surface-strong)', backdropFilter: 'blur(8px)' }}>
-        <div className="max-w-7xl mx-auto px-4 flex items-center justify-end gap-1 overflow-x-auto py-2 no-scrollbar">
+        <div className="max-w-7xl mx-auto px-2 sm:px-4 flex items-center justify-end gap-0.5 sm:gap-1 overflow-x-auto py-1.5 sm:py-2 no-scrollbar">
           {currentRole === 'seller' && (
             <>
               {navBtn(sellerView === 'dashboard',     () => setSellerView('dashboard'),     'Dashboard')}
@@ -89,7 +89,7 @@ export const AppContent: React.FC = () => {
       </div>
 
       {/* Main Content */}
-      <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6">
+      <main className="flex-1 max-w-7xl w-full mx-auto p-0 sm:p-2">
         {currentRole === 'seller' && (
           <>
             {sellerView === 'signup'         && <SellerSignUp />}

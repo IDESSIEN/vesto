@@ -73,7 +73,7 @@ export const SellerDashboard: React.FC = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto py-8 px-4 flex flex-col gap-6 pb-28">
+    <div className="max-w-4xl mx-auto py-6 sm:py-8 px-3 sm:px-4 flex flex-col gap-5 sm:gap-6 pb-28">
 
       {/* ── Identity Header ─────────────────────────────────── */}
       <header className="flex items-center justify-between">
@@ -250,7 +250,7 @@ export const SellerDashboard: React.FC = () => {
       )}
 
       {/* ── Stat Tiles ───────────────────────────────────────── */}
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
         <StatTile label="Active Capital" value={`$${activeCapital.toLocaleString()}`} sub="In escrow" accent="#10B981" />
         <StatTile label="Cash Received"  value={`$${seller.totalFinanced.toLocaleString()}`} sub="All time" />
         <StatTile label="On Marketplace" value={`${openOnMarket}`} sub="Open invoices" accent="#E8B96A" />
@@ -306,14 +306,14 @@ export const SellerDashboard: React.FC = () => {
       {/* ── Invoices Ledger ──────────────────────────────────── */}
       <section>
         {/* Section header */}
-        <div className="flex items-center justify-between mb-3">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
           <div>
             <h3 className="font-headline text-base font-extrabold text-primary" style={{ letterSpacing: '-0.02em' }}>Invoices Ledger</h3>
             <p className="text-[11px] text-secondary">Live status of submitted invoices</p>
           </div>
           {/* Tab switcher */}
           <div
-            className="flex items-center gap-0.5 p-1 rounded-full"
+            className="flex items-center gap-0.5 p-1 rounded-full overflow-x-auto no-scrollbar self-start sm:self-auto"
             style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}
           >
             {(['all', 'pending', 'funded', 'repaid'] as const).map((tab) => (

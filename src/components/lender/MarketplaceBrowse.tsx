@@ -61,7 +61,7 @@ export const MarketplaceBrowse: React.FC = () => {
   const categories = ['All', 'Agri Exporter', 'High Yield', 'Short Term', 'Cold Chain'];
 
   return (
-    <div className="max-w-4xl mx-auto py-8 px-4 flex flex-col gap-6 pb-32">
+    <div className="max-w-4xl mx-auto py-6 sm:py-8 px-3 sm:px-4 flex flex-col gap-5 sm:gap-6 pb-32">
 
       {/* ── Hero Pool Banner ─────────────────────────────────── */}
       <section
@@ -84,7 +84,7 @@ export const MarketplaceBrowse: React.FC = () => {
           style={{ backgroundImage: 'radial-gradient(circle,#fff 1px,transparent 1px)', backgroundSize: '24px 24px' }}
         />
 
-        <div className="relative p-7">
+        <div className="relative p-5 sm:p-7">
           {/* Live badge */}
           <div className="flex items-center gap-2 mb-4">
             <span className="text-[10px] uppercase tracking-[0.14em] font-semibold" style={{ color: 'rgba(255,255,255,0.4)' }}>
@@ -142,8 +142,8 @@ export const MarketplaceBrowse: React.FC = () => {
           </div>
 
           {/* Stats strip */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-6">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="flex items-center gap-4 sm:gap-6">
               <div>
                 <div className="text-[9px] uppercase tracking-widest font-semibold mb-0.5" style={{ color: 'rgba(255,255,255,0.35)' }}>Avg APY</div>
                 <div className="font-headline font-extrabold text-lg font-tnum" style={{ color: '#E8B96A' }}>{avgYield}%</div>
