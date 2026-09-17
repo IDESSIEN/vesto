@@ -111,15 +111,15 @@ export const AnalyticsOverview: React.FC = () => {
         </div>
       </div>
 
-      {/* System & Monad Network Health */}
+      {/* System & Arc Network Health */}
       <div className="bg-primary-container text-on-primary rounded-2xl p-5 shadow-sm flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-success-shamrock text-white flex items-center justify-center font-bold">
             <span className="material-symbols-outlined text-xl">bolt</span>
           </div>
           <div>
-            <h4 className="font-headline font-bold text-sm text-white">Monad Testnet Performance</h4>
-            <span className="text-xs text-on-primary-container">Avg Block Time: 400ms · Finality: 800ms · Gas limit optimized</span>
+            <h4 className="font-headline font-bold text-sm text-white">Arc Testnet Performance</h4>
+            <span className="text-xs text-on-primary-container">Avg Block Time: &lt;1s · Finality: Sub-second · USDC native gas</span>
           </div>
         </div>
 

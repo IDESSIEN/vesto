@@ -19,10 +19,10 @@ export const SellerOnboardingTutorial: React.FC = () => {
       detail: 'Zero debt created on your balance sheet — this is immediate factoring liquidity.',
     },
     {
-      title: 'Buyer Settles directly on Monad',
+      title: 'Buyer Settles directly on Arc',
       icon: 'account_balance',
       description: 'Your buyer pays the invoice on due date. The remaining 15% balance (minus minor fee) is released to you.',
-      detail: 'Fully transparent liquidity pools managed by smart contracts on Monad.',
+      detail: 'Fully transparent liquidity pools managed by smart contracts on Arc.',
     },
     {
       title: 'Grow Your Credit Limit',

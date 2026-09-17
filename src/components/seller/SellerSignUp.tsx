@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
+import { ConnectKitButton } from 'connectkit';
 
 export const SellerSignUp: React.FC = () => {
-  const { setSellerView, loginWithEmailOrPhone, connectExternalWallet, showToast } = useApp();
+  const { setSellerView, showToast } = useApp();
   const [fullName, setFullName] = useState('Amina Diallo');
   const [email, setEmail] = useState('amina@nairobfresh.co');
   const [phonePrefix, setPhonePrefix] = useState('+254');
@@ -12,8 +13,7 @@ export const SellerSignUp: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    loginWithEmailOrPhone(email || `${phonePrefix}${phoneNumber}`);
-    showToast('Seller Account Created! Embedded Monad MPC Wallet provisioned (0 Seed Phrases).', 'success');
+    showToast('Seller Account Created! Connect your wallet to submit invoices on Arc.', 'success');
     setSellerView('tier1');
   };
 
@@ -41,7 +41,7 @@ export const SellerSignUp: React.FC = () => {
           Create your Seller Account
         </h1>
         <p className="font-body-md text-sm text-secondary">
-          An embedded Monad wallet will be created automatically. Zero seed phrases required.
+          Connect your existing wallet or create one to submit invoices on Arc.
         </p>
       </div>
 
@@ -173,15 +173,10 @@ export const SellerSignUp: React.FC = () => {
           <span className="material-symbols-outlined text-lg">arrow_forward</span>
         </button>
 
-        {/* Existing External Wallet Link */}
-        <div className="text-center">
-          <button
-            type="button"
-            onClick={() => connectExternalWallet('MetaMask')}
-            className="text-xs text-secondary font-semibold hover:text-primary transition-colors underline"
-          >
-            Already have a Web3 wallet? Connect Existing Wallet (MetaMask / Coinbase)
-          </button>
+        {/* External Wallet Option */}
+        <div className="flex items-center justify-center gap-2 text-xs text-secondary">
+          <span>Already have a wallet?</span>
+          <ConnectKitButton label="Connect Wallet" />
         </div>
       </form>
     </div>

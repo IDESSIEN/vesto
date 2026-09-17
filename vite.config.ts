@@ -1,17 +1,16 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import { nodePolyfills } from 'vite-plugin-node-polyfills';
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    nodePolyfills({ include: ['events', 'buffer', 'util'] }),
+  ],
   server: {
-    port: 3000,
+    host: true,
+    port: 5173,
     open: false,
-    proxy: {
-      '/agora': {
-        target: 'https://api.agora.finance',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/agora/, ''),
-      },
-    },
+    allowedHosts: ['itczm57kpg2kd8onm1au9.preview.studio.arc.io'],
   },
 });

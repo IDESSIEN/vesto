@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
+import { ConnectKitButton } from 'connectkit';
 
 export const LenderSignUp: React.FC = () => {
-  const { setLenderView, loginWithEmailOrPhone, connectExternalWallet, showToast } = useApp();
+  const { setLenderView, showToast } = useApp();
   const [accountType, setAccountType] = useState<'individual' | 'institutional'>('institutional');
   const [fullName, setFullName] = useState('Standard Agrarian Yield Fund');
   const [email, setEmail] = useState('invest@agrarian-capital.io');
@@ -10,8 +11,7 @@ export const LenderSignUp: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    loginWithEmailOrPhone(email);
-    showToast('Lender Account Created! Embedded MPC Wallet provisioned (Zero seed phrases).', 'success');
+    showToast('Lender Account Created! Connect your wallet to start funding invoices.', 'success');
     setLenderView('risk_disclosure');
   };
 
@@ -39,7 +39,7 @@ export const LenderSignUp: React.FC = () => {
           Create Liquidity Provider Account
         </h1>
         <p className="font-body-md text-sm text-secondary">
-          Embedded Monad wallet created automatically via email. No seed phrase required.
+          Connect your existing wallet or create one to start funding invoices on Arc.
         </p>
       </div>
 
@@ -128,14 +128,9 @@ export const LenderSignUp: React.FC = () => {
         </button>
 
         {/* External Wallet Option */}
-        <div className="text-center">
-          <button
-            type="button"
-            onClick={() => connectExternalWallet('MetaMask')}
-            className="text-xs text-secondary font-semibold hover:text-primary transition-colors underline"
-          >
-            Connect Existing Web3 Wallet (MetaMask / Coinbase / WalletConnect)
-          </button>
+        <div className="flex items-center justify-center gap-2 text-xs text-secondary">
+          <span>Already have a wallet?</span>
+          <ConnectKitButton label="Connect Wallet" />
         </div>
       </form>
     </div>

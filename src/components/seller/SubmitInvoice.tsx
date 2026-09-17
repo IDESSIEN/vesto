@@ -188,7 +188,7 @@ export const SubmitInvoice: React.FC = () => {
           className="w-full h-13 bg-success-shamrock text-white font-label-lg font-bold rounded-xl hover:bg-success-shamrock/90 shadow-md transition-all active:scale-[0.98] flex items-center justify-center gap-2 py-3"
         >
           <span className="material-symbols-outlined text-lg">payments</span>
-          <span>Submit Invoice to Monad Marketplace</span>
+          <span>Submit Invoice to Vesto Marketplace</span>
         </button>
       </form>
     </div>

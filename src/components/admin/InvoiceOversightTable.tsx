@@ -20,7 +20,7 @@ export const InvoiceOversightTable: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h1 className="font-headline text-2xl font-bold text-primary tracking-tight">Invoice Risk Oversight Grid</h1>
-          <span className="text-xs text-secondary">Monitor & verify commercial invoices across Monad ecosystem</span>
+          <span className="text-xs text-secondary">Monitor & verify commercial invoices across the Vesto ecosystem</span>
         </div>
 
         <div className="flex items-center gap-2">

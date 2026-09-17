@@ -77,7 +77,7 @@ export const RiskDisclosure: React.FC = () => {
               className="mt-0.5 w-4 h-4 rounded text-primary focus:ring-primary"
             />
             <span className="text-xs text-on-surface-variant leading-tight">
-              I accept the Smart Contract execution terms on Monad Testnet.
+              I accept the Smart Contract execution terms on Arc Testnet.
             </span>
           </label>
         </div>
