@@ -34,18 +34,18 @@ const InputField: React.FC<{
 );
 
 export const SellerSignUp: React.FC = () => {
-  const { setSellerView, showToast } = useApp();
-  const [fullName, setFullName] = useState('Amina Diallo');
-  const [email, setEmail] = useState('amina@nairobifresh.co');
+  const { completeSellerOnboarding, showToast } = useApp();
+  const [fullName, setFullName] = useState('');
+  const [email, setEmail] = useState('');
   const [phonePrefix, setPhonePrefix] = useState('+254');
-  const [phoneNumber, setPhoneNumber] = useState('712 345 678');
-  const [businessName, setBusinessName] = useState('Nairobi Fresh Produce Co.');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [businessName, setBusinessName] = useState('');
   const [operatingCountry, setOperatingCountry] = useState('Kenya');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    showToast('Account created! Connect your wallet to submit invoices on Arc.', 'success');
-    setSellerView('tier1');
+    completeSellerOnboarding({ fullName, businessName, operatingCountry, category: 'Agricultural Produce Exporter' });
+    showToast(`Welcome, ${fullName}! Next: verify your ID to unlock your $500 credit limit.`, 'success');
   };
 
   return (

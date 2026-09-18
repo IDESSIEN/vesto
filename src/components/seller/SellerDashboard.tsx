@@ -256,8 +256,47 @@ export const SellerDashboard: React.FC = () => {
         <StatTile label="On Marketplace" value={`${openOnMarket}`} sub="Open invoices" accent="#E8B96A" />
       </div>
 
+      {/* ── Verification Gate Banner ─────────────────────────── */}
+      {seller.verificationTier === 0 && (
+        <div
+          className="relative flex flex-col sm:flex-row sm:items-center justify-between px-5 py-5 rounded-2xl overflow-hidden gap-4"
+          style={{
+            background: 'linear-gradient(135deg,#0A1628 0%,#112240 100%)',
+            boxShadow: '0 0 0 1px rgba(201,146,42,0.30)',
+          }}
+        >
+          <div className="absolute top-0 left-0 right-0 h-[3px]"
+            style={{ background: 'linear-gradient(90deg,#C9922A,#E8B96A)' }}
+          />
+          <div className="absolute inset-0 opacity-[0.02]"
+            style={{ backgroundImage: 'radial-gradient(circle,#fff 1px,transparent 1px)', backgroundSize: '20px 20px' }}
+          />
+          <div className="relative flex items-start gap-4">
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
+              style={{ background: 'rgba(201,146,42,0.15)', border: '1px solid rgba(201,146,42,0.30)' }}>
+              <span className="material-symbols-outlined text-xl" style={{ color: '#E8B96A' }}>lock</span>
+            </div>
+            <div>
+              <h4 className="text-sm font-extrabold text-white mb-1" style={{ letterSpacing: '-0.01em' }}>
+                Verify your identity to unlock funding
+              </h4>
+              <p className="text-xs leading-relaxed" style={{ color: 'rgba(255,255,255,0.5)' }}>
+                Complete Tier 1 ID verification to unlock a $500 advance limit. Takes under 60 seconds.
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={() => setSellerView('tier1')}
+            className="relative px-5 py-2.5 rounded-xl text-xs font-extrabold text-white shrink-0 transition-all active:scale-[0.97]"
+            style={{ background: 'linear-gradient(135deg,#C9922A,#E8B96A)', boxShadow: '0 4px 12px rgba(201,146,42,0.35)' }}
+          >
+            Verify Now →
+          </button>
+        </div>
+      )}
+
       {/* ── Tier Upgrade ─────────────────────────────────────── */}
-      {seller.verificationTier < 2 && (
+      {seller.verificationTier === 1 && (
         <div
           className="relative flex items-center justify-between px-5 py-4 rounded-2xl overflow-hidden"
           style={{ background: 'linear-gradient(135deg,rgba(201,146,42,0.08) 0%,rgba(232,185,106,0.04) 100%)', border: '1px solid rgba(201,146,42,0.20)' }}
@@ -283,15 +322,22 @@ export const SellerDashboard: React.FC = () => {
       {/* ── CTA Buttons ──────────────────────────────────────── */}
       <div className="grid grid-cols-2 gap-3">
         <button
-          onClick={() => setSellerView('submit_invoice')}
+          onClick={() => setSellerView(seller.verificationTier > 0 ? 'submit_invoice' : 'tier1')}
           className="h-14 rounded-2xl text-sm font-extrabold text-white flex items-center justify-center gap-2 transition-all active:scale-[0.98]"
           style={{
-            background: 'linear-gradient(135deg,#C9922A 0%,#E8B96A 100%)',
-            boxShadow: '0 8px 24px rgba(201,146,42,0.35)',
+            background: seller.verificationTier > 0
+              ? 'linear-gradient(135deg,#C9922A 0%,#E8B96A 100%)'
+              : 'linear-gradient(135deg,#0A1628 0%,#112240 100%)',
+            boxShadow: seller.verificationTier > 0
+              ? '0 8px 24px rgba(201,146,42,0.35)'
+              : '0 8px 24px rgba(10,22,40,0.25)',
+            border: seller.verificationTier === 0 ? '1px solid rgba(201,146,42,0.25)' : 'none',
           }}
         >
-          <span className="material-symbols-outlined text-lg">add_circle</span>
-          Submit Invoice
+          <span className="material-symbols-outlined text-lg">
+            {seller.verificationTier > 0 ? 'add_circle' : 'lock'}
+          </span>
+          {seller.verificationTier > 0 ? 'Submit Invoice' : 'Verify First'}
         </button>
         <button
           onClick={() => setSellerView('tier2')}
@@ -299,7 +345,7 @@ export const SellerDashboard: React.FC = () => {
           style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}
         >
           <span className="material-symbols-outlined text-lg">stars</span>
-          Upgrade Tier
+          {seller.verificationTier < 2 ? 'Upgrade Tier' : 'Tier 2 ✓'}
         </button>
       </div>
 

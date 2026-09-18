@@ -13,6 +13,7 @@ import { SellerDashboard } from './components/seller/SellerDashboard';
 
 // Lender Components
 import { LenderSignUp } from './components/lender/LenderSignUp';
+import { LenderWelcome } from './components/lender/LenderWelcome';
 import { RiskDisclosure } from './components/lender/RiskDisclosure';
 import { MarketplaceGuidedTour } from './components/lender/MarketplaceGuidedTour';
 import { MarketplaceBrowse } from './components/lender/MarketplaceBrowse';
@@ -32,6 +33,7 @@ export const AppContent: React.FC = () => {
     sellerView, setSellerView,
     lenderView, setLenderView,
     adminView, setAdminView,
+    sellerOnboarded, lenderOnboarded,
   } = useApp();
 
   const navBtn = (active: boolean, onClick: () => void, label: string) => (
@@ -57,8 +59,8 @@ export const AppContent: React.FC = () => {
         <div className="max-w-7xl mx-auto px-2 sm:px-4 flex items-center justify-end gap-0.5 sm:gap-1 overflow-x-auto py-1.5 sm:py-2 no-scrollbar">
           {currentRole === 'seller' && (
             <>
-              {navBtn(sellerView === 'dashboard',     () => setSellerView('dashboard'),     'Dashboard')}
-              {navBtn(sellerView === 'submit_invoice',() => setSellerView('submit_invoice'),'+ Submit Invoice')}
+              {navBtn(sellerView === 'dashboard',     () => setSellerView(sellerOnboarded ? 'dashboard' : 'signup'), 'Dashboard')}
+              {navBtn(sellerView === 'submit_invoice',() => setSellerView(sellerOnboarded ? 'submit_invoice' : 'signup'),'+ Submit Invoice')}
               {navBtn(sellerView === 'tier1',         () => setSellerView('tier1'),         'Tier 1 ($500)')}
               {navBtn(sellerView === 'tier2',         () => setSellerView('tier2'),         'Tier 2 ($5,000)')}
               {navBtn(sellerView === 'in_progress',   () => setSellerView('in_progress'),   'Status')}
@@ -68,7 +70,7 @@ export const AppContent: React.FC = () => {
           )}
           {currentRole === 'lender' && (
             <>
-              {navBtn(lenderView === 'browse',        () => setLenderView('browse'),        'Marketplace')}
+              {navBtn(lenderView === 'browse',        () => setLenderView(lenderOnboarded ? 'browse' : 'signup'), 'Marketplace')}
               {navBtn(lenderView === 'batch',         () => setLenderView('batch'),         'Batch Funding')}
               {navBtn(lenderView === 'portfolio',     () => setLenderView('portfolio'),     'Portfolio')}
               {navBtn(lenderView === 'risk_disclosure',()=> setLenderView('risk_disclosure'),'Risk Disclosure')}
@@ -104,6 +106,7 @@ export const AppContent: React.FC = () => {
         {currentRole === 'lender' && (
           <>
             {lenderView === 'signup'         && <LenderSignUp />}
+            {lenderView === 'welcome'        && <LenderWelcome />}
             {lenderView === 'risk_disclosure'&& <RiskDisclosure />}
             {lenderView === 'guided_tour'    && <MarketplaceGuidedTour />}
             {lenderView === 'browse'         && <MarketplaceBrowse />}

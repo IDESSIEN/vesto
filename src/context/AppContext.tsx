@@ -20,6 +20,12 @@ interface AppContextType {
   adminView: string;
   setAdminView: (view: string) => void;
 
+  // Onboarding gates
+  sellerOnboarded: boolean;
+  lenderOnboarded: boolean;
+  completeSellerOnboarding: (data: Partial<SellerProfile>) => void;
+  completeLenderOnboarding: (data: Partial<LenderProfile>) => void;
+
   // Profiles
   seller: SellerProfile;
   lender: LenderProfile;
@@ -205,15 +211,51 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currentRole, setCurrentRole] = useState<UserRole>('seller');
-  const [sellerView, setSellerView] = useState<string>('dashboard');
-  const [lenderView, setLenderView] = useState<string>('browse');
+  const [sellerView, setSellerView] = useState<string>('signup');
+  const [lenderView, setLenderView] = useState<string>('signup');
   const [adminView, setAdminView] = useState<string>('oversight');
 
-  const [seller, setSeller] = useState<SellerProfile>(initialSeller);
-  const [lender, setLender] = useState<LenderProfile>(initialLender);
+  const [sellerOnboarded, setSellerOnboarded] = useState(false);
+  const [lenderOnboarded, setLenderOnboarded] = useState(false);
+
+  const [seller, setSeller] = useState<SellerProfile>({ ...initialSeller, fullName: '', businessName: '', creditLimit: 0, verificationTier: 0 });
+  const [lender, setLender] = useState<LenderProfile>({ ...initialLender, fullName: '', targetAllocation: 0, totalInvested: 0, totalYieldEarned: 0, availableBalance: 0 });
   const [invoices, setInvoices] = useState<Invoice[]>(initialInvoices);
   const [verifications, setVerifications] = useState<VerificationRequest[]>(initialVerifications);
   const [notification, setNotification] = useState<{ message: string; type: 'success' | 'info' | 'warning' } | null>(null);
+
+  const completeSellerOnboarding = (data: Partial<SellerProfile>) => {
+    setSeller(prev => ({
+      ...initialSeller,
+      ...prev,
+      ...data,
+      id: 'sel_101',
+      creditLimit: 0,
+      verificationTier: 0,
+      kycStatusTier1: 'none',
+      kycStatusTier2: 'none',
+      createdAt: new Date().toISOString().split('T')[0],
+    }));
+    setSellerOnboarded(true);
+    setSellerView('tier1');
+  };
+
+  const completeLenderOnboarding = (data: Partial<LenderProfile>) => {
+    setLender(prev => ({
+      ...initialLender,
+      ...prev,
+      ...data,
+      id: 'len_505',
+      totalInvested: 0,
+      totalYieldEarned: 0,
+      availableBalance: data.targetAllocation ?? 0,
+      riskAccepted: false,
+      autoInvestEnabled: false,
+      createdAt: new Date().toISOString().split('T')[0],
+    }));
+    setLenderOnboarded(true);
+    setLenderView('welcome');
+  };
 
   const showToast = (message: string, type: 'success' | 'info' | 'warning' = 'success') => {
     setNotification({ message, type });
@@ -406,6 +448,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         sellerView, setSellerView,
         lenderView, setLenderView,
         adminView, setAdminView,
+        sellerOnboarded, lenderOnboarded,
+        completeSellerOnboarding, completeLenderOnboarding,
         seller, lender,
         invoices,
         submitInvoice, approveInvoiceAdmin, flagInvoiceAdmin,

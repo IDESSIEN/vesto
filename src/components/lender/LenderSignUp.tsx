@@ -3,16 +3,16 @@ import { useApp } from '../../context/AppContext';
 import { ConnectKitButton } from 'connectkit';
 
 export const LenderSignUp: React.FC = () => {
-  const { setLenderView, showToast } = useApp();
-  const [accountType, setAccountType] = useState<'individual' | 'institutional'>('institutional');
-  const [fullName, setFullName] = useState('Standard Agrarian Yield Fund');
-  const [email, setEmail] = useState('invest@agrarian-capital.io');
-  const [targetAllocation, setTargetAllocation] = useState<number>(50000);
+  const { completeLenderOnboarding, showToast } = useApp();
+  const [accountType, setAccountType] = useState<'individual' | 'institutional'>('individual');
+  const [fullName, setFullName] = useState('');
+  const [email, setEmail] = useState('');
+  const [targetAllocation, setTargetAllocation] = useState<number>(5000);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    showToast('Account created! Connect your wallet to start funding invoices.', 'success');
-    setLenderView('risk_disclosure');
+    completeLenderOnboarding({ fullName, email, accountType, targetAllocation, investorTier: accountType === 'institutional' ? 'Institutional Liquidity Provider' : 'Retail Investor' });
+    showToast(`Welcome, ${fullName}! Review the risk disclosure to start funding.`, 'success');
   };
 
   const focusStyle = { borderColor: '#C9922A', boxShadow: '0 0 0 3px rgba(201,146,42,0.10)' };
