@@ -2,10 +2,15 @@ import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
 import { cleanverseService, CleanverseResult } from '../../services/cleanverseService';
 
+const GoldStrip: React.FC = () => (
+  <div className="absolute top-0 left-0 right-0 h-[3px] rounded-t-2xl"
+    style={{ background: 'linear-gradient(90deg,#C9922A,#E8B96A,#C9922A)' }} />
+);
+
 export const Tier2Verification: React.FC = () => {
   const { setSellerView, submitVerification, showToast, seller } = useApp();
-  const [taxId, setTaxId] = useState('P051928401Z');
-  const [fileName, setFileName] = useState('nairobi_fresh_tax_cert_2026.pdf');
+  const [taxId, setTaxId] = useState('');
+  const [fileName, setFileName] = useState('');
   const [videoUploaded, setVideoUploaded] = useState(false);
   const [isVerifying, setIsVerifying] = useState(false);
   const [verificationOutcome, setVerificationOutcome] = useState<'pass' | 'fail' | 'uncertain'>('pass');
@@ -13,190 +18,225 @@ export const Tier2Verification: React.FC = () => {
 
   const docUrl = 'https://lh3.googleusercontent.com/aida-public/AB6AXuChP_Oslw2qMuh5bd2tcx9zj5kjSF7v_-iaDTnr91VIWCYs4uByYBKSpApEGff-h3SWoL4rhAhGE-ZhMuCvQw3n4IzHgI8IUHaRpgFHbRay1FIhFRhK-QCoVrGUJASOziVbldbFi6hojbMatzzuqaUKp-_TphUKJKJUaYfOzRWpTSK4cQIKL4RPNSAboBg4aCeMll5BCPi_v0cQt-GhG5Rcb3lBeBuaJX_iAAuika0sYNZzZyXAW8hS1g';
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files?.[0]) setFileName(e.target.files[0].name);
+  };
+
   const handleCleanverseCheck = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsVerifying(true);
     setRejectionResult(null);
-
     try {
       const result = await cleanverseService.verifyTier2BusinessDocument(
-        docUrl,
-        seller.businessName,
-        videoUploaded ? 'https://cleanverse.io/videos/shop_farm_scan.mp4' : undefined,
-        verificationOutcome
+        docUrl, seller.businessName, videoUploaded ? 'https://cleanverse.io/videos/shop_farm_scan.mp4' : undefined, verificationOutcome
       );
-
       setIsVerifying(false);
-
       if (result.status === 'pass') {
-        // Clear Pass -> Auto-Unlock Tier 2 ($5,000)
         submitVerification(2, 'Tax & Bank Registration (Tier 2)', docUrl);
-        showToast(`Cleanverse Verification Passed (${result.confidenceScore}% Score)! $5,000 Limit unlocked automatically.`, 'success');
+        showToast(`Business verified (${result.confidenceScore}% confidence). $5,000 limit unlocked!`, 'success');
         setSellerView('dashboard');
       } else if (result.status === 'fail') {
-        // Clear Fail -> Friendly rejection message
         setRejectionResult(result);
-        showToast('Cleanverse Tier 2 Verification Rejected: See feedback below.', 'warning');
+        showToast('Tier 2 verification rejected. See feedback below.', 'warning');
       } else {
-        // Uncertain -> Escalate to Admin Queue
         submitVerification(2, 'Tax & Bank Registration (Tier 2)', docUrl);
-        showToast('Cleanverse flagged location metadata as uncertain. Sent to Admin Queue for human inspection.', 'info');
+        showToast("Flagged for human review. You'll hear back within 24h.", 'info');
         setSellerView('in_progress');
       }
-    } catch (err) {
+    } catch {
       setIsVerifying(false);
-      showToast('Error calling Cleanverse verification service.', 'warning');
+      showToast('Error contacting Cleanverse — please try again.', 'warning');
     }
   };
 
   return (
-    <div className="max-w-xl mx-auto py-6 px-4">
-      {/* Navigation */}
-      <div className="flex items-center justify-between mb-4">
+    <div className="max-w-xl mx-auto py-6 sm:py-8 px-3 sm:px-4 flex flex-col gap-5 pb-24">
+
+      {/* ── Back + Step ─────────────────────────────────────── */}
+      <div className="flex items-center justify-between">
         <button
           onClick={() => setSellerView('tier1')}
-          className="w-10 h-10 rounded-full flex items-center justify-center bg-surface-container text-on-surface hover:bg-surface-variant transition-colors"
+          className="w-10 h-10 rounded-full flex items-center justify-center transition-all"
+          style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}
         >
-          <span className="material-symbols-outlined text-[20px]">arrow_back</span>
+          <span className="material-symbols-outlined text-[20px] text-secondary">arrow_back</span>
         </button>
-        <div className="flex items-center space-x-1 bg-surface-container px-3 py-1 rounded-full">
-          <span className="font-label-sm text-xs text-secondary font-semibold">STEP 3 OF 3</span>
+        <div className="flex items-center gap-2">
+          <div className="flex gap-1.5">
+            <div className="w-6 h-1.5 rounded-full" style={{ background: 'linear-gradient(90deg,#C9922A,#E8B96A)' }} />
+            <div className="w-6 h-1.5 rounded-full" style={{ background: 'linear-gradient(90deg,#C9922A,#E8B96A)' }} />
+            <div className="w-6 h-1.5 rounded-full" style={{ background: 'linear-gradient(90deg,#C9922A,#E8B96A)' }} />
+          </div>
+          <span className="text-[10px] text-secondary uppercase tracking-widest font-semibold">Step 3 of 3</span>
         </div>
-        <div className="w-10"></div>
+        <div className="w-10" />
       </div>
 
-      <div className="mb-6">
-        <div className="flex items-center space-x-2 mb-1">
-          <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-tertiary-fixed-dim text-primary">
-            <span className="material-symbols-outlined text-sm">stars</span>
-          </span>
-          <span className="font-label-md text-xs text-on-tertiary-container uppercase font-bold tracking-wider">
-            Cleanverse Commercial Verification
-          </span>
+      {/* ── Header ──────────────────────────────────────────── */}
+      <div>
+        <div className="flex items-center gap-2 mb-2">
+          <div
+            className="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5"
+            style={{ background: 'rgba(201,146,42,0.12)', color: '#C9922A', border: '1px solid rgba(201,146,42,0.20)' }}
+          >
+            <span className="material-symbols-outlined text-[12px]">stars</span>
+            Cleanverse Commercial
+          </div>
         </div>
-        <h1 className="font-headline text-2xl font-bold text-primary-container">Tier 2 Verification ($5,000)</h1>
-        <p className="font-body-md text-sm text-secondary mt-1">
-          Submit business PIN or shop/farm video for Cleanverse verification. Clear passes unlock $5,000 automatically.
+        <h1 className="font-headline font-extrabold text-primary mb-1" style={{ fontSize: '28px', letterSpacing: '-0.025em' }}>
+          Tier 2 Verification
+        </h1>
+        <p className="text-sm text-secondary">
+          Business document check. Clear passes unlock your <span className="font-bold text-primary">$5,000 credit limit</span> automatically.
         </p>
       </div>
 
-      {/* Test Outcome Selector */}
-      <div className="bg-surface-container-low p-3 rounded-xl border border-border-subtle mb-6 flex items-center justify-between text-xs">
-        <span className="text-secondary font-semibold">Cleanverse API Simulation:</span>
-        <div className="flex gap-2">
+      {/* ── Target Limit Card ───────────────────────────────── */}
+      <div
+        className="relative rounded-2xl p-5 overflow-hidden text-white"
+        style={{
+          background: 'linear-gradient(135deg,#0A1628 0%,#112240 100%)',
+          boxShadow: '0 0 0 1px rgba(201,146,42,0.22)',
+        }}
+      >
+        <GoldStrip />
+        <div className="absolute inset-0 opacity-[0.025]"
+          style={{ backgroundImage: 'radial-gradient(circle,#fff 1px,transparent 1px)', backgroundSize: '22px 22px' }}
+        />
+        <div className="relative flex items-center justify-between">
+          <div>
+            <div className="text-[9px] uppercase tracking-widest font-semibold mb-1 text-white/40">Commercial Credit Limit</div>
+            <div className="font-headline font-extrabold font-tnum text-white" style={{ fontSize: '36px', letterSpacing: '-0.03em' }}>
+              $5,000
+            </div>
+            <div className="text-[11px] font-semibold mt-1" style={{ color: '#E8B96A' }}>Unlocked on clear pass</div>
+          </div>
+          <div
+            className="w-14 h-14 rounded-2xl flex items-center justify-center font-headline font-extrabold text-xl"
+            style={{ background: 'rgba(201,146,42,0.15)', border: '1px solid rgba(201,146,42,0.30)', color: '#E8B96A' }}
+          >T2</div>
+        </div>
+      </div>
+
+      {/* ── Demo Selector ───────────────────────────────────── */}
+      <div
+        className="flex items-center justify-between px-4 py-3 rounded-xl text-xs"
+        style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}
+      >
+        <span className="font-semibold text-secondary">Demo simulation:</span>
+        <div className="flex gap-1.5">
           {(['pass', 'fail', 'uncertain'] as const).map((mode) => (
-            <button
-              key={mode}
-              onClick={() => setVerificationOutcome(mode)}
-              className={`px-2.5 py-1 rounded-md font-bold uppercase text-[10px] transition-all ${
-                verificationOutcome === mode
-                  ? mode === 'pass'
-                    ? 'bg-success-shamrock text-white'
-                    : mode === 'fail'
-                    ? 'bg-error text-white'
-                    : 'bg-on-tertiary-container text-white'
-                  : 'bg-surface-card text-secondary border border-border-subtle'
-              }`}
-            >
-              {mode}
-            </button>
+            <button key={mode} onClick={() => setVerificationOutcome(mode)}
+              className="px-3 py-1 rounded-lg font-bold uppercase text-[10px] transition-all"
+              style={verificationOutcome === mode
+                ? { background: mode === 'pass' ? '#047857' : mode === 'fail' ? '#DC2626' : '#7C3AED', color: '#fff' }
+                : { background: 'var(--canvas)', color: 'var(--secondary)', border: '1px solid var(--border)' }
+              }
+            >{mode}</button>
           ))}
         </div>
       </div>
 
-      {/* Rejection Banner */}
+      {/* ── Rejection Banner ────────────────────────────────── */}
       {rejectionResult && (
-        <div className="bg-error-container/80 border border-error text-error p-5 rounded-xl mb-6 shadow-sm flex flex-col gap-2">
-          <div className="flex items-center gap-2 font-bold text-sm">
-            <span className="material-symbols-outlined text-xl">error</span>
-            <span>Cleanverse Verification Rejected</span>
+        <div className="flex flex-col gap-2 px-5 py-4 rounded-2xl"
+          style={{ background: 'rgba(239,68,68,0.06)', border: '1px solid rgba(239,68,68,0.20)' }}>
+          <div className="flex items-center gap-2 font-bold text-sm" style={{ color: '#EF4444' }}>
+            <span className="material-symbols-outlined text-lg">error</span>
+            Verification Rejected
           </div>
-          <p className="text-xs text-on-error-container leading-relaxed">
+          <p className="text-xs leading-relaxed text-secondary">
             {rejectionResult.failureReason || 'Tax PIN could not be verified against jurisdiction registry.'}
           </p>
-          <div className="pt-2 border-t border-error/30 text-[11px] font-medium text-error flex justify-between">
-            <span>Tax PIN Verified: {rejectionResult.taxIdVerified ? 'Yes' : 'No'}</span>
-            <span>Action Required: Please verify your PIN or upload a valid tax certificate.</span>
+          <div className="flex justify-between text-[11px] font-semibold pt-2 border-t" style={{ borderColor: 'rgba(239,68,68,0.15)', color: '#EF4444' }}>
+            <span>PIN Verified: {rejectionResult.taxIdVerified ? 'Yes' : 'No'}</span>
+            <span>Upload a valid tax certificate</span>
           </div>
         </div>
       )}
 
-      <form onSubmit={handleCleanverseCheck} className="flex flex-col gap-6">
-        {/* Target Limit Banner */}
-        <div className="bg-gradient-to-r from-primary-container to-primary text-white p-5 rounded-xl shadow-sm flex items-center justify-between">
-          <div>
-            <span className="text-xs uppercase tracking-wider text-inverse-primary font-semibold">Target Credit Limit</span>
-            <div className="text-3xl font-extrabold text-white mt-1">$5,000.00</div>
-            <span className="text-xs text-primary-fixed-dim">Cleanverse Auto-Unlock Enabled</span>
-          </div>
-          <div className="w-12 h-12 rounded-xl bg-tertiary-fixed text-primary flex items-center justify-center font-bold text-lg">
-            5K
-          </div>
-        </div>
+      {/* ── Form ────────────────────────────────────────────── */}
+      <form onSubmit={handleCleanverseCheck} className="flex flex-col gap-4">
+        <div
+          className="relative rounded-2xl overflow-hidden"
+          style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}
+        >
+          <GoldStrip />
+          <div className="p-5 flex flex-col gap-4">
 
-        {/* Form Controls */}
-        <div className="bg-surface-card rounded-xl p-5 shadow-sm border border-border-subtle flex flex-col gap-4">
-          <div className="flex flex-col gap-1">
-            <label className="font-label-md text-xs font-semibold text-on-surface-variant">
-              KRA / National Tax PIN Number
-            </label>
-            <input
-              type="text"
-              required
-              value={taxId}
-              onChange={(e) => setTaxId(e.target.value)}
-              className="w-full h-12 px-3 rounded-lg bg-surface-container-lowest font-body-md text-sm text-on-surface border border-border-subtle focus:outline-none focus:ring-2 focus:ring-primary"
-            />
-          </div>
-
-          <div className="flex flex-col gap-1">
-            <label className="font-label-md text-xs font-semibold text-on-surface-variant">
-              Business Tax Cert or Bank Statement (PDF)
-            </label>
-            <div className="p-4 rounded-lg border border-border-subtle bg-surface-container-lowest flex items-center justify-between text-xs">
-              <span className="font-bold text-primary">{fileName}</span>
-              <span className="text-success-shamrock font-semibold flex items-center gap-1">
-                <span className="material-symbols-outlined text-sm">check_circle</span>
-                <span>Attached</span>
-              </span>
-            </div>
-          </div>
-
-          {/* Shop / Farm Video Toggle */}
-          <div className="flex items-center justify-between p-3 rounded-lg bg-surface-container-low border border-border-subtle text-xs">
-            <div className="flex items-center gap-2">
-              <span className="material-symbols-outlined text-primary text-base">videocam</span>
-              <span className="font-semibold text-primary">Include Shop/Farm Walkthrough Video</span>
-            </div>
-            <button
-              type="button"
-              onClick={() => setVideoUploaded((prev) => !prev)}
-              className={`w-10 h-5 rounded-full transition-colors relative flex items-center px-0.5 ${
-                videoUploaded ? 'bg-success-shamrock' : 'bg-surface-container-high'
-              }`}
-            >
-              <div
-                className={`w-4 h-4 rounded-full bg-white shadow-sm transform transition-transform ${
-                  videoUploaded ? 'translate-x-5' : 'translate-x-0'
-                }`}
+            {/* Tax ID */}
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-semibold text-primary">KRA / National Tax PIN</label>
+              <input
+                type="text" required value={taxId} onChange={e => setTaxId(e.target.value)}
+                placeholder="e.g. P051928401Z"
+                className="w-full h-12 px-4 rounded-xl text-sm text-primary font-tnum focus:outline-none transition-all"
+                style={{ background: 'var(--canvas)', border: '1px solid var(--border)' }}
+                onFocus={e => { e.currentTarget.style.borderColor = '#C9922A'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(201,146,42,0.10)'; }}
+                onBlur={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.boxShadow = 'none'; }}
               />
-            </button>
+            </div>
+
+            {/* Document Upload */}
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-semibold text-primary">Business Tax Cert / Bank Statement (PDF)</label>
+              <div className="relative border-2 border-dashed rounded-xl p-4 flex items-center gap-3 cursor-pointer transition-all hover:border-gold"
+                style={{ borderColor: fileName ? '#C9922A' : 'var(--border)', background: 'var(--canvas)' }}>
+                <input type="file" accept=".pdf,.jpg,.png" onChange={handleFileChange}
+                  className="absolute inset-0 opacity-0 cursor-pointer w-full h-full" />
+                <span className="material-symbols-outlined text-2xl shrink-0"
+                  style={{ color: fileName ? '#C9922A' : 'var(--secondary)' }}>
+                  {fileName ? 'task' : 'upload_file'}
+                </span>
+                <div>
+                  <p className="text-xs font-bold text-primary">
+                    {fileName || 'Click to upload document'}
+                  </p>
+                  <p className="text-[11px] text-secondary">PDF, PNG, JPG · Max 15MB</p>
+                </div>
+                {fileName && (
+                  <span className="ml-auto shrink-0 material-symbols-outlined text-lg" style={{ color: '#10B981' }}>check_circle</span>
+                )}
+              </div>
+            </div>
+
+            {/* Video Toggle */}
+            <div className="flex items-center justify-between p-3.5 rounded-xl"
+              style={{ background: 'var(--canvas)', border: '1px solid var(--border)' }}>
+              <div className="flex items-center gap-2.5">
+                <span className="material-symbols-outlined text-base" style={{ color: '#C9922A' }}>videocam</span>
+                <div>
+                  <p className="text-xs font-semibold text-primary">Shop / Farm Walkthrough Video</p>
+                  <p className="text-[10px] text-secondary">Boosts confidence score by up to 15%</p>
+                </div>
+              </div>
+              <button type="button" onClick={() => setVideoUploaded(p => !p)}
+                className="w-11 h-6 rounded-full relative transition-all shrink-0"
+                style={{ background: videoUploaded ? 'linear-gradient(135deg,#047857,#10B981)' : 'var(--border)' }}>
+                <div className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow transition-all ${videoUploaded ? 'left-6' : 'left-1'}`} />
+              </button>
+            </div>
           </div>
         </div>
 
         <button
           type="submit"
           disabled={isVerifying}
-          className="w-full h-13 bg-primary text-white font-label-lg font-bold rounded-xl hover:bg-primary-container shadow-md transition-all active:scale-[0.98] flex items-center justify-center gap-2 py-3"
+          className="w-full h-14 rounded-2xl text-sm font-extrabold text-white flex items-center justify-center gap-2 transition-all active:scale-[0.98] disabled:opacity-60"
+          style={{
+            background: 'linear-gradient(135deg,#C9922A 0%,#E8B96A 100%)',
+            boxShadow: '0 8px 24px rgba(201,146,42,0.35)',
+          }}
         >
           {isVerifying ? (
             <>
-              <span className="material-symbols-outlined text-lg animate-spin">autorenew</span>
-              <span>Cleanverse Verifying Business Registry...</span>
+              <span className="material-symbols-outlined text-lg animate-spin">progress_activity</span>
+              Verifying with Cleanverse…
             </>
           ) : (
             <>
-              <span>Verify with Cleanverse & Unlock $5,000</span>
+              <span className="material-symbols-outlined text-lg">business_center</span>
+              Verify Business & Unlock $5,000
               <span className="material-symbols-outlined text-lg">arrow_forward</span>
             </>
           )}

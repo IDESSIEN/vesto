@@ -90,8 +90,12 @@ export const AppContent: React.FC = () => {
         </div>
       </div>
 
-      {/* Main Content */}
-      <main className="flex-1 max-w-7xl w-full mx-auto p-0 sm:p-2">
+      {/* Main Content — fade-in on every view switch */}
+      <main
+        className="flex-1 max-w-7xl w-full mx-auto p-0 sm:p-2"
+        key={`${currentRole}:${sellerView}:${lenderView}:${adminView}`}
+        style={{ animation: 'vesto-fade-in 0.18s ease-out both' }}
+      >
         {currentRole === 'seller' && (
           <>
             {sellerView === 'signup'         && <SellerSignUp />}

@@ -2,6 +2,11 @@ import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
 import { cleanverseService, CleanverseResult } from '../../services/cleanverseService';
 
+const GoldStrip: React.FC = () => (
+  <div className="absolute top-0 left-0 right-0 h-[3px] rounded-t-2xl"
+    style={{ background: 'linear-gradient(90deg,#C9922A,#E8B96A,#C9922A)' }} />
+);
+
 export const Tier1Verification: React.FC = () => {
   const { setSellerView, submitVerification, showToast, seller } = useApp();
   const [isVerifying, setIsVerifying] = useState(false);
@@ -13,160 +18,192 @@ export const Tier1Verification: React.FC = () => {
   const handleCleanverseCheck = async () => {
     setIsVerifying(true);
     setRejectionResult(null);
-
     try {
-      const result = await cleanverseService.verifyTier1GovernmentId(
-        docUrl,
-        seller.fullName,
-        verificationOutcome
-      );
-
+      const result = await cleanverseService.verifyTier1GovernmentId(docUrl, seller.fullName, verificationOutcome);
       setIsVerifying(false);
-
       if (result.status === 'pass') {
-        // Clear Pass -> Auto-Unlock Tier 1 ($500)
         submitVerification(1, 'National ID Photo (Tier 1)', docUrl);
-        showToast(`Cleanverse Verification Passed (${result.confidenceScore}% Score)! $500 Micro-Limit unlocked automatically.`, 'success');
+        showToast(`ID Verified (${result.confidenceScore}% confidence). $500 limit unlocked — submit your first invoice!`, 'success');
         setSellerView('dashboard');
       } else if (result.status === 'fail') {
-        // Clear Fail -> Friendly rejection message with reason
         setRejectionResult(result);
-        showToast('Cleanverse Verification Rejected: See feedback below.', 'warning');
+        showToast('Verification rejected. See feedback below.', 'warning');
       } else {
-        // Uncertain -> Escalate to Admin Queue for human review
         submitVerification(1, 'National ID Photo (Tier 1)', docUrl);
-        showToast('Cleanverse flagged item as uncertain. Sent to Admin Queue for human review.', 'info');
+        showToast("Flagged for human review. You'll hear back within 24h.", 'info');
         setSellerView('in_progress');
       }
-    } catch (err) {
+    } catch {
       setIsVerifying(false);
-      showToast('Error calling Cleanverse verification service.', 'warning');
+      showToast('Error contacting Cleanverse — please try again.', 'warning');
     }
   };
 
   return (
-    <div className="max-w-xl mx-auto py-6 px-4">
-      {/* Navigation Header */}
-      <div className="flex items-center justify-between mb-4">
+    <div className="max-w-xl mx-auto py-6 sm:py-8 px-3 sm:px-4 flex flex-col gap-5 pb-24">
+
+      {/* ── Back + Step ─────────────────────────────────────── */}
+      <div className="flex items-center justify-between">
         <button
           onClick={() => setSellerView('signup')}
-          className="w-10 h-10 rounded-full flex items-center justify-center bg-surface-container text-on-surface hover:bg-surface-variant transition-colors"
+          className="w-10 h-10 rounded-full flex items-center justify-center transition-all"
+          style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}
         >
-          <span className="material-symbols-outlined text-[20px]">arrow_back</span>
+          <span className="material-symbols-outlined text-[20px] text-secondary">arrow_back</span>
         </button>
-        <div className="flex items-center space-x-1 bg-surface-container px-3 py-1 rounded-full">
-          <span className="font-label-sm text-xs text-secondary font-semibold">STEP 2 OF 3</span>
+        <div className="flex items-center gap-2">
+          <div className="flex gap-1.5">
+            <div className="w-6 h-1.5 rounded-full" style={{ background: 'linear-gradient(90deg,#C9922A,#E8B96A)' }} />
+            <div className="w-6 h-1.5 rounded-full" style={{ background: 'linear-gradient(90deg,#C9922A,#E8B96A)' }} />
+            <div className="w-6 h-1.5 rounded-full" style={{ background: 'var(--border)' }} />
+          </div>
+          <span className="text-[10px] text-secondary uppercase tracking-widest font-semibold">Step 2 of 3</span>
         </div>
-        <div className="w-10"></div>
+        <div className="w-10" />
       </div>
 
-      <div className="mb-6">
-        <div className="flex items-center space-x-2 mb-1">
-          <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-success-shamrock text-white">
-            <span className="material-symbols-outlined text-sm">verified</span>
-          </span>
-          <span className="font-label-md text-xs text-success-shamrock uppercase font-bold tracking-wider">
+      {/* ── Header ──────────────────────────────────────────── */}
+      <div>
+        <div className="flex items-center gap-2 mb-2">
+          <div
+            className="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5"
+            style={{ background: 'rgba(16,185,129,0.12)', color: '#10B981', border: '1px solid rgba(16,185,129,0.20)' }}
+          >
+            <span className="material-symbols-outlined text-[12px]">verified</span>
             Cleanverse AI Powered
-          </span>
+          </div>
         </div>
-        <h1 className="font-headline text-2xl font-bold text-primary-container">Tier 1 Verification</h1>
-        <p className="font-body-md text-sm text-secondary mt-1">
-          Government-issued ID verification using Cleanverse AI. Clear passes unlock $500 instantly.
+        <h1 className="font-headline font-extrabold text-primary mb-1" style={{ fontSize: '28px', letterSpacing: '-0.025em' }}>
+          Tier 1 Verification
+        </h1>
+        <p className="text-sm text-secondary">
+          Government-issued ID check. Clear passes unlock your <span className="font-bold text-primary">$500 credit limit</span> instantly.
         </p>
       </div>
 
-      {/* Test Outcome Selector for Demonstration */}
-      <div className="bg-surface-container-low p-3 rounded-xl border border-border-subtle mb-6 flex items-center justify-between text-xs">
-        <span className="text-secondary font-semibold">Cleanverse API Simulation:</span>
-        <div className="flex gap-2">
+      {/* ── Target Limit Card ───────────────────────────────── */}
+      <div
+        className="relative rounded-2xl p-5 overflow-hidden text-white"
+        style={{
+          background: 'linear-gradient(135deg,#0A1628 0%,#112240 100%)',
+          boxShadow: '0 0 0 1px rgba(201,146,42,0.22)',
+        }}
+      >
+        <GoldStrip />
+        <div className="absolute inset-0 opacity-[0.025]"
+          style={{ backgroundImage: 'radial-gradient(circle,#fff 1px,transparent 1px)', backgroundSize: '22px 22px' }}
+        />
+        <div className="relative flex items-center justify-between">
+          <div>
+            <div className="text-[9px] uppercase tracking-widest font-semibold mb-1 text-white/40">Micro Credit Limit</div>
+            <div className="font-headline font-extrabold font-tnum text-white" style={{ fontSize: '36px', letterSpacing: '-0.03em' }}>
+              $500
+            </div>
+            <div className="text-[11px] font-semibold mt-1" style={{ color: '#E8B96A' }}>Unlocked on clear pass</div>
+          </div>
+          <div
+            className="w-14 h-14 rounded-2xl flex items-center justify-center font-headline font-extrabold text-xl"
+            style={{ background: 'rgba(201,146,42,0.15)', border: '1px solid rgba(201,146,42,0.30)', color: '#E8B96A' }}
+          >T1</div>
+        </div>
+      </div>
+
+      {/* ── Simulation Selector ─────────────────────────────── */}
+      <div
+        className="flex items-center justify-between px-4 py-3 rounded-xl text-xs"
+        style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}
+      >
+        <span className="font-semibold text-secondary">Demo simulation:</span>
+        <div className="flex gap-1.5">
           {(['pass', 'fail', 'uncertain'] as const).map((mode) => (
             <button
               key={mode}
               onClick={() => setVerificationOutcome(mode)}
-              className={`px-2.5 py-1 rounded-md font-bold uppercase text-[10px] transition-all ${
-                verificationOutcome === mode
-                  ? mode === 'pass'
-                    ? 'bg-success-shamrock text-white'
-                    : mode === 'fail'
-                    ? 'bg-error text-white'
-                    : 'bg-on-tertiary-container text-white'
-                  : 'bg-surface-card text-secondary border border-border-subtle'
-              }`}
-            >
-              {mode}
-            </button>
+              className="px-3 py-1 rounded-lg font-bold uppercase text-[10px] transition-all"
+              style={verificationOutcome === mode
+                ? {
+                    background: mode === 'pass' ? '#047857' : mode === 'fail' ? '#DC2626' : '#7C3AED',
+                    color: '#fff',
+                  }
+                : { background: 'var(--canvas)', color: 'var(--secondary)', border: '1px solid var(--border)' }
+              }
+            >{mode}</button>
           ))}
         </div>
       </div>
 
-      {/* Rejection Feedback Banner if Clear Fail */}
+      {/* ── Rejection Banner ────────────────────────────────── */}
       {rejectionResult && (
-        <div className="bg-error-container/80 border border-error text-error p-5 rounded-xl mb-6 shadow-sm flex flex-col gap-2">
-          <div className="flex items-center gap-2 font-bold text-sm">
-            <span className="material-symbols-outlined text-xl">error</span>
-            <span>Cleanverse Verification Rejected</span>
+        <div
+          className="flex flex-col gap-2 px-5 py-4 rounded-2xl"
+          style={{ background: 'rgba(239,68,68,0.06)', border: '1px solid rgba(239,68,68,0.20)' }}
+        >
+          <div className="flex items-center gap-2 font-bold text-sm" style={{ color: '#EF4444' }}>
+            <span className="material-symbols-outlined text-lg">error</span>
+            Verification Rejected
           </div>
-          <p className="text-xs text-on-error-container leading-relaxed">
+          <p className="text-xs leading-relaxed text-secondary">
             {rejectionResult.failureReason || 'Document photo was too dark or blurry.'}
           </p>
-          <div className="pt-2 border-t border-error/30 text-[11px] font-medium text-error flex justify-between">
-            <span>Confidence Score: {rejectionResult.confidenceScore}%</span>
-            <span>Action Required: Please re-upload a clear, bright photo of your ID.</span>
+          <div className="flex justify-between text-[11px] font-semibold pt-2 border-t" style={{ borderColor: 'rgba(239,68,68,0.15)', color: '#EF4444' }}>
+            <span>Confidence: {rejectionResult.confidenceScore}%</span>
+            <span>Re-upload a clear, bright photo</span>
           </div>
         </div>
       )}
 
-      {/* Micro-Limit Summary Card */}
-      <div className="bg-surface-card rounded-xl p-5 shadow-sm border border-border-subtle mb-6">
-        <div className="flex items-start justify-between">
-          <div>
-            <span className="font-label-sm text-xs text-secondary uppercase tracking-wider font-semibold">Micro-Limit Target</span>
-            <div className="flex items-baseline space-x-1.5 mt-1">
-              <span className="font-headline text-3xl font-extrabold text-success-shamrock">$500</span>
-              <span className="font-body-sm text-xs text-secondary">USD instant advance</span>
+      {/* ── ID Preview Card ─────────────────────────────────── */}
+      <div
+        className="relative rounded-2xl overflow-hidden"
+        style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}
+      >
+        <GoldStrip />
+        <div className="p-5">
+          <div className="flex items-center justify-between mb-4">
+            <span className="text-xs font-extrabold text-primary">Government ID (Front)</span>
+            <span
+              className="text-[10px] font-bold px-2.5 py-1 rounded-full"
+              style={{ background: 'rgba(16,185,129,0.10)', color: '#10B981', border: '1px solid rgba(16,185,129,0.20)' }}
+            >Ready for Scan</span>
+          </div>
+          <div
+            className="flex items-center gap-4 p-3 rounded-xl"
+            style={{ background: 'var(--canvas)', border: '1px solid var(--border)' }}
+          >
+            <div className="w-20 h-24 rounded-xl overflow-hidden shrink-0">
+              <img src={docUrl} alt="ID Document" className="w-full h-full object-cover" />
+            </div>
+            <div className="flex flex-col gap-1.5 text-xs">
+              <span className="font-bold text-primary">{seller.fullName || 'Your Name'}</span>
+              <span className="text-secondary font-tnum">ID No: KEN-849201948</span>
+              <div className="flex items-center gap-1.5 mt-1" style={{ color: '#10B981' }}>
+                <span className="material-symbols-outlined text-[14px]">verified</span>
+                <span className="font-semibold text-[11px]">Cleanverse AI Ready</span>
+              </div>
             </div>
           </div>
-          <span className="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full font-label-sm text-xs font-semibold">
-            Tier 1 Limit
-          </span>
         </div>
       </div>
 
-      {/* ID Document Preview */}
-      <div className="bg-surface-card rounded-xl p-4 shadow-sm border border-border-subtle mb-6">
-        <div className="flex items-center justify-between mb-3">
-          <span className="font-label-md text-xs font-semibold text-primary-container">Government ID (Front)</span>
-          <span className="bg-primary/10 text-primary px-2.5 py-0.5 rounded-full text-xs font-semibold">
-            Ready for Cleanverse Scan
-          </span>
-        </div>
-
-        <div className="relative w-full rounded-lg bg-surface-container-high p-3 flex items-center gap-4">
-          <div className="w-20 h-24 rounded-lg overflow-hidden shrink-0 bg-surface-variant border border-border-subtle">
-            <img src={docUrl} alt="ID Document" className="w-full h-full object-cover" />
-          </div>
-          <div className="flex flex-col gap-1 flex-1 text-xs">
-            <span className="font-bold text-primary">{seller.fullName}</span>
-            <span className="text-secondary text-[11px]">ID No: KEN-849201948</span>
-            <span className="text-success-shamrock font-semibold text-[11px]">Cleanverse AI Ready</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Action CTA */}
+      {/* ── CTA ─────────────────────────────────────────────── */}
       <button
         onClick={handleCleanverseCheck}
         disabled={isVerifying}
-        className="w-full h-13 bg-primary text-white font-label-lg font-bold rounded-xl hover:bg-primary-container shadow-md transition-all active:scale-[0.98] flex items-center justify-center gap-2 py-3"
+        className="w-full h-14 rounded-2xl text-sm font-extrabold text-white flex items-center justify-center gap-2 transition-all active:scale-[0.98] disabled:opacity-60"
+        style={{
+          background: 'linear-gradient(135deg,#C9922A 0%,#E8B96A 100%)',
+          boxShadow: '0 8px 24px rgba(201,146,42,0.35)',
+        }}
       >
         {isVerifying ? (
           <>
-            <span className="material-symbols-outlined text-lg animate-spin">autorenew</span>
-            <span>Sending to Cleanverse AI...</span>
+            <span className="material-symbols-outlined text-lg animate-spin">progress_activity</span>
+            Sending to Cleanverse AI…
           </>
         ) : (
           <>
-            <span>Verify with Cleanverse & Unlock $500</span>
+            <span className="material-symbols-outlined text-lg">shield</span>
+            Verify ID & Unlock $500
             <span className="material-symbols-outlined text-lg">arrow_forward</span>
           </>
         )}

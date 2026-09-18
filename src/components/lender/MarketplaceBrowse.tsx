@@ -19,12 +19,13 @@ const RiskBar: React.FC<{ score: number }> = ({ score }) => {
 };
 
 export const MarketplaceBrowse: React.FC = () => {
-  const { invoices, fundInvoiceLender, setLenderView } = useApp();
+  const { invoices, fundInvoiceLender, setLenderView, lender } = useApp();
   const { address: _address, isConnected } = useAccount();
   const { raw: usdcBalance } = useUSDCBalance();
   const { execute, step, txHash, isConfirming, isSuccess, errorMsg, reset } = useFundInvoice();
 
   const [searchTerm, setSearchTerm] = useState('');
+  // H4: pre-seed category filter based on lender's target allocation
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedInvoices, setSelectedInvoices] = useState<string[]>([]);
   const [fundingModal, setFundingModal] = useState<Invoice | null>(null);
@@ -38,7 +39,12 @@ export const MarketplaceBrowse: React.FC = () => {
     ? Math.round(openInvoices.reduce((s, i) => s + i.riskScore, 0) / openInvoices.length)
     : 0;
 
-  const filteredInvoices = openInvoices.filter(inv => {
+  // H4: filter invoices affordable within lender's target allocation
+  const allocationFiltered = lender.targetAllocation > 0
+    ? openInvoices.filter(i => i.advanceAmount <= lender.targetAllocation)
+    : openInvoices;
+
+  const filteredInvoices = allocationFiltered.filter(inv => {
     const q = searchTerm.toLowerCase();
     const match = inv.sellerBusinessName.toLowerCase().includes(q) ||
       inv.buyerName.toLowerCase().includes(q) || inv.id.toLowerCase().includes(q);
@@ -47,6 +53,10 @@ export const MarketplaceBrowse: React.FC = () => {
     if (selectedCategory === 'Short Term') return match && inv.termDays <= 45;
     return match && inv.sellerCategory.toLowerCase().includes(selectedCategory.toLowerCase());
   });
+
+  // H3: balance sufficiency check
+  const hasInsufficientBalance = (inv: Invoice) =>
+    isConnected && usdcBalance !== undefined && usdcBalance < BigInt(Math.round(inv.advanceAmount * 1e6));
 
   const toggleSelect = (id: string) =>
     setSelectedInvoices(p => p.includes(id) ? p.filter(x => x !== id) : [...p, id]);
@@ -456,6 +466,32 @@ export const MarketplaceBrowse: React.FC = () => {
               {!isConnected ? (
                 <div className="flex justify-center">
                   <ConnectKitButton label="Connect Wallet to Fund" />
+                </div>
+              ) : hasInsufficientBalance(fundingModal) ? (
+                /* H3: Insufficient balance guard */
+                <div className="flex flex-col gap-3">
+                  <div
+                    className="flex items-start gap-3 px-4 py-3.5 rounded-xl"
+                    style={{ background: 'rgba(239,68,68,0.06)', border: '1px solid rgba(239,68,68,0.18)' }}
+                  >
+                    <span className="material-symbols-outlined text-lg shrink-0 mt-0.5" style={{ color: '#EF4444' }}>account_balance_wallet</span>
+                    <div>
+                      <p className="text-xs font-bold mb-0.5" style={{ color: '#EF4444' }}>Insufficient USDC balance</p>
+                      <p className="text-[11px] text-secondary leading-relaxed">
+                        You need <span className="font-bold text-primary">${fundingModal.advanceAmount.toLocaleString()} USDC</span> to fund this invoice. Get test USDC from the Arc Studio sidebar to continue.
+                      </p>
+                    </div>
+                  </div>
+                  <a
+                    href="https://faucet.circle.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full h-12 rounded-2xl text-sm font-bold text-white flex items-center justify-center gap-2 transition-all"
+                    style={{ background: 'linear-gradient(135deg,#0A1628,#112240)', border: '1px solid rgba(201,146,42,0.25)' }}
+                  >
+                    <span className="material-symbols-outlined text-base">add_circle</span>
+                    Get Test USDC
+                  </a>
                 </div>
               ) : step === 'idle' || step === 'error' ? (
                 <button

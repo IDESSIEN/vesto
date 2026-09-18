@@ -210,15 +210,25 @@ export const SellerSignUp: React.FC = () => {
               <span className="material-symbols-outlined text-lg">arrow_forward</span>
             </button>
 
-            <div className="relative flex items-center gap-3">
-              <div className="flex-1 h-px" style={{ background: 'var(--border)' }} />
-              <span className="text-[11px] text-secondary font-medium">or</span>
-              <div className="flex-1 h-px" style={{ background: 'var(--border)' }} />
+            {/* Wallet explainer — shown AFTER form, with context */}
+            <div
+              className="flex items-start gap-3 px-4 py-3.5 rounded-2xl"
+              style={{ background: 'rgba(201,146,42,0.06)', border: '1px solid rgba(201,146,42,0.15)' }}
+            >
+              <span className="material-symbols-outlined text-lg shrink-0 mt-0.5" style={{ color: '#C9922A' }}>account_balance_wallet</span>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-semibold text-primary mb-0.5">
+                  You'll connect a wallet in the next step
+                </p>
+                <p className="text-[11px] leading-relaxed" style={{ color: 'var(--secondary)' }}>
+                  Your wallet is your payment address for USDC advances — no seed phrase required. We'll guide you through it after account setup.
+                </p>
+              </div>
             </div>
 
-            <div className="flex items-center justify-center gap-2 text-xs text-secondary">
+            <div className="flex items-center justify-center gap-2 text-[11px] text-secondary">
               <span>Already have a wallet?</span>
-              <ConnectKitButton label="Connect" />
+              <ConnectKitButton label="Connect now" />
             </div>
           </form>
         </div>
