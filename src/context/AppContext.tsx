@@ -23,8 +23,10 @@ interface AppContextType {
   // Onboarding gates
   sellerOnboarded: boolean;
   lenderOnboarded: boolean;
+  adminOnboarded: boolean;
   completeSellerOnboarding: (data: Partial<SellerProfile>) => void;
   completeLenderOnboarding: (data: Partial<LenderProfile>) => void;
+  completeAdminOnboarding: () => void;
 
   // Profiles
   seller: SellerProfile;
@@ -215,10 +217,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [currentRole, setCurrentRole] = useState<UserRole>('seller');
   const [sellerView, setSellerView] = useState<string>('signup');
   const [lenderView, setLenderView] = useState<string>('signup');
-  const [adminView, setAdminView] = useState<string>('oversight'); // default: oversight, not 2fa
+  const [adminView, setAdminView] = useState<string>('2fa'); // default: 2fa sign-in gate
 
   const [sellerOnboarded, setSellerOnboarded] = useState(false);
   const [lenderOnboarded, setLenderOnboarded] = useState(false);
+  const [adminOnboarded, setAdminOnboarded] = useState(false);
 
   const [seller, setSeller] = useState<SellerProfile>({ ...initialSeller, fullName: '', businessName: '', creditLimit: 0, verificationTier: 0 });
   const [lender, setLender] = useState<LenderProfile>({ ...initialLender, fullName: '', targetAllocation: 0, totalInvested: 0, totalYieldEarned: 0, availableBalance: 0 });
@@ -241,6 +244,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }));
     setSellerOnboarded(true);
     setSellerView('dashboard');
+  };
+
+  const completeAdminOnboarding = () => {
+    setAdminOnboarded(true);
+    setAdminView('oversight');
   };
 
   const completeLenderOnboarding = (data: Partial<LenderProfile>) => {
@@ -451,8 +459,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         sellerView, setSellerView,
         lenderView, setLenderView,
         adminView, setAdminView,
-        sellerOnboarded, lenderOnboarded,
-        completeSellerOnboarding, completeLenderOnboarding,
+        sellerOnboarded, lenderOnboarded, adminOnboarded,
+        completeSellerOnboarding, completeLenderOnboarding, completeAdminOnboarding,
         seller, lender,
         invoices, selectedBatchIds, setSelectedBatchIds,
         submitInvoice, approveInvoiceAdmin, flagInvoiceAdmin,

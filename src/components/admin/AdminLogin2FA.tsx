@@ -2,14 +2,14 @@ import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
 
 export const AdminLogin2FA: React.FC = () => {
-  const { setAdminView, showToast } = useApp();
+  const { completeAdminOnboarding, showToast } = useApp();
   const [adminUser, setAdminUser] = useState('');
   const [passcode, setPasscode] = useState('');
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     showToast('Admin authenticated. Welcome to the oversight portal.', 'success');
-    setAdminView('oversight');
+    completeAdminOnboarding();
   };
 
   // Split passcode into 6 character slots

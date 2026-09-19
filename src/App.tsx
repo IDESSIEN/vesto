@@ -33,7 +33,7 @@ export const AppContent: React.FC = () => {
     sellerView, setSellerView,
     lenderView, setLenderView,
     adminView, setAdminView,
-    sellerOnboarded, lenderOnboarded,
+    sellerOnboarded, lenderOnboarded, adminOnboarded,
   } = useApp();
 
   const navBtn = (active: boolean, onClick: () => void, label: string) => (
@@ -59,27 +59,27 @@ export const AppContent: React.FC = () => {
         <div className="max-w-7xl mx-auto px-2 sm:px-4 flex items-center justify-end gap-0.5 sm:gap-1 overflow-x-auto py-1.5 sm:py-2 no-scrollbar">
           {currentRole === 'seller' && (
             <>
-              {navBtn(sellerView === 'dashboard' || sellerView === 'signup', () => setSellerView(sellerOnboarded ? 'dashboard' : 'signup'), 'Dashboard')}
-              {navBtn(sellerView === 'submit_invoice', () => setSellerView(sellerOnboarded ? 'submit_invoice' : 'signup'), '+ Invoice')}
+              {navBtn(sellerView === 'signup' && !sellerOnboarded, () => setSellerView('signup'), 'Sign Up')}
+              {sellerOnboarded && navBtn(sellerView === 'dashboard', () => setSellerView('dashboard'), 'Dashboard')}
+              {sellerOnboarded && navBtn(sellerView === 'submit_invoice', () => setSellerView('submit_invoice'), '+ Invoice')}
             </>
           )}
           {currentRole === 'lender' && (
             <>
-              {navBtn(lenderView === 'browse',        () => setLenderView(lenderOnboarded ? 'browse' : 'signup'), 'Marketplace')}
-              {navBtn(lenderView === 'batch',         () => setLenderView('batch'),         'Batch Funding')}
-              {navBtn(lenderView === 'portfolio',     () => setLenderView('portfolio'),     'Portfolio')}
-              {navBtn(lenderView === 'risk_disclosure',()=> setLenderView('risk_disclosure'),'Risk Disclosure')}
-              {navBtn(lenderView === 'guided_tour',   () => setLenderView('guided_tour'),   'Guided Tour')}
-              {navBtn(lenderView === 'signup',        () => setLenderView('signup'),        'Sign Up')}
+              {navBtn(lenderView === 'signup' && !lenderOnboarded, () => setLenderView('signup'), 'Sign Up')}
+              {lenderOnboarded && navBtn(lenderView === 'browse' || lenderView === 'welcome', () => setLenderView('browse'), 'Marketplace')}
+              {lenderOnboarded && navBtn(lenderView === 'batch',          () => setLenderView('batch'),          'Batch Funding')}
+              {lenderOnboarded && navBtn(lenderView === 'portfolio',      () => setLenderView('portfolio'),      'Portfolio')}
             </>
           )}
           {currentRole === 'admin' && (
             <>
-              {navBtn(adminView === 'oversight',  () => setAdminView('oversight'),  'Invoices')}
-              {navBtn(adminView === 'queue',      () => setAdminView('queue'),      'KYC Queue')}
-              {navBtn(adminView === 'dispute',    () => setAdminView('dispute'),    'Disputes')}
-              {navBtn(adminView === 'analytics',  () => setAdminView('analytics'),  'Analytics')}
-              {navBtn(adminView === '2fa',        () => setAdminView('2fa'),        '⚙ Security')}
+              {navBtn(adminView === '2fa' && !adminOnboarded, () => setAdminView('2fa'), 'Sign In')}
+              {adminOnboarded && navBtn(adminView === 'oversight',  () => setAdminView('oversight'),  'Invoices')}
+              {adminOnboarded && navBtn(adminView === 'queue',      () => setAdminView('queue'),      'KYC Queue')}
+              {adminOnboarded && navBtn(adminView === 'dispute',    () => setAdminView('dispute'),    'Disputes')}
+              {adminOnboarded && navBtn(adminView === 'analytics',  () => setAdminView('analytics'),  'Analytics')}
+              {adminOnboarded && navBtn(adminView === '2fa',        () => setAdminView('2fa'),        '⚙ Security')}
             </>
           )}
         </div>
@@ -104,22 +104,22 @@ export const AppContent: React.FC = () => {
         )}
         {currentRole === 'lender' && (
           <>
-            {lenderView === 'signup'         && <LenderSignUp />}
-            {lenderView === 'welcome'        && <LenderWelcome />}
-            {lenderView === 'risk_disclosure'&& <RiskDisclosure />}
-            {lenderView === 'guided_tour'    && <MarketplaceGuidedTour />}
-            {lenderView === 'browse'         && <MarketplaceBrowse />}
-            {lenderView === 'batch'          && <FundInvoiceBatch />}
-            {lenderView === 'portfolio'      && <LenderPortfolio />}
+            {(!lenderOnboarded || lenderView === 'signup')   && <LenderSignUp />}
+            {lenderOnboarded && lenderView === 'welcome'        && <LenderWelcome />}
+            {lenderOnboarded && lenderView === 'risk_disclosure'&& <RiskDisclosure />}
+            {lenderOnboarded && lenderView === 'guided_tour'    && <MarketplaceGuidedTour />}
+            {lenderOnboarded && lenderView === 'browse'         && <MarketplaceBrowse />}
+            {lenderOnboarded && lenderView === 'batch'          && <FundInvoiceBatch />}
+            {lenderOnboarded && lenderView === 'portfolio'      && <LenderPortfolio />}
           </>
         )}
         {currentRole === 'admin' && (
           <>
-            {adminView === '2fa'             && <AdminLogin2FA />}
-            {adminView === 'queue'           && <VerificationQueue />}
-            {adminView === 'oversight'       && <InvoiceOversightTable />}
-            {adminView === 'dispute'         && <DisputeResolution />}
-            {adminView === 'analytics'       && <AnalyticsOverview />}
+            {(!adminOnboarded || adminView === '2fa')        && <AdminLogin2FA />}
+            {adminOnboarded && adminView === 'queue'         && <VerificationQueue />}
+            {adminOnboarded && adminView === 'oversight'     && <InvoiceOversightTable />}
+            {adminOnboarded && adminView === 'dispute'       && <DisputeResolution />}
+            {adminOnboarded && adminView === 'analytics'     && <AnalyticsOverview />}
           </>
         )}
       </main>
