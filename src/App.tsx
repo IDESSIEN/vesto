@@ -10,6 +10,7 @@ import { VerificationInProgress } from './components/seller/VerificationInProgre
 import { SellerOnboardingTutorial } from './components/seller/SellerOnboardingTutorial';
 import { SubmitInvoice } from './components/seller/SubmitInvoice';
 import { SellerDashboard } from './components/seller/SellerDashboard';
+import { SellerStatus } from './components/seller/SellerStatus';
 
 // Lender Components
 import { LenderSignUp } from './components/lender/LenderSignUp';
@@ -34,6 +35,7 @@ export const AppContent: React.FC = () => {
     lenderView, setLenderView,
     adminView, setAdminView,
     sellerOnboarded, lenderOnboarded, adminOnboarded,
+    seller,
   } = useApp();
 
   const navBtn = (active: boolean, onClick: () => void, label: string) => (
@@ -62,6 +64,21 @@ export const AppContent: React.FC = () => {
               {navBtn(sellerView === 'signup' && !sellerOnboarded, () => setSellerView('signup'), 'Sign Up')}
               {sellerOnboarded && navBtn(sellerView === 'dashboard', () => setSellerView('dashboard'), 'Dashboard')}
               {sellerOnboarded && navBtn(sellerView === 'submit_invoice', () => setSellerView('submit_invoice'), '+ Invoice')}
+              {sellerOnboarded && navBtn(
+                sellerView === 'tier1' || sellerView === 'tier2' || sellerView === 'in_progress',
+                () => {
+                  // Route to the correct tier based on current verification state
+                  if (seller.kycStatusTier1 === 'verified') {
+                    setSellerView('tier2');
+                  } else if (seller.kycStatusTier1 === 'pending') {
+                    setSellerView('in_progress');
+                  } else {
+                    setSellerView('tier1');
+                  }
+                },
+                'Verify ID'
+              )}
+              {sellerOnboarded && navBtn(sellerView === 'status', () => setSellerView('status'), 'Status')}
             </>
           )}
           {currentRole === 'lender' && (
@@ -93,13 +110,14 @@ export const AppContent: React.FC = () => {
       >
         {currentRole === 'seller' && (
           <>
-            {sellerView === 'signup'         && <SellerSignUp />}
-            {sellerView === 'tier1'          && <Tier1Verification />}
-            {sellerView === 'tier2'          && <Tier2Verification />}
-            {sellerView === 'in_progress'    && <VerificationInProgress />}
-            {sellerView === 'tutorial'       && <SellerOnboardingTutorial />}
-            {sellerView === 'submit_invoice' && <SubmitInvoice />}
-            {sellerView === 'dashboard'      && <SellerDashboard />}
+            {(!sellerOnboarded || sellerView === 'signup') && <SellerSignUp />}
+            {sellerOnboarded && sellerView === 'tier1'          && <Tier1Verification />}
+            {sellerOnboarded && sellerView === 'tier2'          && <Tier2Verification />}
+            {sellerOnboarded && sellerView === 'in_progress'    && <VerificationInProgress />}
+            {sellerOnboarded && sellerView === 'tutorial'       && <SellerOnboardingTutorial />}
+            {sellerOnboarded && sellerView === 'submit_invoice' && <SubmitInvoice />}
+            {sellerOnboarded && sellerView === 'dashboard'      && <SellerDashboard />}
+            {sellerOnboarded && sellerView === 'status'         && <SellerStatus />}
           </>
         )}
         {currentRole === 'lender' && (
