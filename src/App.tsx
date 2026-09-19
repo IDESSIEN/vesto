@@ -59,10 +59,8 @@ export const AppContent: React.FC = () => {
         <div className="max-w-7xl mx-auto px-2 sm:px-4 flex items-center justify-end gap-0.5 sm:gap-1 overflow-x-auto py-1.5 sm:py-2 no-scrollbar">
           {currentRole === 'seller' && (
             <>
-              {navBtn(sellerView === 'dashboard',     () => setSellerView(sellerOnboarded ? 'dashboard' : 'signup'), 'Dashboard')}
-              {navBtn(sellerView === 'submit_invoice',() => setSellerView(sellerOnboarded ? 'submit_invoice' : 'signup'), '+ Invoice')}
-              {navBtn(['tier1','tier2','in_progress','tutorial','signup'].includes(sellerView),
-                () => setSellerView(sellerOnboarded ? 'tier1' : 'signup'), 'Account')}
+              {navBtn(sellerView === 'dashboard' || sellerView === 'signup', () => setSellerView(sellerOnboarded ? 'dashboard' : 'signup'), 'Dashboard')}
+              {navBtn(sellerView === 'submit_invoice', () => setSellerView(sellerOnboarded ? 'submit_invoice' : 'signup'), '+ Invoice')}
             </>
           )}
           {currentRole === 'lender' && (

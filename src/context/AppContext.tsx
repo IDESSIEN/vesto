@@ -240,7 +240,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       createdAt: new Date().toISOString().split('T')[0],
     }));
     setSellerOnboarded(true);
-    setSellerView('tier1');
+    setSellerView('dashboard');
   };
 
   const completeLenderOnboarding = (data: Partial<LenderProfile>) => {

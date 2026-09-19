@@ -257,68 +257,96 @@ export const SellerDashboard: React.FC = () => {
         <StatTile label="On Marketplace" value={`${openOnMarket}`} sub="Open invoices" accent="#E8B96A" />
       </div>
 
-      {/* ── Verification Gate Banner ─────────────────────────── */}
-      {seller.verificationTier === 0 && (
-        <div
-          className="relative flex flex-col sm:flex-row sm:items-center justify-between px-5 py-5 rounded-2xl overflow-hidden gap-4"
-          style={{
-            background: 'linear-gradient(135deg,#0A1628 0%,#112240 100%)',
-            boxShadow: '0 0 0 1px rgba(201,146,42,0.30)',
-          }}
-        >
-          <div className="absolute top-0 left-0 right-0 h-[3px]"
-            style={{ background: 'linear-gradient(90deg,#C9922A,#E8B96A)' }}
-          />
-          <div className="absolute inset-0 opacity-[0.02]"
-            style={{ backgroundImage: 'radial-gradient(circle,#fff 1px,transparent 1px)', backgroundSize: '20px 20px' }}
-          />
-          <div className="relative flex items-start gap-4">
-            <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
-              style={{ background: 'rgba(201,146,42,0.15)', border: '1px solid rgba(201,146,42,0.30)' }}>
-              <span className="material-symbols-outlined text-xl" style={{ color: '#E8B96A' }}>lock</span>
-            </div>
-            <div>
-              <h4 className="text-sm font-extrabold text-white mb-1" style={{ letterSpacing: '-0.01em' }}>
-                Verify your identity to unlock funding
-              </h4>
-              <p className="text-xs leading-relaxed" style={{ color: 'rgba(255,255,255,0.5)' }}>
-                Complete Tier 1 ID verification to unlock a $500 advance limit. Takes under 60 seconds.
-              </p>
-            </div>
-          </div>
-          <button
-            onClick={() => setSellerView('tier1')}
-            className="relative px-5 py-2.5 rounded-xl text-xs font-extrabold text-white shrink-0 transition-all active:scale-[0.97]"
-            style={{ background: 'linear-gradient(135deg,#C9922A,#E8B96A)', boxShadow: '0 4px 12px rgba(201,146,42,0.35)' }}
-          >
-            Verify Now →
-          </button>
+      {/* ── Your Progress ───────────────────────────────────── */}
+      <section
+        className="rounded-2xl overflow-hidden"
+        style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}
+      >
+        <div className="px-5 py-3 flex items-center justify-between border-b" style={{ borderColor: 'var(--border)' }}>
+          <span className="text-[11px] font-extrabold uppercase tracking-widest text-secondary">Your Progress</span>
+          <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full" style={{ background: 'rgba(201,146,42,0.10)', color: '#C9922A' }}>
+            {[seller.verificationTier >= 1, seller.verificationTier >= 2, true].filter(Boolean).length}/3 steps
+          </span>
         </div>
-      )}
+        <div className="divide-y" style={{ borderColor: 'var(--border)' }}>
+          {/* Step 1: Verify ID */}
+          <div className="flex items-center justify-between px-5 py-4">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0"
+                style={seller.verificationTier >= 1
+                  ? { background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.3)' }
+                  : { background: 'rgba(201,146,42,0.10)', border: '1px solid rgba(201,146,42,0.25)' }}>
+                {seller.verificationTier >= 1
+                  ? <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 3.5" stroke="#10B981" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                  : <span className="text-[11px] font-extrabold" style={{ color: '#C9922A' }}>1</span>
+                }
+              </div>
+              <div>
+                <p className="text-sm font-bold" style={{ color: seller.verificationTier >= 1 ? 'var(--secondary)' : 'var(--primary)' }}>
+                  Verify your identity
+                </p>
+                <p className="text-[11px] text-secondary">Tier 1 — unlocks $500 advance limit</p>
+              </div>
+            </div>
+            {seller.verificationTier < 1 && (
+              <button onClick={() => setSellerView('tier1')}
+                className="px-4 py-1.5 rounded-xl text-[11px] font-extrabold text-white shrink-0"
+                style={{ background: 'linear-gradient(135deg,#C9922A,#E8B96A)' }}>
+                Start →
+              </button>
+            )}
+          </div>
 
-      {/* ── Tier Upgrade ─────────────────────────────────────── */}
-      {seller.verificationTier === 1 && (
-        <div
-          className="relative flex items-center justify-between px-5 py-4 rounded-2xl overflow-hidden"
-          style={{ background: 'linear-gradient(135deg,rgba(201,146,42,0.08) 0%,rgba(232,185,106,0.04) 100%)', border: '1px solid rgba(201,146,42,0.20)' }}
-        >
-          <div className="absolute top-0 left-0 bottom-0 w-1 rounded-l-2xl" style={{ background: 'linear-gradient(180deg,#C9922A,#E8B96A)' }} />
-          <div className="flex items-center gap-4 pl-2">
-            <span className="material-symbols-outlined text-2xl" style={{ color: '#C9922A' }}>stars</span>
-            <div>
-              <h4 className="text-sm font-extrabold text-primary" style={{ letterSpacing: '-0.01em' }}>Unlock Tier 2 — $5,000 Limit</h4>
-              <p className="text-[11px] text-secondary mt-0.5">Upload Tax PIN + Bank Statement to expand.</p>
+          {/* Step 2: Upgrade to Tier 2 */}
+          <div className="flex items-center justify-between px-5 py-4">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0"
+                style={seller.verificationTier >= 2
+                  ? { background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.3)' }
+                  : { background: seller.verificationTier >= 1 ? 'rgba(201,146,42,0.10)' : 'var(--surface-container)', border: '1px solid var(--border)' }}>
+                {seller.verificationTier >= 2
+                  ? <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 3.5" stroke="#10B981" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                  : <span className="text-[11px] font-extrabold" style={{ color: seller.verificationTier >= 1 ? '#C9922A' : 'var(--secondary)' }}>2</span>
+                }
+              </div>
+              <div>
+                <p className="text-sm font-bold" style={{ color: seller.verificationTier >= 2 ? 'var(--secondary)' : seller.verificationTier >= 1 ? 'var(--primary)' : 'var(--secondary)' }}>
+                  Upgrade to Tier 2
+                </p>
+                <p className="text-[11px] text-secondary">Upload tax PIN + bank statement — unlocks $5,000</p>
+              </div>
             </div>
+            {seller.verificationTier === 1 && (
+              <button onClick={() => setSellerView('tier2')}
+                className="px-4 py-1.5 rounded-xl text-[11px] font-extrabold text-white shrink-0"
+                style={{ background: 'linear-gradient(135deg,#C9922A,#E8B96A)' }}>
+                Upgrade →
+              </button>
+            )}
           </div>
-          <button
-            onClick={() => setSellerView('tier2')}
-            className="px-4 py-2 rounded-xl text-xs font-bold text-white shrink-0 transition-all active:scale-[0.97]"
-            style={{ background: 'linear-gradient(135deg,#C9922A,#E8B96A)', boxShadow: '0 4px 12px rgba(201,146,42,0.30)' }}
-          >
-            Upgrade
-          </button>
+
+          {/* Step 3: Take the Tour */}
+          <div className="flex items-center justify-between px-5 py-4">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0"
+                style={{ background: 'var(--surface-container)', border: '1px solid var(--border)' }}>
+                <span className="text-[11px] font-extrabold text-secondary">3</span>
+              </div>
+              <div>
+                <p className="text-sm font-bold text-primary">Explore the platform</p>
+                <p className="text-[11px] text-secondary">A 2-min guided tour of how Vesto works</p>
+              </div>
+            </div>
+            <button onClick={() => setSellerView('tutorial')}
+              className="px-4 py-1.5 rounded-xl text-[11px] font-bold text-primary shrink-0 transition-all"
+              style={{ background: 'var(--surface-container)', border: '1px solid var(--border)' }}>
+              Take Tour
+            </button>
+          </div>
         </div>
-      )}
+      </section>
+
+
 
       {/* ── CTA Buttons ──────────────────────────────────────── */}
       <div className="grid grid-cols-2 gap-3">
