@@ -1,7 +1,7 @@
 import React from 'react';
 import { useApp } from '../../context/AppContext';
 
-// Tiny inline sparkline — pure SVG, no deps
+// Tiny inline sparkline - pure SVG, no deps
 const Sparkline: React.FC<{ data: number[]; color: string; width?: number; height?: number }> = ({
   data, color, width = 64, height = 28,
 }) => {

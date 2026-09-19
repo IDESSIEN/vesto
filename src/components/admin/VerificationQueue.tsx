@@ -99,7 +99,7 @@ export const VerificationQueue: React.FC = () => {
                 <button
                   onClick={() => {
                     let undone = false;
-                    toast.success(`Approved Tier ${req.tier} — ${req.businessName}`, {
+                    toast.success(`Approved Tier ${req.tier} - ${req.businessName}`, {
                       duration: 4000,
                       action: {
                         label: 'Undo',

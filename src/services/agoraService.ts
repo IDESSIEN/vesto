@@ -341,7 +341,7 @@ export const agoraService = {
     lenderName: string
   ): Promise<AgoraDepositSetup> => {
     if (!isAgoraConfigured) {
-      const walletAccount = simulateWalletAccount(walletAddress, `${lenderName} — Advance Lender Wallet`);
+      const walletAccount = simulateWalletAccount(walletAddress, `${lenderName} - Advance Lender Wallet`);
       return {
         route: simulateLenderDepositRoute(walletAccount.id),
         walletAccount,
@@ -351,7 +351,7 @@ export const agoraService = {
 
     const walletAccount = await agoraService.registerWallet(
       walletAddress,
-      `${lenderName} — Advance Lender Wallet`
+      `${lenderName} - Advance Lender Wallet`
     );
 
     const wireToAusd = await createRoute({
@@ -428,7 +428,7 @@ export const agoraService = {
         accountNumber: params.accountNumber,
         routingNumber: params.routingNumber,
         beneficiary: params.beneficiary,
-        label: `${params.sellerName} — Payout Bank`,
+        label: `${params.sellerName} - Payout Bank`,
       });
       return {
         route: simulateSellerPayoutRoute(bankAccount.id),
@@ -437,14 +437,14 @@ export const agoraService = {
       };
     }
 
-    await agoraService.registerWallet(params.walletAddress, `${params.sellerName} — Advance Seller Wallet`);
+    await agoraService.registerWallet(params.walletAddress, `${params.sellerName} - Advance Seller Wallet`);
 
     const bankAccount = await agoraService.registerBankAccount({
       bankName: params.bankName,
       accountNumber: params.accountNumber,
       routingNumber: params.routingNumber,
       beneficiary: params.beneficiary,
-      label: `${params.sellerName} — Payout Bank`,
+      label: `${params.sellerName} - Payout Bank`,
     });
 
     const route = await createRoute({

@@ -85,7 +85,7 @@ export const AppContent: React.FC = () => {
         </div>
       </div>
 
-      {/* Main Content — fade-in on every view switch */}
+      {/* Main Content - fade-in on every view switch */}
       <main
         className="flex-1 max-w-7xl w-full mx-auto p-0 sm:p-2"
         key={`${currentRole}:${sellerView}:${lenderView}:${adminView}`}

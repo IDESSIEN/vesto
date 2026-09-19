@@ -69,7 +69,7 @@ export const SellerDashboard: React.FC = () => {
       refetchClaim();
       showToast('Payout claimed successfully!', 'success');
     } catch {
-      showToast('Claim failed — check your wallet.', 'warning');
+      showToast('Claim failed - check your wallet.', 'warning');
     }
   };
 
@@ -177,7 +177,7 @@ export const SellerDashboard: React.FC = () => {
             </div>
           )}
 
-          {/* Dashed separator — cinema ticket perforation */}
+          {/* Dashed separator - cinema ticket perforation */}
           <div className="relative mb-5">
             <div className="absolute -left-7 w-5 h-5 rounded-full" style={{ background: 'var(--canvas)', top: '-10px' }} />
             <div className="absolute -right-7 w-5 h-5 rounded-full" style={{ background: 'var(--canvas)', top: '-10px' }} />
@@ -230,7 +230,7 @@ export const SellerDashboard: React.FC = () => {
               Payout Ready
             </div>
             <div className="font-headline font-extrabold text-2xl text-primary font-tnum" style={{ letterSpacing: '-0.02em' }}>
-              {pendingClaim !== undefined ? formatUSDC(pendingClaim) : '—'}
+              {pendingClaim !== undefined ? formatUSDC(pendingClaim) : '-'}
               <span className="text-sm font-medium text-secondary ml-2">USDC</span>
             </div>
           </div>
@@ -285,7 +285,7 @@ export const SellerDashboard: React.FC = () => {
                 <p className="text-sm font-bold" style={{ color: seller.verificationTier >= 1 ? 'var(--secondary)' : 'var(--primary)' }}>
                   Verify your identity
                 </p>
-                <p className="text-[11px] text-secondary">Tier 1 — unlocks $500 advance limit</p>
+                <p className="text-[11px] text-secondary">Tier 1 - unlocks $500 advance limit</p>
               </div>
             </div>
             {seller.verificationTier < 1 && (
@@ -313,7 +313,7 @@ export const SellerDashboard: React.FC = () => {
                 <p className="text-sm font-bold" style={{ color: seller.verificationTier >= 2 ? 'var(--secondary)' : seller.verificationTier >= 1 ? 'var(--primary)' : 'var(--secondary)' }}>
                   Upgrade to Tier 2
                 </p>
-                <p className="text-[11px] text-secondary">Upload tax PIN + bank statement — unlocks $5,000</p>
+                <p className="text-[11px] text-secondary">Upload tax PIN + bank statement - unlocks $5,000</p>
               </div>
             </div>
             {seller.verificationTier === 1 && (
@@ -478,13 +478,13 @@ export const SellerDashboard: React.FC = () => {
                         let undone = false;
                         toast(`Mark invoice ${inv.id} as repaid?`, {
                           duration: 5000,
-                          description: `$${inv.advanceAmount.toLocaleString()} USDC — this cannot be undone after 5 seconds.`,
+                          description: `$${inv.advanceAmount.toLocaleString()} USDC - this cannot be undone after 5 seconds.`,
                           action: {
                             label: 'Confirm Repaid',
                             onClick: () => { undone = true; repayInvoiceSeller(inv.id); },
                           },
                           cancel: { label: 'Cancel', onClick: () => { undone = true; } },
-                          onAutoClose: () => { /* do nothing — require explicit confirm */ undone = true; },
+                          onAutoClose: () => { /* do nothing - require explicit confirm */ undone = true; },
                         });
                       }}
                       className="px-3.5 py-2 rounded-xl text-xs font-bold text-white transition-all active:scale-[0.97]"

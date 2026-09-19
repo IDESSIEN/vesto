@@ -330,7 +330,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         totalFinanced: prev.totalFinanced + target.amount,
       }));
     }
-    showToast(`Funded ${invoiceId} — ${target.advanceAmount.toLocaleString()} USDC deployed. → Check Portfolio for yield tracking.`, 'success');
+    showToast(`Funded ${invoiceId} - ${target.advanceAmount.toLocaleString()} USDC deployed. → Check Portfolio for yield tracking.`, 'success');
   };
 
   const fundBatchLender = (invoiceIds: string[]) => {
@@ -349,7 +349,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       totalInvested: prev.totalInvested + totalAdvance,
       availableBalance: Math.max(0, prev.availableBalance - totalAdvance),
     }));
-    showToast(`Batch funded: ${invoiceIds.length} invoices — $${totalAdvance.toLocaleString()} USDC on Arc. → View Portfolio for returns.`, 'success');
+    showToast(`Batch funded: ${invoiceIds.length} invoices - $${totalAdvance.toLocaleString()} USDC on Arc. → View Portfolio for returns.`, 'success');
   };
 
   const repayInvoiceSeller = (invoiceId: string) => {

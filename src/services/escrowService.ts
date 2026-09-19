@@ -65,7 +65,7 @@ export const escrowService = {
     };
   },
 
-  /** Escrow releases the seller advance (USDC) — Agora converts this leg to local currency. */
+  /** Escrow releases the seller advance (USDC) - Agora converts this leg to local currency. */
   async releaseSellerAdvance(params: {
     invoiceId: string;
     amountUsdc: number;

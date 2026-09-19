@@ -23,7 +23,7 @@ export const Tier1Verification: React.FC = () => {
       setIsVerifying(false);
       if (result.status === 'pass') {
         submitVerification(1, 'National ID Photo (Tier 1)', docUrl);
-        showToast(`ID Verified (${result.confidenceScore}% confidence). $500 limit unlocked — submit your first invoice!`, 'success');
+        showToast(`ID Verified (${result.confidenceScore}% confidence). $500 limit unlocked - submit your first invoice!`, 'success');
         setSellerView('dashboard');
       } else if (result.status === 'fail') {
         setRejectionResult(result);
@@ -35,7 +35,7 @@ export const Tier1Verification: React.FC = () => {
       }
     } catch {
       setIsVerifying(false);
-      showToast('Error contacting Cleanverse — please try again.', 'warning');
+      showToast('Error contacting Cleanverse - please try again.', 'warning');
     }
   };
 

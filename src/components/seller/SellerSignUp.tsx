@@ -51,7 +51,7 @@ export const SellerSignUp: React.FC = () => {
   return (
     <div className="flex items-stretch" style={{ background: 'var(--canvas)', minHeight: 'calc(100dvh - 96px)' }}>
 
-      {/* ── Left panel — editorial ───────────────────────────── */}
+      {/* ── Left panel - editorial ───────────────────────────── */}
       <div
         className="hidden lg:flex flex-col justify-between w-[420px] shrink-0 p-10 relative overflow-hidden"
         style={{
@@ -118,7 +118,7 @@ export const SellerSignUp: React.FC = () => {
         </p>
       </div>
 
-      {/* ── Right panel — form ───────────────────────────────── */}
+      {/* ── Right panel - form ───────────────────────────────── */}
       <div className="flex-1 flex items-center justify-center px-4 sm:px-6 py-8 sm:py-12">
         <div className="w-full max-w-sm">
 
@@ -210,7 +210,7 @@ export const SellerSignUp: React.FC = () => {
               <span className="material-symbols-outlined text-lg">arrow_forward</span>
             </button>
 
-            {/* Wallet explainer — shown AFTER form, with context */}
+            {/* Wallet explainer - shown AFTER form, with context */}
             <div
               className="flex items-start gap-3 px-4 py-3.5 rounded-2xl"
               style={{ background: 'rgba(201,146,42,0.06)', border: '1px solid rgba(201,146,42,0.15)' }}
@@ -221,7 +221,7 @@ export const SellerSignUp: React.FC = () => {
                   You'll connect a wallet in the next step
                 </p>
                 <p className="text-[11px] leading-relaxed" style={{ color: 'var(--secondary)' }}>
-                  Your wallet is your payment address for USDC advances — no seed phrase required. We'll guide you through it after account setup.
+                  Your wallet is your payment address for USDC advances - no seed phrase required. We'll guide you through it after account setup.
                 </p>
               </div>
             </div>

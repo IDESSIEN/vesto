@@ -175,7 +175,7 @@ export const SubmitInvoice: React.FC = () => {
 
             {/* 3-row breakdown */}
             <div className="flex flex-col gap-2.5 mb-4">
-              {/* Row 1 — Invoice Total */}
+              {/* Row 1 - Invoice Total */}
               <div className="flex items-center gap-3">
                 <div className="w-28 shrink-0 text-[11px] font-semibold" style={{ color: 'rgba(255,255,255,0.55)' }}>Invoice Total</div>
                 <div className="flex-1 h-2 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.12)' }}>
@@ -184,7 +184,7 @@ export const SubmitInvoice: React.FC = () => {
                 <div className="w-20 text-right font-tnum text-xs font-bold text-white">${amount.toLocaleString()}</div>
               </div>
 
-              {/* Row 2 — Advance (advanceRatePct%) */}
+              {/* Row 2 - Advance (advanceRatePct%) */}
               <div className="flex items-center gap-3">
                 <div className="w-28 shrink-0 text-[11px] font-semibold" style={{ color: 'rgba(255,255,255,0.55)' }}>Advance ({advanceRatePct}%)</div>
                 <div className="flex-1 h-2 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.12)' }}>
@@ -193,7 +193,7 @@ export const SubmitInvoice: React.FC = () => {
                 <div className="w-20 text-right font-tnum text-xs font-bold" style={{ color: 'var(--gold-light)' }}>${advanceAmount.toLocaleString()}</div>
               </div>
 
-              {/* Row 3 — Fee deducted */}
+              {/* Row 3 - Fee deducted */}
               <div className="flex items-center gap-3">
                 <div className="w-28 shrink-0 text-[11px] font-semibold" style={{ color: 'rgba(255,255,255,0.55)' }}>Platform Fee (2%)</div>
                 <div className="flex-1 h-2 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.12)' }}>

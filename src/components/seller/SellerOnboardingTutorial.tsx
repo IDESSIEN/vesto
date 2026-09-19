@@ -7,7 +7,7 @@ export const SellerOnboardingTutorial: React.FC = () => {
 
   const steps = [
     { title: 'Submit Unpaid Invoices',      icon: 'description',    description: 'Upload invoices issued to buyers with 30–90 day payment terms. Get instant AI validation.',               detail: 'Vesto accepts commercial invoices, bills of lading, and delivery receipts.' },
-    { title: 'Receive Instant Cash Advance', icon: 'payments',       description: 'Get up to 85% of your invoice value advanced to your bank or mobile money within minutes.',             detail: 'Zero debt on your balance sheet — this is immediate factoring liquidity.' },
+    { title: 'Receive Instant Cash Advance', icon: 'payments',       description: 'Get up to 85% of your invoice value advanced to your bank or mobile money within minutes.',             detail: 'Zero debt on your balance sheet - this is immediate factoring liquidity.' },
     { title: 'Buyer Settles on Arc',          icon: 'account_balance', description: 'Your buyer pays the invoice on due date. The remaining 15% (minus fee) is released to your wallet.', detail: 'Fully transparent liquidity pools governed by smart contracts on Arc.' },
     { title: 'Grow Your Credit Limit',       icon: 'trending_up',    description: 'Each on-time settlement increases your credit limit automatically up to $5,000+.',                      detail: 'Unlock Tier 2 and institutional credit lines as your history grows.' },
   ];

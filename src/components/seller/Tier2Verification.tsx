@@ -45,7 +45,7 @@ export const Tier2Verification: React.FC = () => {
       }
     } catch {
       setIsVerifying(false);
-      showToast('Error contacting Cleanverse — please try again.', 'warning');
+      showToast('Error contacting Cleanverse - please try again.', 'warning');
     }
   };
 

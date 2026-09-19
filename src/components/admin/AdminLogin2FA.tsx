@@ -82,7 +82,7 @@ export const AdminLogin2FA: React.FC = () => {
               </div>
             </div>
 
-            {/* TOTP — character slot layout */}
+            {/* TOTP - character slot layout */}
             <div className="flex flex-col gap-2">
               <div className="flex items-center justify-between">
                 <label className="text-xs font-semibold text-primary">2FA Authenticator Code (TOTP)</label>

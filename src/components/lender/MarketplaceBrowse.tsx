@@ -40,7 +40,7 @@ export const MarketplaceBrowse: React.FC = () => {
   const totalPool = openInvoices.reduce((s, i) => s + i.amount, 0);
   const avgYield = openInvoices.length
     ? (openInvoices.reduce((s, i) => s + i.expectedYieldPct, 0) / openInvoices.length).toFixed(1)
-    : '—';
+    : '-';
   const avgRisk = openInvoices.length
     ? Math.round(openInvoices.reduce((s, i) => s + i.riskScore, 0) / openInvoices.length)
     : 0;
@@ -177,7 +177,7 @@ export const MarketplaceBrowse: React.FC = () => {
               <div className="text-right">
                 <div className="text-[9px] uppercase tracking-widest font-semibold mb-0.5" style={{ color: 'rgba(255,255,255,0.35)' }}>Your Balance</div>
                 <div className="font-headline font-bold text-base text-white font-tnum">
-                  {usdcBalance !== undefined ? formatUSDC(usdcBalance) : '—'} <span style={{ color: 'rgba(255,255,255,0.35)', fontSize: '11px' }}>USDC</span>
+                  {usdcBalance !== undefined ? formatUSDC(usdcBalance) : '-'} <span style={{ color: 'rgba(255,255,255,0.35)', fontSize: '11px' }}>USDC</span>
                 </div>
               </div>
             ) : (
@@ -435,8 +435,8 @@ export const MarketplaceBrowse: React.FC = () => {
                 >
                   <span className="material-symbols-outlined text-sm animate-spin" style={{ color: '#818CF8' }}>progress_activity</span>
                   <span className="text-xs font-semibold" style={{ color: '#818CF8' }}>
-                    {step === 'approving' ? 'Step 1 of 2 — Approve USDC spend in wallet…'
-                      : step === 'funding' ? 'Step 2 of 2 — Confirm funding transaction…'
+                    {step === 'approving' ? 'Step 1 of 2 - Approve USDC spend in wallet…'
+                      : step === 'funding' ? 'Step 2 of 2 - Confirm funding transaction…'
                       : 'Waiting for Arc block confirmation…'}
                   </span>
                 </div>

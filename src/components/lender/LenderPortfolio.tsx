@@ -69,7 +69,7 @@ export const LenderPortfolio: React.FC = () => {
 
       {/* ── KPI Cards ────────────────────────────────────────── */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        {/* Total Invested — hero dark card */}
+        {/* Total Invested - hero dark card */}
         <div className="vesto-hero rounded-2xl p-5 text-white shadow-hero relative overflow-hidden">
           <div className="h-[3px] absolute top-0 left-0 right-0" style={{ background: 'linear-gradient(90deg,#C9922A,#E8B96A)' }} />
           <div className="relative">
