@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { toast } from 'sonner';
 import { useAccount } from 'wagmi';
 import { ConnectKitButton } from 'connectkit';
 import { useApp } from '../../context/AppContext';
@@ -445,7 +446,19 @@ export const SellerDashboard: React.FC = () => {
                   </div>
                   {inv.status === 'funded' && (
                     <button
-                      onClick={() => repayInvoiceSeller(inv.id)}
+                      onClick={() => {
+                        let undone = false;
+                        toast(`Mark invoice ${inv.id} as repaid?`, {
+                          duration: 5000,
+                          description: `$${inv.advanceAmount.toLocaleString()} USDC — this cannot be undone after 5 seconds.`,
+                          action: {
+                            label: 'Confirm Repaid',
+                            onClick: () => { undone = true; repayInvoiceSeller(inv.id); },
+                          },
+                          cancel: { label: 'Cancel', onClick: () => { undone = true; } },
+                          onAutoClose: () => { /* do nothing — require explicit confirm */ undone = true; },
+                        });
+                      }}
                       className="px-3.5 py-2 rounded-xl text-xs font-bold text-white transition-all active:scale-[0.97]"
                       style={{ background: 'linear-gradient(135deg,#047857,#10B981)' }}
                     >

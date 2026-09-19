@@ -215,7 +215,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [currentRole, setCurrentRole] = useState<UserRole>('seller');
   const [sellerView, setSellerView] = useState<string>('signup');
   const [lenderView, setLenderView] = useState<string>('signup');
-  const [adminView, setAdminView] = useState<string>('oversight');
+  const [adminView, setAdminView] = useState<string>('oversight'); // default: oversight, not 2fa
 
   const [sellerOnboarded, setSellerOnboarded] = useState(false);
   const [lenderOnboarded, setLenderOnboarded] = useState(false);

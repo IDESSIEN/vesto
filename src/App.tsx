@@ -77,11 +77,11 @@ export const AppContent: React.FC = () => {
           )}
           {currentRole === 'admin' && (
             <>
-              {navBtn(adminView === 'oversight',      () => setAdminView('oversight'),      'Invoice Oversight')}
-              {navBtn(adminView === 'queue',          () => setAdminView('queue'),          'KYC Queue')}
-              {navBtn(adminView === 'dispute',        () => setAdminView('dispute'),        'Disputes')}
-              {navBtn(adminView === 'analytics',      () => setAdminView('analytics'),      'Analytics')}
-              {navBtn(adminView === '2fa',            () => setAdminView('2fa'),            'Admin 2FA')}
+              {navBtn(adminView === 'oversight',  () => setAdminView('oversight'),  'Invoices')}
+              {navBtn(adminView === 'queue',      () => setAdminView('queue'),      'KYC Queue')}
+              {navBtn(adminView === 'dispute',    () => setAdminView('dispute'),    'Disputes')}
+              {navBtn(adminView === 'analytics',  () => setAdminView('analytics'),  'Analytics')}
+              {navBtn(adminView === '2fa',        () => setAdminView('2fa'),        '⚙ Security')}
             </>
           )}
         </div>
