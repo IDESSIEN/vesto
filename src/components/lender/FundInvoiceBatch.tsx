@@ -2,10 +2,13 @@ import React from 'react';
 import { useApp } from '../../context/AppContext';
 
 export const FundInvoiceBatch: React.FC = () => {
-  const { invoices, fundBatchLender, setLenderView, lender } = useApp();
+  const { invoices, fundBatchLender, setLenderView, lender, selectedBatchIds } = useApp();
 
   const openInvoices = invoices.filter((i) => i.status === 'published_marketplace' || i.status === 'pending_admin_approval');
-  const batchInvoices = openInvoices.length >= 2 ? openInvoices.slice(0, 3) : openInvoices;
+  // Use context-provided selection if available, otherwise fall back to first 3
+  const batchInvoices = selectedBatchIds.length > 0
+    ? invoices.filter(i => selectedBatchIds.includes(i.id))
+    : (openInvoices.length >= 2 ? openInvoices.slice(0, 3) : openInvoices);
 
   const totalDeployment = batchInvoices.reduce((sum, i) => sum + i.advanceAmount, 0);
   const blendedApy =

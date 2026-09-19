@@ -167,19 +167,49 @@ export const SubmitInvoice: React.FC = () => {
         <div className="vesto-hero rounded-2xl p-5 text-white relative overflow-hidden shadow-hero">
           <div className="h-[3px] absolute top-0 left-0 right-0" style={{ background: 'linear-gradient(90deg,#C9922A,#E8B96A)' }} />
           <div className="relative">
-            <div className="flex items-center justify-between text-xs mb-3" style={{ color: 'rgba(255,255,255,0.5)' }}>
-              <span>Advance Rate · Tier {seller.verificationTier}</span>
-              <span className="font-bold text-white">{advanceRatePct}%</span>
+            {/* Title row */}
+            <div className="flex items-center justify-between text-xs mb-4" style={{ color: 'rgba(255,255,255,0.5)' }}>
+              <span className="uppercase tracking-wider font-semibold">Your Payout Breakdown</span>
+              <span className="font-bold text-white">Tier {seller.verificationTier} · {advanceRatePct}% Advance</span>
             </div>
+
+            {/* 3-row breakdown */}
+            <div className="flex flex-col gap-2.5 mb-4">
+              {/* Row 1 — Invoice Total */}
+              <div className="flex items-center gap-3">
+                <div className="w-28 shrink-0 text-[11px] font-semibold" style={{ color: 'rgba(255,255,255,0.55)' }}>Invoice Total</div>
+                <div className="flex-1 h-2 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.12)' }}>
+                  <div className="h-full rounded-full w-full" style={{ background: 'rgba(255,255,255,0.3)' }} />
+                </div>
+                <div className="w-20 text-right font-tnum text-xs font-bold text-white">${amount.toLocaleString()}</div>
+              </div>
+
+              {/* Row 2 — Advance (advanceRatePct%) */}
+              <div className="flex items-center gap-3">
+                <div className="w-28 shrink-0 text-[11px] font-semibold" style={{ color: 'rgba(255,255,255,0.55)' }}>Advance ({advanceRatePct}%)</div>
+                <div className="flex-1 h-2 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.12)' }}>
+                  <div className="h-full rounded-full transition-all" style={{ width: `${advanceRatePct}%`, background: 'linear-gradient(90deg,#C9922A,#E8B96A)' }} />
+                </div>
+                <div className="w-20 text-right font-tnum text-xs font-bold" style={{ color: 'var(--gold-light)' }}>${advanceAmount.toLocaleString()}</div>
+              </div>
+
+              {/* Row 3 — Fee deducted */}
+              <div className="flex items-center gap-3">
+                <div className="w-28 shrink-0 text-[11px] font-semibold" style={{ color: 'rgba(255,255,255,0.55)' }}>Platform Fee (2%)</div>
+                <div className="flex-1 h-2 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.12)' }}>
+                  <div className="h-full rounded-full" style={{ width: '2%', background: '#EF4444' }} />
+                </div>
+                <div className="w-20 text-right font-tnum text-xs font-semibold" style={{ color: 'rgba(255,100,100,0.9)' }}>−${feeAmount.toLocaleString()}</div>
+              </div>
+            </div>
+
+            {/* Net payout big number */}
             <div className="flex items-baseline justify-between border-t pt-3" style={{ borderColor: 'rgba(255,255,255,0.12)' }}>
               <div>
-                <span className="text-[10px] uppercase tracking-wider font-semibold block mb-1" style={{ color: 'rgba(255,255,255,0.5)' }}>Immediate Payout</span>
+                <span className="text-[10px] uppercase tracking-wider font-semibold block mb-1" style={{ color: 'rgba(255,255,255,0.5)' }}>Net Immediate Payout</span>
                 <div className="font-headline text-3xl font-extrabold text-white font-tnum" style={{ letterSpacing: '-0.02em' }}>${netPayout.toLocaleString()}</div>
               </div>
-              <div className="text-right">
-                <span className="text-[11px] block mb-0.5" style={{ color: 'rgba(255,255,255,0.5)' }}>Platform Fee (2%): ${feeAmount}</span>
-                <span className="text-[11px] font-bold" style={{ color: 'var(--gold-light)' }}>100% Guaranteed Settlement</span>
-              </div>
+              <span className="text-[11px] font-bold" style={{ color: 'var(--gold-light)' }}>100% Guaranteed Settlement</span>
             </div>
           </div>
         </div>

@@ -8,18 +8,24 @@ import { formatUSDC, explorerTxUrl } from '../../config/contracts';
 
 const RiskBar: React.FC<{ score: number }> = ({ score }) => {
   const color = score >= 75 ? '#10B981' : score >= 50 ? '#E8B96A' : '#EF4444';
+  const label = score >= 75 ? 'Low Risk' : score >= 50 ? 'Medium Risk' : 'High Risk';
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-2 group relative">
       <div className="flex-1 h-1 rounded-full overflow-hidden" style={{ background: 'var(--border)' }}>
         <div className="h-full rounded-full transition-all" style={{ width: `${score}%`, background: color }} />
       </div>
-      <span className="text-[10px] font-bold font-tnum" style={{ color }}>{score}</span>
+      <span className="text-[10px] font-bold font-tnum cursor-help" style={{ color }}>{score}</span>
+      {/* Tooltip */}
+      <div className="absolute bottom-full right-0 mb-1.5 w-56 bg-[#0A1628] border border-white/10 text-white text-[10px] rounded-lg px-3 py-2 shadow-xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-20 leading-relaxed">
+        <span className="font-bold" style={{ color }}>{label} · {score}/100</span>
+        <br />Score based on buyer payment history, invoice age, and seller tier. <span style={{ color: '#10B981' }}>70+</span> = Low Risk.
+      </div>
     </div>
   );
 };
 
 export const MarketplaceBrowse: React.FC = () => {
-  const { invoices, fundInvoiceLender, setLenderView, lender } = useApp();
+  const { invoices, fundInvoiceLender, setLenderView, lender, setSelectedBatchIds } = useApp();
   const { address: _address, isConnected } = useAccount();
   const { raw: usdcBalance } = useUSDCBalance();
   const { execute, step, txHash, isConfirming, isSuccess, errorMsg, reset } = useFundInvoice();
@@ -201,7 +207,7 @@ export const MarketplaceBrowse: React.FC = () => {
           </div>
           {selectedInvoices.length > 0 && (
             <button
-              onClick={() => setLenderView('batch')}
+              onClick={() => { setSelectedBatchIds(selectedInvoices); setLenderView('batch'); }}
               className="px-4 h-12 rounded-2xl text-xs font-bold text-white flex items-center gap-1.5 shrink-0 transition-all active:scale-[0.98]"
               style={{ background: 'linear-gradient(135deg,#C9922A,#E8B96A)', boxShadow: '0 6px 16px rgba(201,146,42,0.30)' }}
             >

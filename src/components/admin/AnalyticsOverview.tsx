@@ -1,6 +1,35 @@
 import React from 'react';
 import { useApp } from '../../context/AppContext';
 
+// Tiny inline sparkline — pure SVG, no deps
+const Sparkline: React.FC<{ data: number[]; color: string; width?: number; height?: number }> = ({
+  data, color, width = 64, height = 28,
+}) => {
+  if (data.length < 2) return null;
+  const min = Math.min(...data);
+  const max = Math.max(...data);
+  const range = max - min || 1;
+  const step = width / (data.length - 1);
+  const pts = data.map((v, i) => `${i * step},${height - ((v - min) / range) * (height - 4) - 2}`).join(' ');
+  return (
+    <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} fill="none" className="shrink-0">
+      <polyline points={pts} stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.9" />
+      {/* Dot at last point */}
+      <circle
+        cx={(data.length - 1) * step}
+        cy={height - ((data[data.length - 1] - min) / range) * (height - 4) - 2}
+        r="2.5" fill={color}
+      />
+    </svg>
+  );
+};
+
+// 7-day demo data for sparklines
+const sparkVolume   = [82000, 89000, 95000, 91000, 103000, 118000, 128500];
+const sparkLiquidity= [61000, 68000, 72000, 69000, 78000, 81000, 84200];
+const sparkYield    = [13.8, 14.1, 14.8, 14.5, 15.0, 15.4, 15.2];
+const sparkDefault  = [0.18, 0.16, 0.14, 0.15, 0.13, 0.12, 0.12];
+
 export const AnalyticsOverview: React.FC = () => {
   const { analytics, setAdminView } = useApp();
 
@@ -30,7 +59,10 @@ export const AnalyticsOverview: React.FC = () => {
               ${analytics.totalVolumeUSD.toLocaleString()}
             </span>
           </div>
-          <span className="text-[10px] text-success-shamrock font-bold">+28.4% MoM</span>
+          <div className="flex items-center justify-between mt-1">
+            <span className="text-[10px] text-success-shamrock font-bold">+28.4% MoM</span>
+            <Sparkline data={sparkVolume} color="#10B981" />
+          </div>
         </div>
 
         <div className="bg-surface-card border border-border-subtle p-4 rounded-2xl shadow-sm flex flex-col justify-between">
@@ -40,7 +72,10 @@ export const AnalyticsOverview: React.FC = () => {
               ${analytics.activeLiquidityUSD.toLocaleString()}
             </span>
           </div>
-          <span className="text-[10px] text-secondary">14 Open Batches</span>
+          <div className="flex items-center justify-between mt-1">
+            <span className="text-[10px] text-secondary">14 Open Batches</span>
+            <Sparkline data={sparkLiquidity} color="#C9922A" />
+          </div>
         </div>
 
         <div className="bg-surface-card border border-border-subtle p-4 rounded-2xl shadow-sm flex flex-col justify-between">
@@ -50,7 +85,10 @@ export const AnalyticsOverview: React.FC = () => {
               {analytics.averageYieldAPY}%
             </span>
           </div>
-          <span className="text-[10px] text-secondary">Net Annualized</span>
+          <div className="flex items-center justify-between mt-1">
+            <span className="text-[10px] text-secondary">Net Annualized</span>
+            <Sparkline data={sparkYield} color="#10B981" />
+          </div>
         </div>
 
         <div className="bg-surface-card border border-border-subtle p-4 rounded-2xl shadow-sm flex flex-col justify-between">
@@ -60,7 +98,10 @@ export const AnalyticsOverview: React.FC = () => {
               {analytics.defaultRatePct}%
             </span>
           </div>
-          <span className="text-[10px] text-success-shamrock font-bold">First-Loss Protected</span>
+          <div className="flex items-center justify-between mt-1">
+            <span className="text-[10px] text-success-shamrock font-bold">First-Loss Protected</span>
+            <Sparkline data={sparkDefault} color="#E8B96A" />
+          </div>
         </div>
       </div>
 

@@ -60,12 +60,9 @@ export const AppContent: React.FC = () => {
           {currentRole === 'seller' && (
             <>
               {navBtn(sellerView === 'dashboard',     () => setSellerView(sellerOnboarded ? 'dashboard' : 'signup'), 'Dashboard')}
-              {navBtn(sellerView === 'submit_invoice',() => setSellerView(sellerOnboarded ? 'submit_invoice' : 'signup'),'+ Submit Invoice')}
-              {navBtn(sellerView === 'tier1',         () => setSellerView('tier1'),         'Tier 1 ($500)')}
-              {navBtn(sellerView === 'tier2',         () => setSellerView('tier2'),         'Tier 2 ($5,000)')}
-              {navBtn(sellerView === 'in_progress',   () => setSellerView('in_progress'),   'Status')}
-              {navBtn(sellerView === 'tutorial',      () => setSellerView('tutorial'),      'Tour')}
-              {navBtn(sellerView === 'signup',        () => setSellerView('signup'),        'Sign Up')}
+              {navBtn(sellerView === 'submit_invoice',() => setSellerView(sellerOnboarded ? 'submit_invoice' : 'signup'), '+ Invoice')}
+              {navBtn(['tier1','tier2','in_progress','tutorial','signup'].includes(sellerView),
+                () => setSellerView(sellerOnboarded ? 'tier1' : 'signup'), 'Account')}
             </>
           )}
           {currentRole === 'lender' && (

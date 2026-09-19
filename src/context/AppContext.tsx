@@ -32,6 +32,8 @@ interface AppContextType {
 
   // Invoices & Marketplace
   invoices: Invoice[];
+  selectedBatchIds: string[];
+  setSelectedBatchIds: (ids: string[]) => void;
   submitInvoice: (invoiceData: Partial<Invoice>) => void;
   approveInvoiceAdmin: (invoiceId: string) => void;
   flagInvoiceAdmin: (invoiceId: string, reason?: string) => void;
@@ -221,6 +223,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [seller, setSeller] = useState<SellerProfile>({ ...initialSeller, fullName: '', businessName: '', creditLimit: 0, verificationTier: 0 });
   const [lender, setLender] = useState<LenderProfile>({ ...initialLender, fullName: '', targetAllocation: 0, totalInvested: 0, totalYieldEarned: 0, availableBalance: 0 });
   const [invoices, setInvoices] = useState<Invoice[]>(initialInvoices);
+  const [selectedBatchIds, setSelectedBatchIds] = useState<string[]>([]);
   const [verifications, setVerifications] = useState<VerificationRequest[]>(initialVerifications);
   const [notification, setNotification] = useState<{ message: string; type: 'success' | 'info' | 'warning' } | null>(null);
 
@@ -327,7 +330,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         totalFinanced: prev.totalFinanced + target.amount,
       }));
     }
-    showToast(`Funded ${invoiceId} — ${target.advanceAmount.toLocaleString()} USDC deployed on Arc.`, 'success');
+    showToast(`Funded ${invoiceId} — ${target.advanceAmount.toLocaleString()} USDC deployed. → Check Portfolio for yield tracking.`, 'success');
   };
 
   const fundBatchLender = (invoiceIds: string[]) => {
@@ -346,7 +349,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       totalInvested: prev.totalInvested + totalAdvance,
       availableBalance: Math.max(0, prev.availableBalance - totalAdvance),
     }));
-    showToast(`Batch funded: ${invoiceIds.length} invoices — $${totalAdvance.toLocaleString()} USDC on Arc.`, 'success');
+    showToast(`Batch funded: ${invoiceIds.length} invoices — $${totalAdvance.toLocaleString()} USDC on Arc. → View Portfolio for returns.`, 'success');
   };
 
   const repayInvoiceSeller = (invoiceId: string) => {
@@ -365,7 +368,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       availableBalance: prev.availableBalance + target.advanceAmount + yieldAmount,
       totalInvested: Math.max(0, prev.totalInvested - target.advanceAmount),
     }));
-    showToast(`Invoice ${invoiceId} repaid. Lender yield settled.`, 'success');
+    showToast(`Invoice ${invoiceId} repaid. Yield settled. → Claim your USDC from the Dashboard.`, 'success');
   };
 
   const resolveDisputeAdmin = (invoiceId: string) => {
@@ -416,7 +419,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       }));
     }
     supabaseService.updateSellerTierOffchain(req.sellerId, req.tier as 1 | 2, newLimit);
-    showToast(`Tier ${req.tier} verification approved for ${req.businessName}. Credit limit updated.`, 'success');
+    showToast(`Tier ${req.tier} approved for ${req.businessName}. Credit limit updated. → Next: Submit an invoice.`, 'success');
   };
 
   const rejectVerificationAdmin = (reqId: string) => {
@@ -451,7 +454,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         sellerOnboarded, lenderOnboarded,
         completeSellerOnboarding, completeLenderOnboarding,
         seller, lender,
-        invoices,
+        invoices, selectedBatchIds, setSelectedBatchIds,
         submitInvoice, approveInvoiceAdmin, flagInvoiceAdmin,
         fundInvoiceLender, fundBatchLender, repayInvoiceSeller, resolveDisputeAdmin,
         verifications,

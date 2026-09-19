@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { toast } from 'sonner';
 import { useApp } from '../../context/AppContext';
 import { VerificationRequest } from '../../types';
 import { supabaseService } from '../../services/supabaseService';
@@ -78,14 +79,36 @@ export const VerificationQueue: React.FC = () => {
                 </button>
 
                 <button
-                  onClick={() => rejectVerificationAdmin(req.id)}
+                  onClick={() => {
+                    let undone = false;
+                    toast(`Rejected ${req.businessName}`, {
+                      duration: 4000,
+                      action: {
+                        label: 'Undo',
+                        onClick: () => { undone = true; },
+                      },
+                      onDismiss: () => { if (!undone) rejectVerificationAdmin(req.id); },
+                      onAutoClose: () => { if (!undone) rejectVerificationAdmin(req.id); },
+                    });
+                  }}
                   className="px-3 py-2 bg-error-container text-error hover:bg-error-container/80 text-xs font-bold rounded-xl"
                 >
                   Reject
                 </button>
 
                 <button
-                  onClick={() => approveVerificationAdmin(req.id)}
+                  onClick={() => {
+                    let undone = false;
+                    toast.success(`Approved Tier ${req.tier} — ${req.businessName}`, {
+                      duration: 4000,
+                      action: {
+                        label: 'Undo',
+                        onClick: () => { undone = true; },
+                      },
+                      onDismiss: () => { if (!undone) approveVerificationAdmin(req.id); },
+                      onAutoClose: () => { if (!undone) approveVerificationAdmin(req.id); },
+                    });
+                  }}
                   className="px-4 py-2 bg-success-shamrock hover:bg-success-shamrock/90 text-white text-xs font-bold rounded-xl shadow-sm flex items-center gap-1"
                 >
                   <span className="material-symbols-outlined text-base">check_circle</span>
