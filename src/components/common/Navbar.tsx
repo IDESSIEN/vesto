@@ -1,9 +1,32 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { ConnectKitButton } from 'connectkit';
 import { useApp } from '../../context/AppContext';
 
 export const Navbar: React.FC = () => {
-  const { currentRole, setCurrentRole, notification } = useApp();
+  const { currentRole, setCurrentRole, notification, sellerOnboarded, lenderOnboarded, adminOnboarded, seller, lender, signOut } = useApp();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  const isAuthenticated =
+    (currentRole === 'seller' && sellerOnboarded) ||
+    (currentRole === 'lender' && lenderOnboarded) ||
+    (currentRole === 'admin' && adminOnboarded);
+
+  const displayName =
+    currentRole === 'seller' ? seller.fullName || 'Seller' :
+    currentRole === 'lender' ? lender.fullName || 'Lender' :
+    'Admin';
+
+  const initials = displayName.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+
+  // Close menu on outside click
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) setMenuOpen(false);
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
 
   const roles = [
     { id: 'seller' as const, label: 'Seller',  icon: 'storefront' },
@@ -98,6 +121,59 @@ export const Navbar: React.FC = () => {
 
             {/* Wallet button */}
             <ConnectKitButton />
+
+            {/* Avatar + Sign Out (only when authenticated) */}
+            {isAuthenticated && (
+              <div className="relative" ref={menuRef}>
+                <button
+                  onClick={() => setMenuOpen(o => !o)}
+                  className="flex items-center gap-2 pl-1 pr-2.5 py-1 rounded-full transition-all"
+                  style={{
+                    background: menuOpen ? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,0.10)',
+                    border: '1px solid rgba(255,255,255,0.18)',
+                  }}
+                >
+                  {/* Avatar circle */}
+                  <div
+                    className="w-7 h-7 rounded-full flex items-center justify-center font-headline font-extrabold text-[11px] shrink-0"
+                    style={{ background: 'linear-gradient(135deg,#C9922A,#E8B96A)', color: '#0A1628' }}
+                  >
+                    {initials}
+                  </div>
+                  <span className="hidden sm:block text-white text-xs font-semibold max-w-[80px] truncate">{displayName}</span>
+                  <span className="material-symbols-outlined text-white/70 text-[14px]">
+                    {menuOpen ? 'expand_less' : 'expand_more'}
+                  </span>
+                </button>
+
+                {/* Dropdown */}
+                {menuOpen && (
+                  <div
+                    className="absolute right-0 top-full mt-2 w-52 rounded-2xl overflow-hidden z-50"
+                    style={{
+                      background: 'var(--surface-card)',
+                      border: '1px solid var(--border)',
+                      boxShadow: '0 16px 48px rgba(10,22,40,0.18)',
+                    }}
+                  >
+                    {/* User info header */}
+                    <div className="px-4 py-3 border-b" style={{ borderColor: 'var(--border)' }}>
+                      <p className="text-xs font-extrabold text-primary truncate">{displayName}</p>
+                      <p className="text-[10px] text-secondary mt-0.5 capitalize">{currentRole} account</p>
+                    </div>
+                    {/* Sign out */}
+                    <button
+                      onClick={() => { setMenuOpen(false); signOut(); }}
+                      className="w-full flex items-center gap-3 px-4 py-3 text-sm font-semibold transition-all hover:bg-red-50 group"
+                      style={{ color: '#DC2626' }}
+                    >
+                      <span className="material-symbols-outlined text-[18px] group-hover:scale-110 transition-transform">logout</span>
+                      Sign out
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>

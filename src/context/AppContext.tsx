@@ -27,6 +27,7 @@ interface AppContextType {
   completeSellerOnboarding: (data: Partial<SellerProfile>) => void;
   completeLenderOnboarding: (data: Partial<LenderProfile>) => void;
   completeAdminOnboarding: () => void;
+  signOut: () => void;
 
   // Profiles
   seller: SellerProfile;
@@ -268,6 +269,27 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setLenderView('welcome');
   };
 
+  const signOut = () => {
+    if (currentRole === 'seller') {
+      setSellerOnboarded(false);
+      setSellerView('signup');
+      setSeller({ ...initialSeller, fullName: '', businessName: '', creditLimit: 0, verificationTier: 0 });
+    } else if (currentRole === 'lender') {
+      setLenderOnboarded(false);
+      setLenderView('signup');
+      setLender({ ...initialLender, fullName: '', targetAllocation: 0, totalInvested: 0, totalYieldEarned: 0, availableBalance: 0 });
+    } else if (currentRole === 'admin') {
+      setAdminOnboarded(false);
+      setAdminView('2fa');
+    }
+    showToastInternal('Signed out successfully.', 'info');
+  };
+
+  const showToastInternal = (message: string, type: 'success' | 'info' | 'warning' = 'success') => {
+    setNotification({ message, type });
+    setTimeout(() => setNotification(null), 4000);
+  };
+
   const showToast = (message: string, type: 'success' | 'info' | 'warning' = 'success') => {
     setNotification({ message, type });
     setTimeout(() => setNotification(null), 4000);
@@ -460,7 +482,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         lenderView, setLenderView,
         adminView, setAdminView,
         sellerOnboarded, lenderOnboarded, adminOnboarded,
-        completeSellerOnboarding, completeLenderOnboarding, completeAdminOnboarding,
+        completeSellerOnboarding, completeLenderOnboarding, completeAdminOnboarding, signOut,
         seller, lender,
         invoices, selectedBatchIds, setSelectedBatchIds,
         submitInvoice, approveInvoiceAdmin, flagInvoiceAdmin,
