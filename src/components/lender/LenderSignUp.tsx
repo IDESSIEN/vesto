@@ -9,10 +9,14 @@ export const LenderSignUp: React.FC = () => {
   const [email, setEmail] = useState('');
   const [targetAllocation, setTargetAllocation] = useState<number>(5000);
 
+  const [nameError, setNameError] = useState('');
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    completeLenderOnboarding({ fullName, email, accountType, targetAllocation, investorTier: accountType === 'institutional' ? 'Institutional Liquidity Provider' : 'Retail Investor' });
-    showToast(`Welcome, ${fullName}! Review the risk disclosure to start funding.`, 'success');
+    if (!fullName.trim()) { setNameError('Please enter your full name.'); return; }
+    setNameError('');
+    completeLenderOnboarding({ fullName: fullName.trim(), email, accountType, targetAllocation, investorTier: accountType === 'institutional' ? 'Institutional Liquidity Provider' : 'Retail Investor' });
+    showToast(`Welcome, ${fullName.trim()}! Review the risk disclosure to start funding.`, 'success');
   };
 
   const focusStyle = { borderColor: '#C9922A', boxShadow: '0 0 0 3px rgba(201,146,42,0.10)' };
@@ -157,12 +161,14 @@ export const LenderSignUp: React.FC = () => {
                 {accountType === 'institutional' ? 'Fund / Entity Name' : 'Full Legal Name'}
               </label>
               <input
-                type="text" required value={fullName} onChange={e => setFullName(e.target.value)}
+                type="text" required value={fullName}
+                onChange={e => { setFullName(e.target.value); if (e.target.value.trim()) setNameError(''); }}
                 className="w-full h-12 px-4 rounded-xl text-sm text-primary focus:outline-none"
-                style={{ background: 'var(--canvas)', border: '1px solid var(--border)' }}
+                style={{ background: 'var(--canvas)', border: nameError ? '1px solid #EF4444' : '1px solid var(--border)' }}
                 onFocus={e => Object.assign(e.currentTarget.style, focusStyle)}
                 onBlur={e => Object.assign(e.currentTarget.style, blurStyle)}
               />
+              {nameError && <p className="text-[11px] mt-0.5" style={{ color: '#EF4444' }}>{nameError}</p>}
             </div>
 
             <div className="flex flex-col gap-1.5">

@@ -42,10 +42,17 @@ export const SellerSignUp: React.FC = () => {
   const [businessName, setBusinessName] = useState('');
   const [operatingCountry, setOperatingCountry] = useState('Kenya');
 
+  const [nameError, setNameError] = useState('');
+  const [bizError, setBizError] = useState('');
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    completeSellerOnboarding({ fullName, businessName, operatingCountry, category: 'Agricultural Produce Exporter' });
-    showToast(`Welcome, ${fullName}! Next: verify your ID to unlock your $500 credit limit.`, 'success');
+    let valid = true;
+    if (!fullName.trim()) { setNameError('Please enter your full name.'); valid = false; } else setNameError('');
+    if (!businessName.trim()) { setBizError('Please enter your business name.'); valid = false; } else setBizError('');
+    if (!valid) return;
+    completeSellerOnboarding({ fullName: fullName.trim(), businessName: businessName.trim(), operatingCountry, category: 'Agricultural Produce Exporter' });
+    showToast(`Welcome, ${fullName.trim()}! Next: verify your ID to unlock your $500 credit limit.`, 'success');
   };
 
   return (
@@ -148,8 +155,11 @@ export const SellerSignUp: React.FC = () => {
           <p className="text-sm text-secondary mb-8">Start earning advances on your invoices today.</p>
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-            <InputField id="fullName"   label="Full Legal Name"        hint="As on photo ID"   icon="person"         value={fullName}    onChange={setFullName}    placeholder="Amina Diallo"                required />
-            <InputField id="email"      label="Email Address"          hint="Wallet creation"  icon="mail"           value={email}       onChange={setEmail}       placeholder="amina@nairobifresh.co"        required type="email" />
+            <div>
+              <InputField id="fullName" label="Full Legal Name" hint="As on photo ID" icon="person" value={fullName} onChange={v => { setFullName(v); if (v.trim()) setNameError(''); }} placeholder="Amina Diallo" required />
+              {nameError && <p className="text-[11px] mt-1" style={{ color: '#EF4444' }}>{nameError}</p>}
+            </div>
+            <InputField id="email" label="Email Address" hint="Wallet creation" icon="mail" value={email} onChange={setEmail} placeholder="amina@nairobifresh.co" required type="email" />
 
             <div className="flex flex-col gap-1.5">
               <label className="text-xs font-semibold text-primary">Mobile Number</label>
@@ -176,7 +186,10 @@ export const SellerSignUp: React.FC = () => {
               </div>
             </div>
 
-            <InputField id="businessName" label="Registered Business Name" icon="corporate_fare" value={businessName} onChange={setBusinessName} placeholder="Nairobi Fresh Produce Co." required />
+            <div>
+              <InputField id="businessName" label="Registered Business Name" icon="corporate_fare" value={businessName} onChange={v => { setBusinessName(v); if (v.trim()) setBizError(''); }} placeholder="Nairobi Fresh Produce Co." required />
+              {bizError && <p className="text-[11px] mt-1" style={{ color: '#EF4444' }}>{bizError}</p>}
+            </div>
 
             <div className="flex flex-col gap-1.5">
               <label className="text-xs font-semibold text-primary">Operating Jurisdiction</label>

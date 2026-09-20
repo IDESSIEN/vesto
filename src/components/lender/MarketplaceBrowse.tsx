@@ -36,6 +36,28 @@ export const MarketplaceBrowse: React.FC = () => {
   const [selectedInvoices, setSelectedInvoices] = useState<string[]>([]);
   const [fundingModal, setFundingModal] = useState<Invoice | null>(null);
 
+  // M3: gate behind risk disclosure acceptance
+  if (!lender.riskAccepted) {
+    return (
+      <div className="max-w-2xl mx-auto py-16 px-4 flex flex-col items-center gap-5 text-center">
+        <div className="w-16 h-16 rounded-2xl flex items-center justify-center" style={{ background: 'rgba(201,146,42,0.10)' }}>
+          <span className="material-symbols-outlined text-3xl" style={{ color: '#C9922A' }}>gavel</span>
+        </div>
+        <div>
+          <h2 className="font-headline text-xl font-extrabold text-primary mb-2" style={{ letterSpacing: '-0.02em' }}>Risk Disclosure Required</h2>
+          <p className="text-sm text-secondary max-w-xs mx-auto">You must review and accept the risk disclosure before accessing the marketplace and funding invoices.</p>
+        </div>
+        <button
+          onClick={() => setLenderView('risk_disclosure')}
+          className="px-6 py-3 rounded-xl text-sm font-extrabold text-white"
+          style={{ background: 'linear-gradient(135deg,#C9922A,#E8B96A)' }}
+        >
+          Review Risk Disclosure
+        </button>
+      </div>
+    );
+  }
+
   // H6: only show admin-approved invoices
   const openInvoices = invoices.filter(i => i.status === 'published_marketplace');
   const totalPool = openInvoices.reduce((s, i) => s + i.amount, 0);

@@ -16,6 +16,8 @@ export const SubmitInvoice: React.FC = () => {
   const advanceAmount = Math.round(amount * (advanceRatePct / 100));
   const feeAmount = Math.round(amount * 0.02);
   const netPayout = advanceAmount - feeAmount;
+  const availableCredit = seller.creditLimit - seller.usedLimit;
+  const exceedsLimit = seller.creditLimit > 0 && advanceAmount > availableCredit;
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -36,8 +38,8 @@ export const SubmitInvoice: React.FC = () => {
       showToast('Invoice amount must be at least $50.', 'warning');
       return;
     }
-    if (amount > seller.creditLimit && seller.creditLimit > 0) {
-      showToast(`Amount exceeds your credit limit of $${seller.creditLimit.toLocaleString()}. Upgrade your tier to increase it.`, 'warning');
+    if (exceedsLimit) {
+      showToast(`Advance amount exceeds your available credit of $${availableCredit.toLocaleString()}.`, 'warning');
       return;
     }
 
@@ -152,9 +154,15 @@ export const SubmitInvoice: React.FC = () => {
                   required
                   value={amount}
                   onChange={(e) => setAmount(Number(e.target.value))}
-                  className="w-full h-12 pl-8 pr-3 rounded-lg bg-surface-container-lowest font-headline font-bold text-base text-primary border border-border-subtle focus:outline-none focus:ring-2 focus:ring-primary"
+                  className="w-full h-12 pl-8 pr-3 rounded-lg bg-surface-container-lowest font-headline font-bold text-base text-primary border focus:outline-none focus:ring-2 focus:ring-primary"
+                  style={{ borderColor: exceedsLimit ? '#EF4444' : undefined }}
                 />
               </div>
+              {exceedsLimit && (
+                <p className="text-[11px] mt-0.5 font-medium" style={{ color: '#EF4444' }}>
+                  Advance of ${advanceAmount.toLocaleString()} exceeds your available credit of ${availableCredit.toLocaleString()}. Upgrade to Tier 2 for a higher limit.
+                </p>
+              )}
             </div>
 
             <div className="flex flex-col gap-1">
@@ -248,11 +256,12 @@ export const SubmitInvoice: React.FC = () => {
         {/* Submit Button */}
         <button
           type="submit"
-          className="w-full h-13 font-bold rounded-xl shadow-gold transition-all active:scale-[0.98] flex items-center justify-center gap-2 py-3 text-white"
-          style={{ background: 'linear-gradient(135deg, #C9922A 0%, #E8B96A 100%)' }}
+          disabled={exceedsLimit}
+          className="w-full h-13 font-bold rounded-xl shadow-gold transition-all active:scale-[0.98] flex items-center justify-center gap-2 py-3 text-white disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none"
+          style={{ background: exceedsLimit ? '#9CA3AF' : 'linear-gradient(135deg, #C9922A 0%, #E8B96A 100%)' }}
         >
           <span className="material-symbols-outlined text-lg">payments</span>
-          <span>Submit Invoice to Vesto Marketplace</span>
+          <span>{exceedsLimit ? `Credit limit reached - Upgrade to Tier 2` : 'Submit Invoice to Vesto Marketplace'}</span>
         </button>
       </form>
     </div>
