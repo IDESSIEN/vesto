@@ -252,6 +252,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       verificationTier: 0,
       kycStatusTier1: 'none',
       kycStatusTier2: 'none',
+      usedLimit: 0,
+      availablePayout: 0,
+      totalFinanced: 0,
       createdAt: new Date().toISOString().split('T')[0],
     };
     setSeller(newSeller);
