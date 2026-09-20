@@ -53,10 +53,13 @@ export const Tier2Verification: React.FC = () => {
         audio: true,
       });
       streamRef.current = stream;
+      setVideoState('recording');
+      // Attach stream after state update so the <video> element is visible in the DOM
+      await new Promise(r => setTimeout(r, 0));
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
         videoRef.current.muted = true;
-        videoRef.current.play();
+        try { await videoRef.current.play(); } catch { /* autoplay policy — muted stream always allowed */ }
       }
       chunksRef.current = [];
       const mimeType = MediaRecorder.isTypeSupported('video/webm;codecs=vp9')
@@ -74,7 +77,6 @@ export const Tier2Verification: React.FC = () => {
         stopStream();
       };
       recorder.start(250);
-      setVideoState('recording');
       setRecordingSeconds(0);
       timerRef.current = setInterval(() => setRecordingSeconds(s => s + 1), 1000);
     } catch (err: unknown) {
@@ -335,27 +337,37 @@ export const Tier2Verification: React.FC = () => {
                 </div>
               )}
 
-              {/* Live camera viewfinder */}
-              {videoState === 'recording' && (
-                <div className="relative rounded-2xl overflow-hidden"
-                  style={{ background: '#000', border: '2px solid #EF4444', aspectRatio: '16/9' }}>
-                  <video ref={videoRef} autoPlay playsInline muted
-                    className="w-full h-full object-cover" />
-                  {/* REC badge */}
-                  <div className="absolute top-3 left-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-extrabold"
-                    style={{ background: '#EF4444', color: '#fff' }}>
-                    <span className="w-2 h-2 rounded-full bg-white animate-ping" />
-                    REC {fmtTime(recordingSeconds)}
-                  </div>
-                  {/* Stop button */}
-                  <button type="button" onClick={stopRecording}
-                    className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-2 px-5 py-2.5 rounded-full font-bold text-xs text-white"
-                    style={{ background: '#EF4444', boxShadow: '0 4px 16px rgba(239,68,68,0.4)' }}>
-                    <span className="w-3 h-3 rounded-sm bg-white" />
-                    Stop Recording
-                  </button>
+              {/* Live camera viewfinder — always mounted so videoRef is valid when stream attaches */}
+              <div
+                className="relative rounded-2xl overflow-hidden"
+                style={{
+                  background: '#000',
+                  border: '2px solid #EF4444',
+                  aspectRatio: '16/9',
+                  display: videoState === 'recording' ? 'block' : 'none',
+                }}
+              >
+                <video
+                  ref={videoRef}
+                  autoPlay
+                  playsInline
+                  muted
+                  className="w-full h-full object-cover"
+                />
+                {/* REC badge */}
+                <div className="absolute top-3 left-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-extrabold"
+                  style={{ background: '#EF4444', color: '#fff' }}>
+                  <span className="w-2 h-2 rounded-full bg-white animate-ping" />
+                  REC {fmtTime(recordingSeconds)}
                 </div>
-              )}
+                {/* Stop button */}
+                <button type="button" onClick={stopRecording}
+                  className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-2 px-5 py-2.5 rounded-full font-bold text-xs text-white"
+                  style={{ background: '#EF4444', boxShadow: '0 4px 16px rgba(239,68,68,0.4)' }}>
+                  <span className="w-3 h-3 rounded-sm bg-white" />
+                  Stop Recording
+                </button>
+              </div>
 
               {/* Video preview after recording */}
               {videoState === 'recorded' && videoPreviewUrl && (
