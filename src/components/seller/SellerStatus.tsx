@@ -23,7 +23,7 @@ const statusIcon: Record<string, string> = {
 export const SellerStatus: React.FC = () => {
   const { seller, invoices, setSellerView } = useApp();
 
-  const myInvoices = invoices.filter(inv => inv.sellerId === seller.id || inv.sellerId === 'sel_101');
+  const myInvoices = invoices.filter(inv => inv.sellerId === seller.id);
   const invoicesByStatus = {
     pending: myInvoices.filter(i => i.status === 'pending_admin_approval').length,
     published: myInvoices.filter(i => i.status === 'published_marketplace').length,

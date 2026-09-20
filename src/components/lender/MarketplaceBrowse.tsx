@@ -36,7 +36,8 @@ export const MarketplaceBrowse: React.FC = () => {
   const [selectedInvoices, setSelectedInvoices] = useState<string[]>([]);
   const [fundingModal, setFundingModal] = useState<Invoice | null>(null);
 
-  const openInvoices = invoices.filter(i => i.status === 'published_marketplace' || i.status === 'pending_admin_approval');
+  // H6: only show admin-approved invoices
+  const openInvoices = invoices.filter(i => i.status === 'published_marketplace');
   const totalPool = openInvoices.reduce((s, i) => s + i.amount, 0);
   const avgYield = openInvoices.length
     ? (openInvoices.reduce((s, i) => s + i.expectedYieldPct, 0) / openInvoices.length).toFixed(1)
@@ -173,16 +174,27 @@ export const MarketplaceBrowse: React.FC = () => {
                 <div className="font-headline font-extrabold text-lg text-white">&lt;1s</div>
               </div>
             </div>
-            {isConnected ? (
-              <div className="text-right">
-                <div className="text-[9px] uppercase tracking-widest font-semibold mb-0.5" style={{ color: 'rgba(255,255,255,0.35)' }}>Your Balance</div>
-                <div className="font-headline font-bold text-base text-white font-tnum">
-                  {usdcBalance !== undefined ? formatUSDC(usdcBalance) : '-'} <span style={{ color: 'rgba(255,255,255,0.35)', fontSize: '11px' }}>USDC</span>
+            <div className="flex items-center gap-3">
+              {/* M4: Tour link */}
+              <button
+                onClick={() => setLenderView('tour')}
+                className="h-8 px-3 rounded-full text-[10px] font-semibold flex items-center gap-1.5 transition-all"
+                style={{ background: 'rgba(255,255,255,0.07)', color: 'rgba(255,255,255,0.5)', border: '1px solid rgba(255,255,255,0.10)' }}
+              >
+                <span className="material-symbols-outlined text-[13px]">help_outline</span>
+                Tour
+              </button>
+              {isConnected ? (
+                <div className="text-right">
+                  <div className="text-[9px] uppercase tracking-widest font-semibold mb-0.5" style={{ color: 'rgba(255,255,255,0.35)' }}>Your Balance</div>
+                  <div className="font-headline font-bold text-base text-white font-tnum">
+                    {usdcBalance !== undefined ? formatUSDC(usdcBalance) : '-'} <span style={{ color: 'rgba(255,255,255,0.35)', fontSize: '11px' }}>USDC</span>
+                  </div>
                 </div>
-              </div>
-            ) : (
-              <ConnectKitButton label="Connect Wallet" />
-            )}
+              ) : (
+                <ConnectKitButton label="Connect Wallet" />
+              )}
+            </div>
           </div>
         </div>
       </section>

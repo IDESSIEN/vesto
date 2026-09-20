@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
+import { Invoice } from '../../types';
 
 export const InvoiceOversightTable: React.FC = () => {
   const { invoices, approveInvoiceAdmin, flagInvoiceAdmin, setAdminView } = useApp();
   const [filter, setFilter] = useState<'all' | 'pending' | 'published' | 'funded' | 'flagged'>('all');
+  const [flagModal, setFlagModal] = useState<Invoice | null>(null);
+  const [flagReason, setFlagReason] = useState('');
 
   const filteredInvoices = invoices.filter((inv) => {
     if (filter === 'all') return true;
@@ -117,7 +120,7 @@ export const InvoiceOversightTable: React.FC = () => {
 
                       {inv.status !== 'flagged' && (
                         <button
-                          onClick={() => flagInvoiceAdmin(inv.id)}
+                          onClick={() => { setFlagModal(inv); setFlagReason(''); }}
                           className="px-2 py-1 bg-surface-container text-error rounded font-bold text-[11px] hover:bg-error-container"
                         >
                           Flag
@@ -131,6 +134,53 @@ export const InvoiceOversightTable: React.FC = () => {
           </table>
         </div>
       </div>
+      {/* Flag Reason Modal */}
+      {flagModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(10,22,40,0.6)', backdropFilter: 'blur(6px)' }}>
+          <div className="bg-surface-card rounded-2xl max-w-sm w-full shadow-xl border border-border-subtle overflow-hidden">
+            <div className="h-[3px]" style={{ background: 'linear-gradient(90deg,#EF4444,#F87171)' }} />
+            <div className="p-6 flex flex-col gap-4">
+              <div className="flex items-start justify-between">
+                <div>
+                  <h3 className="font-headline font-bold text-base text-primary">Flag Invoice</h3>
+                  <p className="text-xs text-secondary mt-0.5">{flagModal.id} · {flagModal.sellerBusinessName}</p>
+                </div>
+                <button onClick={() => setFlagModal(null)} className="text-secondary hover:text-primary">
+                  <span className="material-symbols-outlined text-xl">close</span>
+                </button>
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-semibold text-secondary">Reason for Flagging (required)</label>
+                <textarea
+                  value={flagReason}
+                  onChange={e => setFlagReason(e.target.value)}
+                  placeholder="e.g. Duplicate invoice, suspected fraud, document mismatch..."
+                  rows={3}
+                  className="w-full px-3 py-2.5 rounded-xl text-sm text-primary border resize-none focus:outline-none focus:ring-2"
+                  style={{ background: 'var(--canvas)', borderColor: 'var(--border)' }}
+                />
+              </div>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setFlagModal(null)}
+                  className="flex-1 h-11 rounded-xl text-sm font-semibold text-secondary border"
+                  style={{ background: 'var(--canvas)', borderColor: 'var(--border)' }}
+                >
+                  Cancel
+                </button>
+                <button
+                  disabled={!flagReason.trim()}
+                  onClick={() => { flagInvoiceAdmin(flagModal.id, flagReason); setFlagModal(null); }}
+                  className="flex-1 h-11 rounded-xl text-sm font-bold text-white disabled:opacity-40"
+                  style={{ background: '#DC2626' }}
+                >
+                  Confirm Flag
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

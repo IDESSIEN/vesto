@@ -53,6 +53,12 @@ export const DisputeResolution: React.FC = () => {
                 </span>
               </div>
 
+              {inv.flagReason && (
+                <div className="px-3 py-2 rounded-lg text-xs flex items-start gap-2" style={{ background: 'rgba(239,68,68,0.07)', border: '1px solid rgba(239,68,68,0.18)' }}>
+                  <span className="material-symbols-outlined text-sm text-error shrink-0 mt-0.5">info</span>
+                  <span className="text-secondary"><span className="font-semibold text-error">Flag reason:</span> {inv.flagReason}</span>
+                </div>
+              )}
               <div className="bg-surface-container-low p-3 rounded-xl flex justify-between items-center text-xs">
                 <div>
                   <span className="text-secondary block text-[11px]">Invoice Value</span>
@@ -64,13 +70,24 @@ export const DisputeResolution: React.FC = () => {
                 </div>
               </div>
 
-              <button
-                onClick={() => resolveDisputeAdmin(inv.id)}
-                className="w-full h-11 bg-success-shamrock hover:bg-success-shamrock/90 text-white font-label-md font-bold rounded-xl shadow-sm flex items-center justify-center gap-2"
-              >
-                <span className="material-symbols-outlined text-base">verified</span>
-                <span>Resolve via First-Loss Reserve ($25K Reserve)</span>
-              </button>
+              <div className="grid grid-cols-2 gap-2">
+                <button
+                  onClick={() => resolveDisputeAdmin(inv.id, 'refund_lender')}
+                  className="h-11 rounded-xl text-sm font-bold flex items-center justify-center gap-1.5 transition-all active:scale-[0.97]"
+                  style={{ background: 'rgba(99,102,241,0.12)', color: '#818CF8', border: '1px solid rgba(99,102,241,0.25)' }}
+                >
+                  <span className="material-symbols-outlined text-base">undo</span>
+                  Refund Lender
+                </button>
+                <button
+                  onClick={() => resolveDisputeAdmin(inv.id, 'pay_seller')}
+                  className="h-11 rounded-xl text-sm font-bold text-white flex items-center justify-center gap-1.5 transition-all active:scale-[0.97]"
+                  style={{ background: 'linear-gradient(135deg,#047857,#10B981)' }}
+                >
+                  <span className="material-symbols-outlined text-base">payments</span>
+                  Pay Seller
+                </button>
+              </div>
             </div>
           ))
         )}

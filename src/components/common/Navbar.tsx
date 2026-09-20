@@ -17,7 +17,8 @@ export const Navbar: React.FC = () => {
     currentRole === 'lender' ? lender.fullName || 'Lender' :
     'Admin';
 
-  const initials = displayName.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+  const rawInitials = displayName.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+  const initials = rawInitials || currentRole[0].toUpperCase();
 
   // Close menu on outside click
   useEffect(() => {

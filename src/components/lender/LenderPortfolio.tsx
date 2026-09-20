@@ -4,7 +4,7 @@ import { useAccount } from 'wagmi';
 import { ConnectKitButton } from 'connectkit';
 
 export const LenderPortfolio: React.FC = () => {
-  const { lender, invoices, setLenderView, showToast } = useApp();
+  const { lender, invoices, setLenderView, showToast, withdrawFunds } = useApp();
   const { address, isConnected } = useAccount();
   const [autoInvest, setAutoInvest] = useState(lender.autoInvestEnabled);
   const [showWithdrawModal, setShowWithdrawModal] = useState(false);
@@ -20,7 +20,11 @@ export const LenderPortfolio: React.FC = () => {
   const handleWithdrawSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!isConnected) { showToast('Connect your wallet to withdraw', 'warning'); return; }
-    showToast(`Withdrawal request for $${withdrawAmount.toLocaleString()} USDC submitted.`, 'success');
+    if (withdrawAmount > lender.availableBalance) {
+      showToast(`Insufficient balance. Available: $${lender.availableBalance.toLocaleString()}`, 'warning');
+      return;
+    }
+    withdrawFunds(withdrawAmount);
     setShowWithdrawModal(false);
   };
 

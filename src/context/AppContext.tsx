@@ -43,7 +43,7 @@ interface AppContextType {
   fundInvoiceLender: (invoiceId: string) => void;
   fundBatchLender: (invoiceIds: string[]) => void;
   repayInvoiceSeller: (invoiceId: string) => void;
-  resolveDisputeAdmin: (invoiceId: string) => void;
+  resolveDisputeAdmin: (invoiceId: string, resolution?: 'refund_lender' | 'pay_seller') => void;
 
   // Verification
   verifications: VerificationRequest[];
@@ -54,6 +54,14 @@ interface AppContextType {
   // Notifications
   notification: { message: string; type: 'success' | 'info' | 'warning' } | null;
   showToast: (message: string, type?: 'success' | 'info' | 'warning') => void;
+
+  // Lender funds
+  withdrawFunds: (amount: number) => void;
+  setLenderProfile: (data: Partial<LenderProfile>) => void;
+
+  // Seller tour
+  sellerTourCompleted: boolean;
+  completeSellerTour: () => void;
 
   // Analytics
   analytics: PlatformAnalytics;
@@ -223,18 +231,21 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [sellerOnboarded, setSellerOnboarded] = useState(false);
   const [lenderOnboarded, setLenderOnboarded] = useState(false);
   const [adminOnboarded, setAdminOnboarded] = useState(false);
+  const [lenderHasSeenWelcome, setLenderHasSeenWelcome] = useState(false);
+  const [sellerTourCompleted, setSellerTourCompleted] = useState(false);
 
   const [seller, setSeller] = useState<SellerProfile>({ ...initialSeller, fullName: '', businessName: '', creditLimit: 0, verificationTier: 0 });
   const [lender, setLender] = useState<LenderProfile>({ ...initialLender, fullName: '', targetAllocation: 0, totalInvested: 0, totalYieldEarned: 0, availableBalance: 0 });
+  // C3: seller registry so admin can approve any seller, not just the signed-in one
+  const [sellerRegistry, setSellerRegistry] = useState<Record<string, SellerProfile>>({});
   const [invoices, setInvoices] = useState<Invoice[]>(initialInvoices);
   const [selectedBatchIds, setSelectedBatchIds] = useState<string[]>([]);
   const [verifications, setVerifications] = useState<VerificationRequest[]>(initialVerifications);
   const [notification, setNotification] = useState<{ message: string; type: 'success' | 'info' | 'warning' } | null>(null);
 
   const completeSellerOnboarding = (data: Partial<SellerProfile>) => {
-    setSeller(prev => ({
+    const newSeller: SellerProfile = {
       ...initialSeller,
-      ...prev,
       ...data,
       id: 'sel_101',
       creditLimit: 0,
@@ -242,7 +253,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       kycStatusTier1: 'none',
       kycStatusTier2: 'none',
       createdAt: new Date().toISOString().split('T')[0],
-    }));
+    };
+    setSeller(newSeller);
+    setSellerRegistry(prev => ({ ...prev, [newSeller.id]: newSeller }));
     setSellerOnboarded(true);
     setSellerView('dashboard');
   };
@@ -266,7 +279,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       createdAt: new Date().toISOString().split('T')[0],
     }));
     setLenderOnboarded(true);
-    setLenderView('welcome');
+    // H2: skip welcome screen on return login
+    setLenderView(lenderHasSeenWelcome ? 'browse' : 'welcome');
+    setLenderHasSeenWelcome(true);
   };
 
   const signOut = () => {
@@ -330,11 +345,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     showToast(`Invoice ${invoiceId} approved and published to marketplace.`, 'success');
   };
 
-  const flagInvoiceAdmin = (invoiceId: string, _reason?: string) => {
+  const flagInvoiceAdmin = (invoiceId: string, reason?: string) => {
     setInvoices((prev) =>
-      prev.map((inv) => inv.id === invoiceId ? { ...inv, status: 'flagged' } : inv)
+      prev.map((inv) => inv.id === invoiceId ? { ...inv, status: 'flagged', flagReason: reason ?? '' } : inv)
     );
-    showToast(`Invoice ${invoiceId} flagged for review.`, 'warning');
+    showToast(`Invoice ${invoiceId} flagged${reason ? `: ${reason.slice(0, 60)}` : ''}.`, 'warning');
   };
 
   const fundInvoiceLender = (invoiceId: string) => {
@@ -401,11 +416,36 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     showToast(`Invoice ${invoiceId} repaid. Yield settled. → Claim your USDC from the Dashboard.`, 'success');
   };
 
-  const resolveDisputeAdmin = (invoiceId: string) => {
-    setInvoices((prev) =>
-      prev.map((inv) => inv.id === invoiceId ? { ...inv, status: 'repaid' } : inv)
-    );
-    showToast(`Dispute resolved for ${invoiceId} via liquidity reserve.`, 'success');
+  const completeSellerTour = () => {
+    setSellerTourCompleted(true);
+    setSellerView('dashboard');
+    showToast('Tour complete! Your dashboard is ready.', 'success');
+  };
+
+  const setLenderProfile = (data: Partial<LenderProfile>) => {
+    setLender(prev => ({ ...prev, ...data }));
+  };
+
+  const withdrawFunds = (amount: number) => {
+    if (amount <= 0 || amount > lender.availableBalance) {
+      showToast('Invalid withdrawal amount.', 'warning');
+      return;
+    }
+    setLender(prev => ({ ...prev, availableBalance: Math.max(0, prev.availableBalance - amount) }));
+    showToast(`Withdrawal of $${amount.toLocaleString()} USDC submitted to your connected wallet.`, 'success');
+  };
+
+  const resolveDisputeAdmin = (invoiceId: string, resolution: 'refund_lender' | 'pay_seller' = 'pay_seller') => {
+    const inv = invoices.find(i => i.id === invoiceId);
+    if (!inv) return;
+    setInvoices((prev) => prev.map((i) => i.id === invoiceId ? { ...i, status: 'repaid' } : i));
+    if (resolution === 'refund_lender') {
+      setLender(prev => ({ ...prev, availableBalance: prev.availableBalance + inv.advanceAmount }));
+      showToast(`Dispute resolved: $${inv.advanceAmount.toLocaleString()} refunded to lender.`, 'success');
+    } else {
+      setSeller(prev => ({ ...prev, availablePayout: prev.availablePayout + inv.advanceAmount }));
+      showToast(`Dispute resolved: $${inv.advanceAmount.toLocaleString()} released to seller.`, 'success');
+    }
   };
 
   const submitVerification = (tier: 1 | 2, docType: string, docUrl: string) => {
@@ -439,15 +479,21 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       prev.map((v) => v.id === reqId ? { ...v, status: 'approved' } : v)
     );
     const newLimit = req.tier === 2 ? 5000 : 500;
+    const applyApproval = (prev: SellerProfile): SellerProfile => ({
+      ...prev,
+      verificationTier: (req.tier === 2 ? 2 : Math.max(prev.verificationTier, 1)) as 0 | 1 | 2,
+      creditLimit: newLimit,
+      kycStatusTier1: req.tier === 1 ? 'verified' : prev.kycStatusTier1,
+      kycStatusTier2: req.tier === 2 ? 'verified' : prev.kycStatusTier2,
+    });
+    // C3: update signed-in seller if it matches, AND update registry for any seller
     if (req.sellerId === seller.id) {
-      setSeller((prev) => ({
-        ...prev,
-        verificationTier: (req.tier === 2 ? 2 : Math.max(prev.verificationTier, 1)) as 0 | 1 | 2,
-        creditLimit: newLimit,
-        kycStatusTier1: req.tier === 1 ? 'verified' : prev.kycStatusTier1,
-        kycStatusTier2: req.tier === 2 ? 'verified' : prev.kycStatusTier2,
-      }));
+      setSeller(applyApproval);
     }
+    setSellerRegistry(prev => {
+      if (!prev[req.sellerId]) return prev;
+      return { ...prev, [req.sellerId]: applyApproval(prev[req.sellerId]) };
+    });
     supabaseService.updateSellerTierOffchain(req.sellerId, req.tier as 1 | 2, newLimit);
     showToast(`Tier ${req.tier} approved for ${req.businessName}. Credit limit updated. → Next: Submit an invoice.`, 'success');
   };
@@ -486,7 +532,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         seller, lender,
         invoices, selectedBatchIds, setSelectedBatchIds,
         submitInvoice, approveInvoiceAdmin, flagInvoiceAdmin,
-        fundInvoiceLender, fundBatchLender, repayInvoiceSeller, resolveDisputeAdmin,
+        fundInvoiceLender, fundBatchLender, repayInvoiceSeller, resolveDisputeAdmin, withdrawFunds,
+        setLenderProfile,
+        sellerTourCompleted, completeSellerTour,
         verifications,
         submitVerification, approveVerificationAdmin, rejectVerificationAdmin,
         notification, showToast,

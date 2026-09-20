@@ -2,9 +2,9 @@ import React from 'react';
 import { useApp } from '../../context/AppContext';
 
 export const FundInvoiceBatch: React.FC = () => {
-  const { invoices, fundBatchLender, setLenderView, lender, selectedBatchIds } = useApp();
+  const { invoices, fundBatchLender, setLenderView, lender, selectedBatchIds, showToast } = useApp();
 
-  const openInvoices = invoices.filter((i) => i.status === 'published_marketplace' || i.status === 'pending_admin_approval');
+  const openInvoices = invoices.filter((i) => i.status === 'published_marketplace');
   // Use context-provided selection if available, otherwise fall back to first 3
   const batchInvoices = selectedBatchIds.length > 0
     ? invoices.filter(i => selectedBatchIds.includes(i.id))
@@ -21,6 +21,10 @@ export const FundInvoiceBatch: React.FC = () => {
       : 45;
 
   const handleExecuteBatch = () => {
+    if (totalDeployment > lender.availableBalance) {
+      showToast(`Insufficient balance. You have $${lender.availableBalance.toLocaleString()} available but this batch requires $${totalDeployment.toLocaleString()}.`, 'warning');
+      return;
+    }
     const ids = batchInvoices.map((i) => i.id);
     fundBatchLender(ids);
     setLenderView('portfolio');

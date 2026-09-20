@@ -72,6 +72,7 @@ export interface Invoice {
   fundedByLenderId?: string;
   fundedAt?: string;
   repaidAt?: string;
+  flagReason?: string;
   createdAt: string;
 }
 

@@ -27,8 +27,17 @@ export const SubmitInvoice: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (amount <= 0) {
-      showToast('Please enter a valid invoice amount', 'warning');
+    if (seller.verificationTier === 0) {
+      showToast('Verify your identity first to submit invoices.', 'warning');
+      setSellerView('tier1');
+      return;
+    }
+    if (amount < 50) {
+      showToast('Invoice amount must be at least $50.', 'warning');
+      return;
+    }
+    if (amount > seller.creditLimit && seller.creditLimit > 0) {
+      showToast(`Amount exceeds your credit limit of $${seller.creditLimit.toLocaleString()}. Upgrade your tier to increase it.`, 'warning');
       return;
     }
 
@@ -44,6 +53,28 @@ export const SubmitInvoice: React.FC = () => {
 
     setSellerView('dashboard');
   };
+
+  if (seller.verificationTier === 0) {
+    return (
+      <div className="max-w-2xl mx-auto py-12 px-4 flex flex-col items-center gap-5 text-center">
+        <div className="w-16 h-16 rounded-2xl flex items-center justify-center" style={{ background: 'rgba(201,146,42,0.10)' }}>
+          <span className="material-symbols-outlined text-3xl" style={{ color: '#C9922A' }}>lock</span>
+        </div>
+        <div>
+          <h2 className="font-headline text-xl font-extrabold text-primary mb-2" style={{ letterSpacing: '-0.02em' }}>Verify Your Identity First</h2>
+          <p className="text-sm text-secondary max-w-xs mx-auto">You need to complete at least Tier 1 verification before you can submit invoices for financing.</p>
+        </div>
+        <button
+          onClick={() => setSellerView('tier1')}
+          className="px-6 py-3 rounded-xl text-sm font-extrabold text-white"
+          style={{ background: 'linear-gradient(135deg,#C9922A,#E8B96A)' }}
+        >
+          Start Tier 1 Verification
+        </button>
+        <button onClick={() => setSellerView('dashboard')} className="text-xs text-secondary underline">Back to Dashboard</button>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-2xl mx-auto py-6 px-4">

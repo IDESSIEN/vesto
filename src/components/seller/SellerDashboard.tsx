@@ -42,7 +42,7 @@ const StatTile: React.FC<{ label: string; value: string; sub: string; accent?: s
 );
 
 export const SellerDashboard: React.FC = () => {
-  const { seller, invoices, setSellerView, repayInvoiceSeller, showToast } = useApp();
+  const { seller, invoices, setSellerView, repayInvoiceSeller, showToast, sellerTourCompleted } = useApp();
   const { address, isConnected } = useAccount();
   const [activeTab, setActiveTab] = useState<'all' | 'pending' | 'funded' | 'repaid'>('all');
 
@@ -250,12 +250,35 @@ export const SellerDashboard: React.FC = () => {
         </div>
       )}
 
-      {/* ── Stat Tiles ───────────────────────────────────────── */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-        <StatTile label="Active Capital" value={`$${activeCapital.toLocaleString()}`} sub="In escrow" accent="#10B981" />
-        <StatTile label="Cash Received"  value={`$${seller.totalFinanced.toLocaleString()}`} sub="All time" />
-        <StatTile label="On Marketplace" value={`${openOnMarket}`} sub="Open invoices" accent="#E8B96A" />
-      </div>
+      {/* ── Stat Tiles / First-Invoice Prompt ───────────────── */}
+      {invoices.filter(i => i.sellerId === seller.id).length === 0 && seller.verificationTier > 0 ? (
+        <div
+          className="flex flex-col sm:flex-row items-center gap-4 px-5 py-5 rounded-2xl"
+          style={{ background: 'var(--surface-card)', border: '1px solid rgba(201,146,42,0.22)' }}
+        >
+          <div className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0"
+            style={{ background: 'rgba(201,146,42,0.10)' }}>
+            <span className="material-symbols-outlined text-2xl" style={{ color: '#C9922A' }}>description</span>
+          </div>
+          <div className="flex-1 text-center sm:text-left">
+            <p className="font-bold text-sm text-primary">Submit your first invoice to start financing</p>
+            <p className="text-xs text-secondary mt-0.5">Your account is ready. Upload an invoice to get your advance within minutes.</p>
+          </div>
+          <button
+            onClick={() => setSellerView('submit_invoice')}
+            className="h-10 px-5 rounded-xl text-xs font-bold text-white shrink-0 transition-all active:scale-[0.97]"
+            style={{ background: 'linear-gradient(135deg,#C9922A,#E8B96A)' }}
+          >
+            + New Invoice
+          </button>
+        </div>
+      ) : (
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+          <StatTile label="Active Capital" value={`$${activeCapital.toLocaleString()}`} sub="In escrow" accent="#10B981" />
+          <StatTile label="Cash Received"  value={`$${seller.totalFinanced.toLocaleString()}`} sub="All time" />
+          <StatTile label="On Marketplace" value={`${openOnMarket}`} sub="Open invoices" accent="#E8B96A" />
+        </div>
+      )}
 
       {/* ── Your Progress ───────────────────────────────────── */}
       <section
@@ -265,7 +288,7 @@ export const SellerDashboard: React.FC = () => {
         <div className="px-5 py-3 flex items-center justify-between border-b" style={{ borderColor: 'var(--border)' }}>
           <span className="text-[11px] font-extrabold uppercase tracking-widest text-secondary">Your Progress</span>
           <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full" style={{ background: 'rgba(201,146,42,0.10)', color: '#C9922A' }}>
-            {[seller.verificationTier >= 1, seller.verificationTier >= 2, true].filter(Boolean).length}/3 steps
+            {[seller.verificationTier >= 1, seller.verificationTier >= 2, sellerTourCompleted].filter(Boolean).length}/3 steps
           </span>
         </div>
         <div className="divide-y" style={{ borderColor: 'var(--border)' }}>
@@ -329,19 +352,26 @@ export const SellerDashboard: React.FC = () => {
           <div className="flex items-center justify-between px-5 py-4">
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0"
-                style={{ background: 'var(--surface-container)', border: '1px solid var(--border)' }}>
-                <span className="text-[11px] font-extrabold text-secondary">3</span>
+                style={sellerTourCompleted
+                  ? { background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.3)' }
+                  : { background: 'var(--surface-container)', border: '1px solid var(--border)' }}>
+                {sellerTourCompleted
+                  ? <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 3.5" stroke="#10B981" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                  : <span className="text-[11px] font-extrabold text-secondary">3</span>
+                }
               </div>
               <div>
-                <p className="text-sm font-bold text-primary">Explore the platform</p>
+                <p className="text-sm font-bold" style={{ color: sellerTourCompleted ? 'var(--secondary)' : 'var(--primary)' }}>Explore the platform</p>
                 <p className="text-[11px] text-secondary">A 2-min guided tour of how Vesto works</p>
               </div>
             </div>
-            <button onClick={() => setSellerView('tutorial')}
-              className="px-4 py-1.5 rounded-xl text-[11px] font-bold text-primary shrink-0 transition-all"
-              style={{ background: 'var(--surface-container)', border: '1px solid var(--border)' }}>
-              Take Tour
-            </button>
+            {!sellerTourCompleted && (
+              <button onClick={() => setSellerView('tutorial')}
+                className="px-4 py-1.5 rounded-xl text-[11px] font-bold text-primary shrink-0 transition-all"
+                style={{ background: 'var(--surface-container)', border: '1px solid var(--border)' }}>
+                Take Tour
+              </button>
+            )}
           </div>
         </div>
       </section>

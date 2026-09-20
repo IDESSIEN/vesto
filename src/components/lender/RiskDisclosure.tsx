@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
 
 export const RiskDisclosure: React.FC = () => {
-  const { setLenderView, showToast } = useApp();
-  const [agreed1, setAgreed1] = useState(true);
-  const [agreed2, setAgreed2] = useState(true);
+  const { setLenderView, showToast, lender, setLenderProfile } = useApp();
+  const [agreed1, setAgreed1] = useState(lender.riskAccepted);
+  const [agreed2, setAgreed2] = useState(lender.riskAccepted);
 
   const handleAgree = () => {
+    setLenderProfile({ riskAccepted: true });
     showToast('Risk Disclosure Acknowledged! Launching Marketplace Tour.', 'success');
     setLenderView('guided_tour');
   };

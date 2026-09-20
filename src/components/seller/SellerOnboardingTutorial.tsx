@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
 
 export const SellerOnboardingTutorial: React.FC = () => {
-  const { setSellerView } = useApp();
+  const { setSellerView, completeSellerTour } = useApp();
   const [currentStep, setCurrentStep] = useState(0);
 
   const steps = [
@@ -93,12 +93,12 @@ export const SellerOnboardingTutorial: React.FC = () => {
           </button>
         ) : (
           <button
-            onClick={() => setSellerView('submit_invoice')}
+            onClick={completeSellerTour}
             className="flex-1 h-12 rounded-xl text-sm font-bold text-white shadow-gold transition-all active:scale-[0.98] flex items-center justify-center gap-2"
             style={{ background: 'linear-gradient(135deg, #C9922A 0%, #E8B96A 100%)' }}
           >
-            <span>Submit First Invoice</span>
-            <span className="material-symbols-outlined text-lg">arrow_forward</span>
+            <span>Done - Back to Dashboard</span>
+            <span className="material-symbols-outlined text-lg">check_circle</span>
           </button>
         )}
       </div>
