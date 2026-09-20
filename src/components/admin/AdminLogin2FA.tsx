@@ -17,12 +17,19 @@ export const AdminLogin2FA: React.FC = () => {
     return true;
   };
 
+  const DEMO_PASSCODE = '123456';
+
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     const emailOk = validateEmail(adminUser);
     if (!emailOk) return;
     if (passcode.length < 6) {
       setCodeError('Please enter all 6 digits.');
+      return;
+    }
+    if (passcode !== DEMO_PASSCODE) {
+      setCodeError(`Invalid code. Use ${DEMO_PASSCODE} for the demo.`);
+      setPasscode('');
       return;
     }
     setCodeError('');
@@ -151,6 +158,9 @@ export const AdminLogin2FA: React.FC = () => {
               )}
               <p className="text-[10px] text-secondary text-center">
                 Open your authenticator app and enter the current 6-digit code
+              </p>
+              <p className="text-[10px] text-center font-semibold" style={{ color: '#C9922A' }}>
+                Demo: use <span className="font-tnum tracking-widest">123456</span>
               </p>
             </div>
 

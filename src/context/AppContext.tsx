@@ -164,7 +164,7 @@ const initialInvoices: Invoice[] = [
     riskTier: 'A+',
     riskScore: 96,
     status: 'funded',
-    fundedByLenderId: 'len_505',
+    fundedByLenderId: 'len_seed_001',
     fundedAt: '2026-09-04',
     createdAt: '2026-08-28',
     docName: 'freight_waybill_sugar_route.pdf',

@@ -10,7 +10,7 @@ export const LenderPortfolio: React.FC = () => {
   const [showWithdrawModal, setShowWithdrawModal] = useState(false);
   const [withdrawAmount, setWithdrawAmount] = useState(5000);
 
-  const fundedPositions = invoices.filter(i => i.status === 'funded');
+  const fundedPositions = invoices.filter(i => i.status === 'funded' && i.fundedByLenderId === lender.id);
 
   const handleToggleAutoInvest = () => {
     setAutoInvest(p => !p);
