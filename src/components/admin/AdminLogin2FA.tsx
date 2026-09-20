@@ -5,9 +5,27 @@ export const AdminLogin2FA: React.FC = () => {
   const { completeAdminOnboarding, showToast } = useApp();
   const [adminUser, setAdminUser] = useState('');
   const [passcode, setPasscode] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [codeError, setCodeError] = useState('');
+
+  const validateEmail = (val: string) => {
+    if (!val.endsWith('@vesto.finance')) {
+      setEmailError('Only @vesto.finance accounts are permitted.');
+      return false;
+    }
+    setEmailError('');
+    return true;
+  };
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
+    const emailOk = validateEmail(adminUser);
+    if (!emailOk) return;
+    if (passcode.length < 6) {
+      setCodeError('Please enter all 6 digits.');
+      return;
+    }
+    setCodeError('');
     showToast('Admin authenticated. Welcome to the oversight portal.', 'success');
     completeAdminOnboarding();
   };
@@ -72,14 +90,23 @@ export const AdminLogin2FA: React.FC = () => {
                 </span>
                 <input
                   type="email" required value={adminUser}
-                  onChange={e => setAdminUser(e.target.value)}
+                  onChange={e => { setAdminUser(e.target.value); if (emailError) validateEmail(e.target.value); }}
+                  onBlur={e => validateEmail(e.target.value)}
                   placeholder="admin@vesto.finance"
                   className="w-full h-12 pl-11 pr-4 rounded-xl text-sm text-primary focus:outline-none transition-all"
-                  style={{ background: 'var(--canvas)', border: '1px solid var(--border)' }}
-                  onFocus={e => { e.currentTarget.style.borderColor = '#C9922A'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(201,146,42,0.10)'; }}
-                  onBlur={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.boxShadow = 'none'; }}
+                  style={{
+                    background: 'var(--canvas)',
+                    border: `1px solid ${emailError ? '#EF4444' : 'var(--border)'}`,
+                  }}
+                  onFocus={e => { e.currentTarget.style.borderColor = emailError ? '#EF4444' : '#C9922A'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(201,146,42,0.10)'; }}
                 />
               </div>
+              {emailError && (
+                <div className="flex items-center gap-1.5 mt-1">
+                  <span className="material-symbols-outlined text-[13px]" style={{ color: '#EF4444' }}>error</span>
+                  <p className="text-[11px] font-semibold" style={{ color: '#EF4444' }}>{emailError}</p>
+                </div>
+              )}
             </div>
 
             {/* TOTP - character slot layout */}
@@ -116,6 +143,12 @@ export const AdminLogin2FA: React.FC = () => {
                 onFocus={e => { e.currentTarget.style.borderColor = '#C9922A'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(201,146,42,0.10)'; }}
                 onBlur={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.boxShadow = 'none'; }}
               />
+              {codeError && (
+                <div className="flex items-center gap-1.5">
+                  <span className="material-symbols-outlined text-[13px]" style={{ color: '#EF4444' }}>error</span>
+                  <p className="text-[11px] font-semibold" style={{ color: '#EF4444' }}>{codeError}</p>
+                </div>
+              )}
               <p className="text-[10px] text-secondary text-center">
                 Open your authenticator app and enter the current 6-digit code
               </p>
@@ -124,7 +157,8 @@ export const AdminLogin2FA: React.FC = () => {
             {/* CTA */}
             <button
               type="submit"
-              className="w-full h-14 rounded-2xl text-sm font-extrabold text-white flex items-center justify-center gap-2 transition-all active:scale-[0.98] mt-1"
+              disabled={passcode.length < 6 || !adminUser.endsWith('@vesto.finance')}
+              className="w-full h-14 rounded-2xl text-sm font-extrabold text-white flex items-center justify-center gap-2 transition-all active:scale-[0.98] mt-1 disabled:opacity-40 disabled:cursor-not-allowed"
               style={{
                 background: 'linear-gradient(135deg,#0A1628 0%,#112240 100%)',
                 boxShadow: '0 8px 24px rgba(10,22,40,0.25)',
@@ -132,7 +166,7 @@ export const AdminLogin2FA: React.FC = () => {
               }}
             >
               <span className="material-symbols-outlined text-lg">lock_open</span>
-              Authenticate & Enter
+              Authenticate &amp; Enter
             </button>
           </form>
         </div>
