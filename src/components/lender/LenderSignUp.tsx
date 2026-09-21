@@ -2,153 +2,304 @@ import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
 import { ConnectKitButton } from 'connectkit';
 
+/* ── Inline SVGs ─────────────────────────────────────────────── */
+const IconVerified = () => (
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+    <path d="M7 1.5L2 3.5v4c0 3 2.5 4.5 5 5 2.5-.5 5-2 5-5v-4L7 1.5z" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round"/>
+    <path d="M4.5 7l2 2 3-3" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+const IconLock = () => (
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+    <rect x="3" y="6" width="8" height="6.5" rx="1.2" stroke="currentColor" strokeWidth="1.3"/>
+    <path d="M4.5 6V5a2.5 2.5 0 0 1 5 0v1" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
+    <circle cx="7" cy="9.5" r="0.8" fill="currentColor"/>
+  </svg>
+);
+const IconBuilding = () => (
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+    <rect x="2" y="4" width="10" height="9" rx="0.8" stroke="currentColor" strokeWidth="1.2"/>
+    <path d="M5 13V9.5h4V13" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round"/>
+    <path d="M2 7h10" stroke="currentColor" strokeWidth="1.2"/>
+    <path d="M7 1.5L2 4h10L7 1.5z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round"/>
+  </svg>
+);
+const IconPerson = () => (
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+    <circle cx="7" cy="4.5" r="2.5" stroke="currentColor" strokeWidth="1.3"/>
+    <path d="M1.5 12.5c0-2.5 2.5-4.5 5.5-4.5s5.5 2 5.5 4.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
+  </svg>
+);
+const IconArrow = () => (
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+    <path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
+/* ── Field ───────────────────────────────────────────────────── */
+const Field: React.FC<{
+  id: string; label: string; hint?: string;
+  value: string; onChange: (v: string) => void;
+  type?: string; placeholder?: string; required?: boolean; error?: string;
+}> = ({ id, label, hint, value, onChange, type = 'text', placeholder, required, error }) => {
+  const [focused, setFocused] = useState(false);
+  return (
+    <div className="flex flex-col gap-1.5">
+      <div className="flex items-center justify-between">
+        <label htmlFor={id} className="text-[11px] font-semibold" style={{ color: 'var(--ink-subtle)' }}>
+          {label}
+        </label>
+        {hint && <span className="text-[10px]" style={{ color: 'var(--ink-faint)' }}>{hint}</span>}
+      </div>
+      <input
+        id={id} type={type} value={value}
+        onChange={e => onChange(e.target.value)}
+        placeholder={placeholder} required={required}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
+        className="w-full h-[46px] px-3.5 rounded-[9px] text-[13px] text-ink transition-all duration-150 focus:outline-none"
+        style={{
+          background: 'var(--cream)',
+          border: error
+            ? '1.5px solid rgba(140,26,26,0.50)'
+            : focused
+            ? '1.5px solid rgba(184,130,30,0.55)'
+            : '1px solid var(--border-2)',
+          boxShadow: focused && !error ? '0 0 0 3px rgba(184,130,30,0.08)' : 'none',
+        }}
+      />
+      {error && <p className="text-[10px] font-medium" style={{ color: '#8C1A1A' }}>{error}</p>}
+    </div>
+  );
+};
+
+/* ── Main ────────────────────────────────────────────────────── */
 export const LenderSignUp: React.FC = () => {
   const { completeLenderOnboarding, showToast } = useApp();
   const [accountType, setAccountType] = useState<'individual' | 'institutional'>('individual');
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
-  const [targetAllocation, setTargetAllocation] = useState<number>(5000);
-
+  const [targetAllocation, setTargetAllocation] = useState(5000);
   const [nameError, setNameError] = useState('');
+  const [submitting, setSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!fullName.trim()) { setNameError('Please enter your full name.'); return; }
+    if (!fullName.trim()) { setNameError('Enter your name.'); return; }
     setNameError('');
-    completeLenderOnboarding({ fullName: fullName.trim(), email, accountType, targetAllocation, investorTier: accountType === 'institutional' ? 'Institutional Liquidity Provider' : 'Retail Investor' });
-    showToast(`Welcome, ${fullName.trim()}! Review the risk disclosure to start funding.`, 'success');
+    setSubmitting(true);
+    await new Promise(r => setTimeout(r, 600));
+    completeLenderOnboarding({
+      fullName: fullName.trim(),
+      email,
+      accountType,
+      targetAllocation,
+      investorTier: accountType === 'institutional' ? 'Institutional Liquidity Provider' : 'Retail Investor',
+    });
+    showToast(`Welcome, ${fullName.trim()}. Read the risk disclosure to start funding.`, 'success');
+    setSubmitting(false);
   };
 
-  const focusStyle = { borderColor: '#C9922A', boxShadow: '0 0 0 3px rgba(201,146,42,0.10)' };
-  const blurStyle  = { borderColor: 'var(--border)', boxShadow: '0 1px 2px rgba(10,22,40,0.04)' };
+  const FEATURES = [
+    { icon: <IconVerified />, text: 'KYC-verified counterparties only' },
+    { icon: <IconLock />,     text: 'Escrow-protected, non-custodial' },
+    { icon: <IconBuilding />, text: 'Institutional and individual tiers' },
+  ];
+
+  /* Format allocation label */
+  const allocationLabel = targetAllocation >= 1000
+    ? `$${(targetAllocation / 1000).toFixed(targetAllocation % 1000 === 0 ? 0 : 1)}k`
+    : `$${targetAllocation}`;
 
   return (
-    <div className="flex items-stretch" style={{ background: 'var(--canvas)', minHeight: 'calc(100dvh - 96px)' }}>
+    <div
+      className="flex items-stretch animate-fade-up"
+      style={{ background: 'var(--canvas)', minHeight: 'calc(100dvh - 96px)' }}
+    >
 
       {/* ── Left editorial panel ─────────────────────────────── */}
       <div
-        className="hidden lg:flex flex-col justify-between w-[420px] shrink-0 p-10 relative overflow-hidden"
-        style={{ background: 'linear-gradient(160deg,#0A1628 0%,#112240 60%,#0D1F3C 100%)' }}
+        className="hidden lg:flex flex-col justify-between w-[400px] shrink-0 relative overflow-hidden"
+        style={{ background: '#0D1824', padding: '44px 40px' }}
       >
-        <div className="absolute top-0 left-0 right-0 h-[3px]"
-          style={{ background: 'linear-gradient(90deg,#C9922A,#E8B96A,#C9922A)' }}
+        {/* Gold strip */}
+        <div
+          className="absolute top-0 left-0 right-0 h-[2px]"
+          style={{ background: 'linear-gradient(90deg,transparent 0%,#B8821E 25%,#E9BE68 55%,#B8821E 80%,transparent 100%)' }}
         />
-        <div className="absolute inset-0 opacity-[0.025]"
-          style={{ backgroundImage: 'radial-gradient(circle,#fff 1px,transparent 1px)', backgroundSize: '28px 28px' }}
+        {/* Dot matrix */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            backgroundImage: 'radial-gradient(circle,rgba(255,255,255,0.025) 1px,transparent 1px)',
+            backgroundSize: '26px 26px',
+          }}
         />
-        <div className="absolute top-0 left-0 w-[500px] h-[500px] rounded-full pointer-events-none"
-          style={{ background: 'radial-gradient(circle,rgba(201,146,42,0.06) 0%,transparent 60%)', transform: 'translate(-30%,-30%)' }}
-        />
+        <div className="grain-overlay absolute inset-0 pointer-events-none" />
 
         {/* Logo */}
         <div className="relative flex items-center gap-2.5">
           <div
-            className="w-9 h-9 rounded-xl flex items-center justify-center font-headline font-extrabold text-sm"
-            style={{ background: 'linear-gradient(135deg,#C9922A,#E8B96A)', color: '#fff' }}
-          >V</div>
-          <span className="font-headline font-extrabold text-white text-xl" style={{ letterSpacing: '-0.02em' }}>Vesto</span>
+            className="w-8 h-8 rounded-[9px] flex items-center justify-center"
+            style={{ background: 'linear-gradient(135deg,#B8821E,#D4A032)' }}
+          >
+            <span className="font-display text-[13px] font-bold text-white" style={{ letterSpacing: '-0.01em' }}>V</span>
+          </div>
+          <span className="font-display text-[17px] font-semibold text-white" style={{ letterSpacing: '-0.025em' }}>
+            Vesto
+          </span>
         </div>
 
         {/* Headline */}
         <div className="relative">
+          <p
+            className="text-[11px] uppercase font-semibold mb-5"
+            style={{ color: 'rgba(255,255,255,0.28)', letterSpacing: '0.12em' }}
+          >
+            For lenders
+          </p>
           <h1
-            className="font-headline font-extrabold text-white leading-tight mb-4"
-            style={{ fontSize: '36px', letterSpacing: '-0.03em' }}
+            className="font-display font-bold text-white mb-5"
+            style={{ fontSize: '32px', letterSpacing: '-0.035em', lineHeight: '0.96' }}
           >
             Deploy capital<br />
             into real-world<br />
-            <span style={{ color: '#E8B96A' }}>invoice pools.</span>
+            <em className="not-italic" style={{ color: '#E9BE68' }}>invoice pools.</em>
           </h1>
-          <p className="text-sm font-medium leading-relaxed mb-8" style={{ color: 'rgba(255,255,255,0.5)' }}>
-            Earn yield on verified commodity invoices. Every position settled onchain with USDC, sub-second.
+          <p
+            className="text-[13px] mb-7 leading-relaxed"
+            style={{ color: 'rgba(255,255,255,0.42)', maxWidth: '280px' }}
+          >
+            Earn yield on verified commodity invoices. Every position settled onchain with USDC, sub-second finality.
           </p>
 
           {/* APY preview card */}
           <div
-            className="rounded-2xl p-4 mb-6"
+            className="rounded-[13px] px-4 py-4 mb-7"
             style={{
-              background: 'rgba(255,255,255,0.04)',
-              border: '1px solid rgba(201,146,42,0.20)',
+              background: 'rgba(255,255,255,0.03)',
+              border: '1px solid rgba(184,130,30,0.18)',
             }}
           >
-            <div className="text-[9px] uppercase tracking-widest font-semibold mb-2" style={{ color: 'rgba(255,255,255,0.35)' }}>
-              Current Pool Yields
-            </div>
+            <p
+              className="text-[8px] uppercase font-semibold mb-2"
+              style={{ color: 'rgba(255,255,255,0.28)', letterSpacing: '0.12em' }}
+            >
+              Current pool yields
+            </p>
             <div className="flex items-end gap-1.5 mb-1">
-              <span className="font-headline font-extrabold text-3xl font-tnum" style={{ color: '#E8B96A', letterSpacing: '-0.02em' }}>12–24</span>
-              <span className="text-base font-bold mb-1" style={{ color: '#E8B96A' }}>% APY</span>
+              <span
+                className="font-mono font-bold font-tnum"
+                style={{ fontSize: '26px', color: '#E9BE68', letterSpacing: '-0.03em', lineHeight: 1 }}
+              >
+                12–24
+              </span>
+              <span
+                className="text-[15px] font-semibold mb-0.5"
+                style={{ color: '#E9BE68' }}
+              >
+                % APY
+              </span>
             </div>
-            <p className="text-[11px]" style={{ color: 'rgba(255,255,255,0.35)' }}>Agri-export · Cold chain · Commodity</p>
+            <p className="text-[10px]" style={{ color: 'rgba(255,255,255,0.28)' }}>
+              Agri-export · Cold chain · Commodity trade
+            </p>
           </div>
 
-          <div className="flex flex-col gap-3">
-            {[
-              { icon: 'verified',      text: 'KYC-verified counterparties' },
-              { icon: 'lock',          text: 'Escrow-protected positions' },
-              { icon: 'account_balance', text: 'Institutional and individual tiers' },
-            ].map(({ icon, text }) => (
-              <div key={icon} className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
-                  style={{ background: 'rgba(201,146,42,0.12)', border: '1px solid rgba(201,146,42,0.20)' }}>
-                  <span className="material-symbols-outlined text-[16px]" style={{ color: '#E8B96A' }}>{icon}</span>
+          {/* Feature list */}
+          <div className="flex flex-col gap-4">
+            {FEATURES.map(({ icon, text }, i) => (
+              <div key={i} className="flex items-center gap-3">
+                <div
+                  className="w-7 h-7 rounded-[7px] flex items-center justify-center shrink-0"
+                  style={{
+                    background: 'rgba(184,130,30,0.12)',
+                    border: '1px solid rgba(184,130,30,0.18)',
+                    color: '#E9BE68',
+                  }}
+                >
+                  {icon}
                 </div>
-                <span className="text-xs font-medium" style={{ color: 'rgba(255,255,255,0.6)' }}>{text}</span>
+                <span className="text-[12px]" style={{ color: 'rgba(255,255,255,0.55)' }}>{text}</span>
               </div>
             ))}
           </div>
         </div>
 
-        <p className="relative text-[10px]" style={{ color: 'rgba(255,255,255,0.25)' }}>
+        <p
+          className="relative text-[9px] uppercase tracking-[0.10em]"
+          style={{ color: 'rgba(255,255,255,0.18)' }}
+        >
           Secured by USDC · Powered by Arc
         </p>
       </div>
 
       {/* ── Right form panel ─────────────────────────────────── */}
-      <div className="flex-1 flex items-center justify-center px-4 sm:px-6 py-8 sm:py-12">
-        <div className="w-full max-w-sm">
+      <div className="flex-1 flex items-center justify-center px-5 sm:px-8 py-10">
+        <div className="w-full max-w-[360px]">
 
           {/* Mobile logo */}
-          <div className="flex items-center gap-2 mb-6 lg:hidden">
+          <div className="flex items-center gap-2 mb-8 lg:hidden">
             <div
-              className="w-8 h-8 rounded-xl flex items-center justify-center font-headline font-extrabold text-sm text-white"
-              style={{ background: 'linear-gradient(135deg,#C9922A,#E8B96A)' }}
-            >V</div>
-            <span className="font-headline font-extrabold text-primary text-lg" style={{ letterSpacing: '-0.02em' }}>Vesto</span>
+              className="w-7 h-7 rounded-[7px] flex items-center justify-center"
+              style={{ background: 'linear-gradient(135deg,#B8821E,#D4A032)' }}
+            >
+              <span className="font-display text-[11px] font-bold text-white">V</span>
+            </div>
+            <span className="font-display text-[15px] font-semibold text-ink" style={{ letterSpacing: '-0.02em' }}>Vesto</span>
           </div>
 
           {/* Step indicator */}
-          <div className="flex items-center gap-3 mb-8">
-            <div className="flex gap-1.5">
-              <div className="w-6 h-1.5 rounded-full" style={{ background: 'linear-gradient(90deg,#C9922A,#E8B96A)' }} />
-              <div className="w-6 h-1.5 rounded-full" style={{ background: 'var(--border)' }} />
-              <div className="w-6 h-1.5 rounded-full" style={{ background: 'var(--border)' }} />
+          <div className="flex items-center gap-2 mb-8">
+            <div className="flex gap-1">
+              <div className="w-8 h-[2px] rounded-full" style={{ background: 'linear-gradient(90deg,#B8821E,#D4A032)' }} />
+              <div className="w-4 h-[2px] rounded-full" style={{ background: 'var(--border-2)' }} />
+              <div className="w-4 h-[2px] rounded-full" style={{ background: 'var(--border-2)' }} />
             </div>
-            <span className="text-[10px] text-secondary uppercase tracking-widest font-semibold">Step 1 of 3 · Liquidity Provider</span>
+            <span
+              className="text-[9px] font-semibold uppercase"
+              style={{ color: 'var(--ink-faint)', letterSpacing: '0.10em' }}
+            >
+              Step 1 of 3 · Liquidity provider
+            </span>
           </div>
 
-          <h2 className="font-headline font-extrabold text-primary mb-1" style={{ fontSize: '26px', letterSpacing: '-0.025em' }}>
-            Create LP Account
+          {/* Heading */}
+          <h2
+            className="font-display font-bold text-ink mb-1"
+            style={{ fontSize: '24px', letterSpacing: '-0.028em', lineHeight: 1.1 }}
+          >
+            Create your LP account
           </h2>
-          <p className="text-sm text-secondary mb-8">Start deploying capital into verified invoice pools.</p>
+          <p
+            className="text-[13px] mb-6"
+            style={{ color: 'var(--ink-subtle)', lineHeight: 1.5 }}
+          >
+            Deploy capital. Earn yield. All onchain.
+          </p>
 
-          {/* Account type */}
+          {/* Account type toggle */}
           <div
-            className="grid grid-cols-2 gap-1.5 p-1.5 rounded-2xl mb-6"
-            style={{ background: 'var(--surface-card)', border: '1px solid var(--border)' }}
+            className="grid grid-cols-2 gap-1 p-1 rounded-[11px] mb-6"
+            style={{ background: 'var(--cream)', border: '1px solid var(--border-2)' }}
           >
             {(['individual', 'institutional'] as const).map(type => (
               <button
                 key={type}
                 type="button"
                 onClick={() => setAccountType(type)}
-                className="py-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2"
+                className="flex items-center justify-center gap-2 py-2.5 rounded-[9px] text-[11px] font-semibold transition-all duration-150"
                 style={accountType === type
-                  ? { background: 'linear-gradient(135deg,#0A1628,#112240)', color: '#fff', boxShadow: '0 4px 12px rgba(10,22,40,0.20)', border: '1px solid rgba(201,146,42,0.20)' }
-                  : { color: 'var(--secondary)' }
+                  ? {
+                      background: 'var(--ink)',
+                      color: '#fff',
+                      boxShadow: 'var(--shadow-e1)',
+                    }
+                  : { color: 'var(--ink-muted)' }
                 }
               >
-                <span className="material-symbols-outlined text-[18px]">
-                  {type === 'individual' ? 'person' : 'corporate_fare'}
+                <span style={{ color: accountType === type ? 'rgba(255,255,255,0.7)' : 'var(--ink-faint)' }}>
+                  {type === 'individual' ? <IconPerson /> : <IconBuilding />}
                 </span>
                 {type === 'individual' ? 'Individual' : 'Institutional'}
               </button>
@@ -156,88 +307,119 @@ export const LenderSignUp: React.FC = () => {
           </div>
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-            <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-semibold text-primary">
-                {accountType === 'institutional' ? 'Fund / Entity Name' : 'Full Legal Name'}
-              </label>
-              <input
-                type="text" required value={fullName}
-                onChange={e => { setFullName(e.target.value); if (e.target.value.trim()) setNameError(''); }}
-                className="w-full h-12 px-4 rounded-xl text-sm text-primary focus:outline-none"
-                style={{ background: 'var(--canvas)', border: nameError ? '1px solid #EF4444' : '1px solid var(--border)' }}
-                onFocus={e => Object.assign(e.currentTarget.style, focusStyle)}
-                onBlur={e => Object.assign(e.currentTarget.style, blurStyle)}
-              />
-              {nameError && <p className="text-[11px] mt-0.5" style={{ color: '#EF4444' }}>{nameError}</p>}
-            </div>
+            <Field
+              id="fullName"
+              label={accountType === 'institutional' ? 'Fund or entity name' : 'Full legal name'}
+              value={fullName}
+              onChange={v => { setFullName(v); if (v.trim()) setNameError(''); }}
+              placeholder={accountType === 'institutional' ? 'Acacia Capital Partners' : 'David Oyelaran'}
+              required
+              error={nameError}
+            />
 
-            <div className="flex flex-col gap-1.5">
-              <div className="flex items-center justify-between">
-                <label className="text-xs font-semibold text-primary">Email Address</label>
-                <span className="text-[10px] text-secondary">Wallet creation</span>
-              </div>
-              <input
-                type="email" required value={email} onChange={e => setEmail(e.target.value)}
-                className="w-full h-12 px-4 rounded-xl text-sm text-primary focus:outline-none"
-                style={{ background: 'var(--canvas)', border: '1px solid var(--border)' }}
-                onFocus={e => Object.assign(e.currentTarget.style, focusStyle)}
-                onBlur={e => Object.assign(e.currentTarget.style, blurStyle)}
-              />
-            </div>
+            <Field
+              id="email" label="Email address" hint="For account notifications"
+              value={email} onChange={setEmail}
+              type="email"
+              placeholder={accountType === 'institutional' ? 'ops@acaciacapital.com' : 'david@example.com'}
+              required
+            />
 
-            <div className="flex flex-col gap-1.5">
+            {/* Allocation */}
+            <div className="flex flex-col gap-2">
               <div className="flex items-center justify-between">
-                <label className="text-xs font-semibold text-primary">Target Allocation</label>
-                <span className="text-[10px] text-secondary font-semibold font-tnum" style={{ color: '#C9922A' }}>
-                  ${targetAllocation.toLocaleString()} USD
+                <label className="text-[11px] font-semibold" style={{ color: 'var(--ink-subtle)' }}>
+                  Target allocation
+                </label>
+                <span
+                  className="font-mono text-[13px] font-semibold font-tnum"
+                  style={{ color: '#B8821E', letterSpacing: '-0.02em' }}
+                >
+                  {allocationLabel}
                 </span>
               </div>
-              <div className="relative">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-bold text-secondary pointer-events-none">$</span>
+
+              {/* Slider track */}
+              <div className="relative h-[46px] flex items-center">
+                <div
+                  className="absolute left-0 right-0 h-[3px] rounded-full"
+                  style={{ background: 'var(--border-2)' }}
+                />
+                <div
+                  className="absolute left-0 h-[3px] rounded-full"
+                  style={{
+                    width: `${((targetAllocation - 500) / (100000 - 500)) * 100}%`,
+                    background: 'linear-gradient(90deg,#B8821E,#D4A032)',
+                    transition: 'width 50ms',
+                  }}
+                />
                 <input
-                  type="number" min={500} step={500} required
+                  type="range" min={500} max={100000} step={500}
                   value={targetAllocation}
                   onChange={e => setTargetAllocation(Number(e.target.value))}
-                  className="w-full h-12 pl-8 pr-4 rounded-xl font-headline font-extrabold text-base text-primary focus:outline-none font-tnum"
-                  style={{ background: 'var(--canvas)', border: '1px solid var(--border)', letterSpacing: '-0.01em' }}
-                  onFocus={e => Object.assign(e.currentTarget.style, focusStyle)}
-                  onBlur={e => Object.assign(e.currentTarget.style, blurStyle)}
+                  className="relative w-full cursor-pointer appearance-none bg-transparent focus:outline-none"
+                  style={{ zIndex: 1 }}
                 />
               </div>
-              {/* Allocation slider */}
-              <input
-                type="range" min={500} max={100000} step={500}
-                value={targetAllocation}
-                onChange={e => setTargetAllocation(Number(e.target.value))}
-                className="w-full h-1.5 rounded-full appearance-none cursor-pointer"
-                style={{ accentColor: '#C9922A' }}
-              />
-              <div className="flex justify-between text-[10px] text-secondary">
+
+              <div className="flex justify-between text-[9px]" style={{ color: 'var(--ink-faint)' }}>
                 <span>$500</span>
                 <span>$100k</span>
               </div>
+
+              {/* Estimated yield preview */}
+              <div
+                className="flex items-center justify-between px-3.5 py-2.5 rounded-[9px]"
+                style={{ background: 'var(--gold-bg)', border: '1px solid var(--gold-border)' }}
+              >
+                <span className="text-[11px]" style={{ color: 'var(--ink-subtle)' }}>
+                  Est. annual yield at 18% avg
+                </span>
+                <span
+                  className="font-mono text-[13px] font-semibold font-tnum"
+                  style={{ color: '#B8821E' }}
+                >
+                  ${Math.round(targetAllocation * 0.18).toLocaleString()}
+                </span>
+              </div>
             </div>
 
+            {/* Submit */}
             <button
               type="submit"
-              className="w-full h-14 rounded-2xl text-sm font-extrabold text-white transition-all active:scale-[0.98] flex items-center justify-center gap-2 mt-2"
+              disabled={submitting}
+              className="w-full h-[52px] rounded-[11px] text-[13px] font-semibold flex items-center justify-center gap-2 transition-all duration-150 active:scale-[0.98] mt-1"
               style={{
-                background: 'linear-gradient(135deg,#0A1628 0%,#112240 100%)',
-                boxShadow: '0 8px 24px rgba(10,22,40,0.25)',
-                border: '1px solid rgba(201,146,42,0.25)',
+                background: submitting ? 'var(--border)' : 'var(--ink)',
+                color: submitting ? 'var(--ink-faint)' : '#fff',
+                boxShadow: submitting ? 'none' : 'var(--shadow-e2)',
+                letterSpacing: '-0.01em',
               }}
             >
-              Create LP Account
-              <span className="material-symbols-outlined text-lg">arrow_forward</span>
+              {submitting ? (
+                <>
+                  <svg className="animate-spin" width="14" height="14" viewBox="0 0 14 14" fill="none">
+                    <circle cx="7" cy="7" r="6" stroke="currentColor" strokeOpacity="0.2" strokeWidth="1.5"/>
+                    <path d="M7 1a6 6 0 0 1 6 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                  </svg>
+                  Creating account
+                </>
+              ) : (
+                <>
+                  Create LP account
+                  <IconArrow />
+                </>
+              )}
             </button>
 
-            <div className="relative flex items-center gap-3">
+            {/* Divider + wallet */}
+            <div className="flex items-center gap-3">
               <div className="flex-1 h-px" style={{ background: 'var(--border)' }} />
-              <span className="text-[11px] text-secondary font-medium">or</span>
+              <span className="text-[10px]" style={{ color: 'var(--ink-faint)' }}>or</span>
               <div className="flex-1 h-px" style={{ background: 'var(--border)' }} />
             </div>
 
-            <div className="flex items-center justify-center gap-2 text-xs text-secondary">
+            <div className="flex items-center justify-center gap-2 text-[11px]" style={{ color: 'var(--ink-faint)' }}>
               <span>Already have a wallet?</span>
               <ConnectKitButton label="Connect" />
             </div>

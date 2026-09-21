@@ -2,37 +2,96 @@ import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
 import { ConnectKitButton } from 'connectkit';
 
-const InputField: React.FC<{
-  id: string; label: string; hint?: string; icon?: string;
-  type?: string; value: string; onChange: (v: string) => void; placeholder?: string; required?: boolean;
-}> = ({ id, label, hint, icon, type = 'text', value, onChange, placeholder, required }) => (
-  <div className="flex flex-col gap-1.5">
-    <div className="flex items-center justify-between">
-      <label htmlFor={id} className="text-xs font-semibold text-primary">{label}</label>
-      {hint && <span className="text-[10px] text-secondary">{hint}</span>}
-    </div>
-    <div className="relative">
-      {icon && (
-        <span className="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-secondary text-[18px] pointer-events-none">{icon}</span>
-      )}
-      <input
-        id={id} type={type} value={value} onChange={e => onChange(e.target.value)}
-        placeholder={placeholder} required={required}
-        className="w-full h-12 rounded-xl text-sm text-primary transition-all focus:outline-none focus:ring-2 focus:ring-offset-0"
-        style={{
-          paddingLeft: icon ? '42px' : '14px',
-          paddingRight: '14px',
-          background: 'var(--canvas)',
-          border: '1px solid var(--border)',
-          boxShadow: '0 1px 2px rgba(10,22,40,0.04)',
-        }}
-        onFocus={e => { e.currentTarget.style.borderColor = '#C9922A'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(201,146,42,0.10)'; }}
-        onBlur={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.boxShadow = '0 1px 2px rgba(10,22,40,0.04)'; }}
-      />
-    </div>
-  </div>
+/* ── Inline SVG icons — no icon library ─────────────────────── */
+const IconBolt = () => (
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+    <path d="M8 1.5L2.5 8h5L5.5 12.5l6-7H6.5L8 1.5z" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round"/>
+  </svg>
+);
+const IconShield = () => (
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+    <path d="M7 1.5L2 3.5v4c0 3 2.5 4.5 5 5 2.5-.5 5-2 5-5v-4L7 1.5z" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round"/>
+    <path d="M4.5 7l2 2 3-3" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+const IconTrend = () => (
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+    <path d="M1.5 10.5L5 7l3 2.5L12.5 3.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M9.5 3.5H12.5V6.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+const IconArrow = () => (
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+    <path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+const IconWallet = () => (
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+    <rect x="1.5" y="3.5" width="11" height="8" rx="1.5" stroke="currentColor" strokeWidth="1.2"/>
+    <path d="M1.5 6.5h11" stroke="currentColor" strokeWidth="1.2"/>
+    <circle cx="9.5" cy="9" r="1" fill="currentColor"/>
+  </svg>
 );
 
+/* ── Input field ─────────────────────────────────────────────── */
+const Field: React.FC<{
+  id: string;
+  label: string;
+  hint?: string;
+  value: string;
+  onChange: (v: string) => void;
+  type?: string;
+  placeholder?: string;
+  required?: boolean;
+  error?: string;
+}> = ({ id, label, hint, value, onChange, type = 'text', placeholder, required, error }) => {
+  const [focused, setFocused] = useState(false);
+  return (
+    <div className="flex flex-col gap-1.5">
+      <div className="flex items-center justify-between">
+        <label
+          htmlFor={id}
+          className="text-[11px] font-semibold"
+          style={{ color: 'var(--ink-subtle)', letterSpacing: '0.01em' }}
+        >
+          {label}
+        </label>
+        {hint && (
+          <span className="text-[10px]" style={{ color: 'var(--ink-faint)' }}>{hint}</span>
+        )}
+      </div>
+      <input
+        id={id}
+        type={type}
+        value={value}
+        onChange={e => onChange(e.target.value)}
+        placeholder={placeholder}
+        required={required}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
+        className="w-full h-[46px] px-3.5 rounded-[9px] text-[13px] text-ink transition-all duration-150 focus:outline-none"
+        style={{
+          background: 'var(--cream)',
+          border: error
+            ? '1.5px solid rgba(140,26,26,0.50)'
+            : focused
+            ? '1.5px solid rgba(184,130,30,0.55)'
+            : '1px solid var(--border-2)',
+          boxShadow: focused && !error
+            ? '0 0 0 3px rgba(184,130,30,0.08)'
+            : error
+            ? '0 0 0 3px rgba(140,26,26,0.06)'
+            : 'none',
+        }}
+      />
+      {error && (
+        <p className="text-[10px] font-medium" style={{ color: '#8C1A1A' }}>{error}</p>
+      )}
+    </div>
+  );
+};
+
+/* ── Main component ──────────────────────────────────────────── */
 export const SellerSignUp: React.FC = () => {
   const { completeSellerOnboarding, showToast } = useApp();
   const [fullName, setFullName] = useState('');
@@ -40,206 +99,301 @@ export const SellerSignUp: React.FC = () => {
   const [phonePrefix, setPhonePrefix] = useState('+254');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [businessName, setBusinessName] = useState('');
-  const [operatingCountry, setOperatingCountry] = useState('Kenya');
-
+  const [country, setCountry] = useState('Kenya');
   const [nameError, setNameError] = useState('');
   const [bizError, setBizError] = useState('');
+  const [submitting, setSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     let valid = true;
-    if (!fullName.trim()) { setNameError('Please enter your full name.'); valid = false; } else setNameError('');
-    if (!businessName.trim()) { setBizError('Please enter your business name.'); valid = false; } else setBizError('');
+    if (!fullName.trim()) { setNameError('Enter your full name.'); valid = false; } else setNameError('');
+    if (!businessName.trim()) { setBizError('Enter your business name.'); valid = false; } else setBizError('');
     if (!valid) return;
-    completeSellerOnboarding({ fullName: fullName.trim(), businessName: businessName.trim(), operatingCountry, category: 'Agricultural Produce Exporter' });
-    showToast(`Welcome, ${fullName.trim()}! Next: verify your ID to unlock your $500 credit limit.`, 'success');
+
+    setSubmitting(true);
+    await new Promise(r => setTimeout(r, 600));
+    completeSellerOnboarding({
+      fullName: fullName.trim(),
+      businessName: businessName.trim(),
+      operatingCountry: country,
+      category: 'Agricultural Produce Exporter',
+    });
+    showToast(`Welcome, ${fullName.trim()}. Next: verify your identity.`, 'success');
+    setSubmitting(false);
   };
 
-  return (
-    <div className="flex items-stretch" style={{ background: 'var(--canvas)', minHeight: 'calc(100dvh - 96px)' }}>
+  const FEATURES = [
+    { icon: <IconBolt />, text: 'Settlement in under a second on Arc' },
+    { icon: <IconShield />, text: 'Escrow-protected advances, no middlemen' },
+    { icon: <IconTrend />, text: 'Credit limits up to $5,000 after verification' },
+  ];
 
-      {/* ── Left panel - editorial ───────────────────────────── */}
+  return (
+    <div
+      className="flex items-stretch animate-fade-up"
+      style={{ background: 'var(--canvas)', minHeight: 'calc(100dvh - 96px)' }}
+    >
+
+      {/* ── Left editorial panel ─────────────────────────────── */}
       <div
-        className="hidden lg:flex flex-col justify-between w-[420px] shrink-0 p-10 relative overflow-hidden"
-        style={{
-          background: 'linear-gradient(160deg,#0A1628 0%,#112240 60%,#0D1F3C 100%)',
-        }}
+        className="hidden lg:flex flex-col justify-between w-[400px] shrink-0 relative overflow-hidden"
+        style={{ background: '#0D1824', padding: '44px 40px' }}
       >
-        {/* Top gold strip */}
-        <div className="absolute top-0 left-0 right-0 h-[3px]"
-          style={{ background: 'linear-gradient(90deg,#C9922A,#E8B96A,#C9922A)' }}
+        {/* Gold strip */}
+        <div
+          className="absolute top-0 left-0 right-0 h-[2px]"
+          style={{ background: 'linear-gradient(90deg,transparent 0%,#B8821E 25%,#E9BE68 55%,#B8821E 80%,transparent 100%)' }}
         />
         {/* Dot matrix */}
-        <div className="absolute inset-0 opacity-[0.025]"
-          style={{ backgroundImage: 'radial-gradient(circle,#fff 1px,transparent 1px)', backgroundSize: '28px 28px' }}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            backgroundImage: 'radial-gradient(circle,rgba(255,255,255,0.025) 1px,transparent 1px)',
+            backgroundSize: '26px 26px',
+          }}
         />
-        {/* Radial glow */}
-        <div className="absolute bottom-0 right-0 w-[500px] h-[500px] rounded-full pointer-events-none"
-          style={{ background: 'radial-gradient(circle,rgba(201,146,42,0.08) 0%,transparent 60%)', transform: 'translate(30%,30%)' }}
-        />
+        {/* Grain */}
+        <div className="grain-overlay absolute inset-0 pointer-events-none" />
 
         {/* Logo */}
         <div className="relative flex items-center gap-2.5">
           <div
-            className="w-9 h-9 rounded-xl flex items-center justify-center font-headline font-extrabold text-sm"
-            style={{ background: 'linear-gradient(135deg,#C9922A,#E8B96A)', color: '#fff' }}
-          >V</div>
-          <span className="font-headline font-extrabold text-white text-xl" style={{ letterSpacing: '-0.02em' }}>Vesto</span>
+            className="w-8 h-8 rounded-[9px] flex items-center justify-center"
+            style={{ background: 'linear-gradient(135deg,#B8821E,#D4A032)' }}
+          >
+            <span className="font-display text-[13px] font-bold text-white" style={{ letterSpacing: '-0.01em' }}>V</span>
+          </div>
+          <span
+            className="font-display text-[17px] font-semibold text-white"
+            style={{ letterSpacing: '-0.025em' }}
+          >
+            Vesto
+          </span>
         </div>
 
-        {/* Editorial headline */}
+        {/* Headline */}
         <div className="relative">
+          <p
+            className="text-[11px] uppercase font-semibold mb-5"
+            style={{ color: 'rgba(255,255,255,0.28)', letterSpacing: '0.12em' }}
+          >
+            For sellers
+          </p>
           <h1
-            className="font-headline font-extrabold text-white leading-tight mb-4"
-            style={{ fontSize: '36px', letterSpacing: '-0.03em' }}
+            className="font-display font-bold text-white mb-5"
+            style={{ fontSize: '32px', letterSpacing: '-0.035em', lineHeight: '0.96' }}
           >
             Turn invoices<br />
             into capital<br />
-            <span style={{ color: '#E8B96A' }}>in minutes.</span>
+            <em
+              className="not-italic"
+              style={{ color: '#E9BE68' }}
+            >
+              in minutes.
+            </em>
           </h1>
-          <p className="text-sm font-medium leading-relaxed mb-8" style={{ color: 'rgba(255,255,255,0.5)' }}>
-            Real-world invoice financing, settled onchain with USDC on Arc. No banks. No delays.
+          <p
+            className="text-[13px] mb-8 leading-relaxed"
+            style={{ color: 'rgba(255,255,255,0.42)', maxWidth: '280px' }}
+          >
+            Real invoice financing, settled onchain with USDC. No banks, no delays, no FX risk.
           </p>
 
-          {/* Social proof */}
-          <div className="flex flex-col gap-3">
-            {[
-              { icon: 'bolt',         text: 'Sub-second settlement on Arc' },
-              { icon: 'shield',       text: 'Escrow-protected advances' },
-              { icon: 'trending_up',  text: 'Up to $5,000 credit limit' },
-            ].map(({ icon, text }) => (
-              <div key={icon} className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
-                  style={{ background: 'rgba(201,146,42,0.12)', border: '1px solid rgba(201,146,42,0.20)' }}>
-                  <span className="material-symbols-outlined text-[16px]" style={{ color: '#E8B96A' }}>{icon}</span>
+          {/* Feature list */}
+          <div className="flex flex-col gap-4">
+            {FEATURES.map(({ icon, text }, i) => (
+              <div key={i} className="flex items-center gap-3">
+                <div
+                  className="w-7 h-7 rounded-[7px] flex items-center justify-center shrink-0"
+                  style={{
+                    background: 'rgba(184,130,30,0.12)',
+                    border: '1px solid rgba(184,130,30,0.18)',
+                    color: '#E9BE68',
+                  }}
+                >
+                  {icon}
                 </div>
-                <span className="text-xs font-medium" style={{ color: 'rgba(255,255,255,0.6)' }}>{text}</span>
+                <span className="text-[12px]" style={{ color: 'rgba(255,255,255,0.55)' }}>{text}</span>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Footer note */}
-        <p className="relative text-[10px]" style={{ color: 'rgba(255,255,255,0.25)' }}>
+        {/* Footer */}
+        <p className="relative text-[9px] uppercase tracking-[0.10em]" style={{ color: 'rgba(255,255,255,0.18)' }}>
           Secured by USDC · Powered by Arc
         </p>
       </div>
 
-      {/* ── Right panel - form ───────────────────────────────── */}
-      <div className="flex-1 flex items-center justify-center px-4 sm:px-6 py-8 sm:py-12">
-        <div className="w-full max-w-sm">
+      {/* ── Right form panel ─────────────────────────────────── */}
+      <div className="flex-1 flex items-center justify-center px-5 sm:px-8 py-10">
+        <div className="w-full max-w-[360px]">
 
-          {/* Mobile logo (hidden on lg where left panel shows) */}
-          <div className="flex items-center gap-2 mb-6 lg:hidden">
+          {/* Mobile logo */}
+          <div className="flex items-center gap-2 mb-8 lg:hidden">
             <div
-              className="w-8 h-8 rounded-xl flex items-center justify-center font-headline font-extrabold text-sm text-white"
-              style={{ background: 'linear-gradient(135deg,#C9922A,#E8B96A)' }}
-            >V</div>
-            <span className="font-headline font-extrabold text-primary text-lg" style={{ letterSpacing: '-0.02em' }}>Vesto</span>
+              className="w-7 h-7 rounded-[7px] flex items-center justify-center"
+              style={{ background: 'linear-gradient(135deg,#B8821E,#D4A032)' }}
+            >
+              <span className="font-display text-[11px] font-bold text-white">V</span>
+            </div>
+            <span className="font-display text-[15px] font-semibold text-ink" style={{ letterSpacing: '-0.02em' }}>Vesto</span>
           </div>
 
-          {/* Step indicator */}
-          <div className="flex items-center gap-3 mb-8">
-            <div className="flex gap-1.5">
-              <div className="w-6 h-1.5 rounded-full" style={{ background: 'linear-gradient(90deg,#C9922A,#E8B96A)' }} />
-              <div className="w-6 h-1.5 rounded-full" style={{ background: 'var(--border)' }} />
-              <div className="w-6 h-1.5 rounded-full" style={{ background: 'var(--border)' }} />
+          {/* Step indicator — 3 segments, non-uniform widths */}
+          <div className="flex items-center gap-2 mb-8">
+            <div className="flex gap-1">
+              <div className="w-8 h-[2px] rounded-full" style={{ background: 'linear-gradient(90deg,#B8821E,#D4A032)' }} />
+              <div className="w-4 h-[2px] rounded-full" style={{ background: 'var(--border-2)' }} />
+              <div className="w-4 h-[2px] rounded-full" style={{ background: 'var(--border-2)' }} />
             </div>
-            <span className="text-[10px] text-secondary uppercase tracking-widest font-semibold">Step 1 of 3</span>
+            <span
+              className="text-[9px] font-semibold uppercase"
+              style={{ color: 'var(--ink-faint)', letterSpacing: '0.10em' }}
+            >
+              Step 1 of 3
+            </span>
           </div>
 
           {/* Heading */}
-          <h2 className="font-headline font-extrabold text-primary mb-1" style={{ fontSize: '26px', letterSpacing: '-0.025em' }}>
-            Create Seller Account
+          <h2
+            className="font-display font-bold text-ink mb-1"
+            style={{ fontSize: '24px', letterSpacing: '-0.028em', lineHeight: 1.1 }}
+          >
+            Create your seller account
           </h2>
-          <p className="text-sm text-secondary mb-8">Start earning advances on your invoices today.</p>
+          <p
+            className="text-[13px] mb-7"
+            style={{ color: 'var(--ink-subtle)', lineHeight: 1.5 }}
+          >
+            Takes about two minutes.
+          </p>
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-            <div>
-              <InputField id="fullName" label="Full Legal Name" hint="As on photo ID" icon="person" value={fullName} onChange={v => { setFullName(v); if (v.trim()) setNameError(''); }} placeholder="Amina Diallo" required />
-              {nameError && <p className="text-[11px] mt-1" style={{ color: '#EF4444' }}>{nameError}</p>}
-            </div>
-            <InputField id="email" label="Email Address" hint="Wallet creation" icon="mail" value={email} onChange={setEmail} placeholder="amina@nairobifresh.co" required type="email" />
+            <Field
+              id="fullName" label="Full legal name" hint="As on photo ID"
+              value={fullName}
+              onChange={v => { setFullName(v); if (v.trim()) setNameError(''); }}
+              placeholder="Amina Diallo" required
+              error={nameError}
+            />
 
+            <Field
+              id="email" label="Email address" hint="For account notifications"
+              value={email} onChange={setEmail}
+              type="email" placeholder="amina@nairobifresh.co" required
+            />
+
+            {/* Phone */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-semibold text-primary">Mobile Number</label>
+              <label className="text-[11px] font-semibold" style={{ color: 'var(--ink-subtle)' }}>
+                Mobile number
+              </label>
               <div className="flex gap-2">
                 <select
                   value={phonePrefix}
                   onChange={e => setPhonePrefix(e.target.value)}
-                  className="w-28 h-12 px-3 rounded-xl text-sm text-primary cursor-pointer focus:outline-none"
-                  style={{ background: 'var(--canvas)', border: '1px solid var(--border)' }}
+                  className="h-[46px] px-3 rounded-[9px] text-[12px] text-ink cursor-pointer focus:outline-none shrink-0"
+                  style={{
+                    background: 'var(--cream)',
+                    border: '1px solid var(--border-2)',
+                    width: '96px',
+                  }}
                 >
-                  <option value="+254">🇰🇪 +254</option>
-                  <option value="+234">🇳🇬 +234</option>
-                  <option value="+1">🇺🇸 +1</option>
-                  <option value="+44">🇬🇧 +44</option>
+                  <option value="+254">+254 KE</option>
+                  <option value="+234">+234 NG</option>
+                  <option value="+233">+233 GH</option>
+                  <option value="+1">+1 US</option>
+                  <option value="+44">+44 GB</option>
                 </select>
                 <input
-                  type="tel" required value={phoneNumber} onChange={e => setPhoneNumber(e.target.value)}
+                  type="tel" required value={phoneNumber}
+                  onChange={e => setPhoneNumber(e.target.value)}
                   placeholder="712 345 678"
-                  className="flex-1 h-12 px-3.5 rounded-xl text-sm text-primary focus:outline-none"
-                  style={{ background: 'var(--canvas)', border: '1px solid var(--border)' }}
-                  onFocus={e => { e.currentTarget.style.borderColor = '#C9922A'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(201,146,42,0.10)'; }}
-                  onBlur={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.boxShadow = 'none'; }}
+                  className="flex-1 h-[46px] px-3.5 rounded-[9px] text-[13px] text-ink focus:outline-none"
+                  style={{ background: 'var(--cream)', border: '1px solid var(--border-2)' }}
+                  onFocus={e => { e.currentTarget.style.borderColor = 'rgba(184,130,30,0.55)'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(184,130,30,0.08)'; }}
+                  onBlur={e => { e.currentTarget.style.borderColor = 'var(--border-2)'; e.currentTarget.style.boxShadow = 'none'; }}
                 />
               </div>
             </div>
 
-            <div>
-              <InputField id="businessName" label="Registered Business Name" icon="corporate_fare" value={businessName} onChange={v => { setBusinessName(v); if (v.trim()) setBizError(''); }} placeholder="Nairobi Fresh Produce Co." required />
-              {bizError && <p className="text-[11px] mt-1" style={{ color: '#EF4444' }}>{bizError}</p>}
-            </div>
+            <Field
+              id="bizName" label="Registered business name"
+              value={businessName}
+              onChange={v => { setBusinessName(v); if (v.trim()) setBizError(''); }}
+              placeholder="Nairobi Fresh Produce Co." required
+              error={bizError}
+            />
 
+            {/* Country */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-semibold text-primary">Operating Jurisdiction</label>
-              <div className="relative">
-                <span className="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-secondary text-[18px] pointer-events-none">public</span>
-                <select
-                  value={operatingCountry}
-                  onChange={e => setOperatingCountry(e.target.value)}
-                  className="w-full h-12 pl-10 pr-4 rounded-xl text-sm text-primary cursor-pointer focus:outline-none"
-                  style={{ background: 'var(--canvas)', border: '1px solid var(--border)' }}
-                >
-                  <option value="Kenya">Kenya (KSh / USD)</option>
-                  <option value="Nigeria">Nigeria (NGN / USD)</option>
-                  <option value="Ghana">Ghana (GHS / USD)</option>
-                  <option value="United States">United States (USD)</option>
-                  <option value="United Kingdom">United Kingdom (GBP)</option>
-                </select>
-              </div>
+              <label className="text-[11px] font-semibold" style={{ color: 'var(--ink-subtle)' }}>
+                Operating jurisdiction
+              </label>
+              <select
+                value={country}
+                onChange={e => setCountry(e.target.value)}
+                className="w-full h-[46px] px-3.5 rounded-[9px] text-[13px] text-ink cursor-pointer focus:outline-none"
+                style={{ background: 'var(--cream)', border: '1px solid var(--border-2)' }}
+              >
+                <option value="Kenya">Kenya</option>
+                <option value="Nigeria">Nigeria</option>
+                <option value="Ghana">Ghana</option>
+                <option value="United States">United States</option>
+                <option value="United Kingdom">United Kingdom</option>
+              </select>
             </div>
 
+            {/* Submit */}
             <button
               type="submit"
-              className="w-full h-14 rounded-2xl text-sm font-extrabold text-white transition-all active:scale-[0.98] flex items-center justify-center gap-2 mt-2"
+              disabled={submitting}
+              className="w-full h-[52px] rounded-[11px] text-[13px] font-semibold text-ink flex items-center justify-center gap-2 transition-all duration-150 active:scale-[0.98] mt-1"
               style={{
-                background: 'linear-gradient(135deg,#0A1628 0%,#112240 100%)',
-                boxShadow: '0 8px 24px rgba(10,22,40,0.25)',
-                border: '1px solid rgba(201,146,42,0.25)',
+                background: submitting ? 'var(--border)' : 'var(--ink)',
+                boxShadow: submitting ? 'none' : 'var(--shadow-e2)',
+                color: submitting ? 'var(--ink-faint)' : '#fff',
+                letterSpacing: '-0.01em',
               }}
             >
-              Create Account
-              <span className="material-symbols-outlined text-lg">arrow_forward</span>
+              {submitting ? (
+                <>
+                  <svg className="animate-spin" width="14" height="14" viewBox="0 0 14 14" fill="none">
+                    <circle cx="7" cy="7" r="6" stroke="currentColor" strokeOpacity="0.2" strokeWidth="1.5"/>
+                    <path d="M7 1a6 6 0 0 1 6 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                  </svg>
+                  Creating account
+                </>
+              ) : (
+                <>
+                  Create account
+                  <IconArrow />
+                </>
+              )}
             </button>
 
-            {/* Wallet explainer - shown AFTER form, with context */}
+            {/* Wallet note */}
             <div
-              className="flex items-start gap-3 px-4 py-3.5 rounded-2xl"
-              style={{ background: 'rgba(201,146,42,0.06)', border: '1px solid rgba(201,146,42,0.15)' }}
+              className="flex items-start gap-3 px-3.5 py-3 rounded-[9px]"
+              style={{ background: 'var(--gold-bg)', border: '1px solid var(--gold-border)' }}
             >
-              <span className="material-symbols-outlined text-lg shrink-0 mt-0.5" style={{ color: '#C9922A' }}>account_balance_wallet</span>
-              <div className="flex-1 min-w-0">
-                <p className="text-xs font-semibold text-primary mb-0.5">
-                  You'll connect a wallet in the next step
+              <span style={{ color: '#B8821E', marginTop: '1px', flexShrink: 0 }}>
+                <IconWallet />
+              </span>
+              <div>
+                <p className="text-[11px] font-semibold mb-0.5" style={{ color: 'var(--ink)' }}>
+                  Wallet connection is next
                 </p>
-                <p className="text-[11px] leading-relaxed" style={{ color: 'var(--secondary)' }}>
-                  Your wallet is your payment address for USDC advances - no seed phrase required. We'll guide you through it after account setup.
+                <p className="text-[10px] leading-relaxed" style={{ color: 'var(--ink-subtle)' }}>
+                  Your wallet receives USDC advances. No seed phrase needed — we walk you through it after setup.
                 </p>
               </div>
             </div>
 
-            <div className="flex items-center justify-center gap-2 text-[11px] text-secondary">
+            {/* Already have wallet */}
+            <div className="flex items-center justify-center gap-2 text-[11px]" style={{ color: 'var(--ink-faint)' }}>
               <span>Already have a wallet?</span>
               <ConnectKitButton label="Connect now" />
             </div>
