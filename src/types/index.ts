@@ -73,6 +73,7 @@ export interface Invoice {
   fundedAt?: string;
   repaidAt?: string;
   flagReason?: string;
+  sellerVerificationTier?: 1 | 2; // populated when invoice is submitted
   createdAt: string;
 }
 

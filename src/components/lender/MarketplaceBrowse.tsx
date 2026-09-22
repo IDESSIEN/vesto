@@ -51,30 +51,43 @@ const RiskMeter: React.FC<{ score: number }> = ({ score }) => {
 };
 
 /* ─────────────────────────────────────────────────────────────────
-   YIELD BADGE
+   YIELD BADGE — split: gross APY + net after 2.8% platform fee
 ───────────────────────────────────────────────────────────────── */
-const YieldBadge: React.FC<{ pct: number }> = ({ pct }) => (
-  <div
-    className="shrink-0 flex flex-col items-center justify-center px-3.5 py-3 rounded-[11px]"
-    style={{
-      background: 'linear-gradient(160deg,rgba(184,130,30,0.10) 0%,rgba(184,130,30,0.04) 100%)',
-      border: '1px solid rgba(184,130,30,0.18)',
-    }}
-  >
-    <span
-      className="font-mono text-[20px] font-bold font-tnum leading-tight"
-      style={{ color: '#B8821E', letterSpacing: '-0.025em' }}
+const FEE_PCT = 2.8;
+const YieldBadge: React.FC<{ pct: number }> = ({ pct }) => {
+  const net = Math.max(0, pct - FEE_PCT).toFixed(1);
+  return (
+    <div
+      className="shrink-0 flex flex-col gap-1 px-3 py-2.5 rounded-[11px]"
+      style={{
+        background: 'linear-gradient(160deg,rgba(184,130,30,0.09) 0%,rgba(184,130,30,0.03) 100%)',
+        border: '1px solid rgba(184,130,30,0.18)',
+        minWidth: '68px',
+      }}
     >
-      {pct}%
-    </span>
-    <span
-      className="text-[8px] font-semibold uppercase tracking-[0.10em] mt-0.5"
-      style={{ color: 'rgba(184,130,30,0.55)' }}
-    >
-      APY
-    </span>
-  </div>
-);
+      <div>
+        <span
+          className="font-mono text-[20px] font-bold font-tnum leading-none"
+          style={{ color: '#B8821E', letterSpacing: '-0.025em' }}
+        >
+          {net}%
+        </span>
+        <span
+          className="text-[8px] font-semibold uppercase tracking-[0.09em] ml-0.5"
+          style={{ color: 'rgba(184,130,30,0.50)' }}
+        >
+          net
+        </span>
+      </div>
+      <span
+        className="text-[9px] font-medium"
+        style={{ color: 'rgba(184,130,30,0.50)' }}
+      >
+        {pct}% gross · {FEE_PCT}% fee
+      </span>
+    </div>
+  );
+};
 
 /* ─────────────────────────────────────────────────────────────────
    INVOICE CARD
@@ -84,8 +97,11 @@ const InvoiceCard: React.FC<{
   selected: boolean;
   onToggle: () => void;
   onFund: () => void;
-}> = ({ inv, selected, onToggle, onFund }) => {
+  lenderPosition?: number; // USDC already deployed by this lender into this invoice
+}> = ({ inv, selected, onToggle, onFund, lenderPosition }) => {
   const [hovered, setHovered] = useState(false);
+  // One-liner thesis — the single most important trust signal on the card
+  const thesis = `${inv.termDays}d trade receivable · ${inv.buyerName} · ${inv.riskTier} risk`;
 
   return (
     <div
@@ -133,7 +149,7 @@ const InvoiceCard: React.FC<{
             )}
           </button>
 
-          {/* Seller name + category + risk */}
+          {/* Seller name + thesis one-liner + risk */}
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-1.5 flex-wrap mb-0.5">
               <span
@@ -142,13 +158,16 @@ const InvoiceCard: React.FC<{
               >
                 {inv.sellerBusinessName}
               </span>
-              {/* Verified check */}
-              <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
-                <circle cx="6.5" cy="6.5" r="6.5" fill="#EBF5F0"/>
-                <path d="M3.5 6.5L5.5 8.5L9.5 4.5" stroke="#1A6645" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
+              {/* Tier badge as trust signal */}
+              <span
+                className="text-[8.5px] font-bold uppercase tracking-[0.07em] px-1.5 py-0.5 rounded-[4px]"
+                style={{ background: 'var(--gold-bg)', color: 'var(--gold)', border: '1px solid var(--gold-border)' }}
+              >
+                T{inv.sellerVerificationTier ?? 1}
+              </span>
             </div>
-            <p className="text-[11px]" style={{ color: 'var(--ink-faint)' }}>{inv.sellerCategory}</p>
+            {/* One-liner thesis */}
+            <p className="text-[10.5px] font-medium" style={{ color: 'var(--ink-subtle)' }}>{thesis}</p>
             <div className="mt-2 w-28">
               <RiskMeter score={inv.riskScore} />
             </div>
@@ -157,19 +176,18 @@ const InvoiceCard: React.FC<{
           <YieldBadge pct={inv.expectedYieldPct} />
         </div>
 
-        {/* Metrics row */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4">
+        {/* Metrics strip — Morpho-style: spacing separates, no interior borders */}
+        <div
+          className="flex flex-wrap items-start gap-x-5 gap-y-2 mb-3 pt-3"
+          style={{ borderTop: '1px solid var(--border)' }}
+        >
           {[
-            { label: 'Buyer', value: inv.buyerName, mono: false },
-            { label: 'Invoice', value: `$${inv.amount.toLocaleString()}`, mono: true },
-            { label: 'Advance', value: `$${inv.advanceAmount.toLocaleString()} · ${inv.advanceRatePct}%`, mono: true },
-            { label: 'Term', value: `${inv.termDays}d · due ${inv.dueDate}`, mono: false },
+            { label: 'Invoice', value: `$${inv.amount.toLocaleString()} USDC`, mono: true },
+            { label: 'Advance', value: `$${inv.advanceAmount.toLocaleString()} (${inv.advanceRatePct}%)`, mono: true },
+            { label: 'Term', value: `${inv.termDays}d`, mono: false },
+            { label: 'Due', value: inv.dueDate, mono: false },
           ].map(({ label, value, mono }) => (
-            <div
-              key={label}
-              className="flex flex-col gap-0.5 px-3 py-2.5 rounded-[9px]"
-              style={{ background: 'rgba(13,24,36,0.03)', border: '1px solid var(--border)' }}
-            >
+            <div key={label} className="flex flex-col gap-0.5">
               <span
                 className="text-[8px] uppercase font-semibold"
                 style={{ color: 'var(--ink-faint)', letterSpacing: '0.09em' }}
@@ -177,13 +195,21 @@ const InvoiceCard: React.FC<{
                 {label}
               </span>
               <span
-                className={`text-[12px] font-semibold text-ink leading-snug truncate ${mono ? 'font-mono font-tnum' : ''}`}
+                className={`text-[12.5px] font-semibold text-ink leading-snug ${mono ? 'font-mono font-tnum' : ''}`}
               >
                 {value}
               </span>
             </div>
           ))}
         </div>
+
+        {/* Inline lender position strip — only shown when this lender has already funded */}
+        {lenderPosition !== undefined && lenderPosition > 0 && (
+          <div className="position-strip mb-2">
+            <span className="position-strip-label">Your position</span>
+            <span className="position-strip-value">${lenderPosition.toLocaleString()} USDC deployed</span>
+          </div>
+        )}
 
         {/* Bottom: doc + CTA */}
         <div className="flex items-center justify-between gap-3 pt-1">
@@ -288,17 +314,19 @@ const FundingModal: React.FC<{
             </button>
           </div>
 
-          {/* Deal facts */}
+          {/* Deal facts — Morpho-style: yield split into gross / fee / net */}
           <div
             className="rounded-[11px] overflow-hidden divide-y"
-            style={{ border: '1px solid var(--border)', borderColor: 'var(--border)' }}
+            style={{ border: '1px solid var(--border)' }}
           >
-            {[
-              ['Buyer offtaker', inv.buyerName],
-              ['Expected yield', `${inv.expectedYieldPct}% APY`],
-              ['Term', `${inv.termDays} days, due ${inv.dueDate}`],
-              ['Risk score', `${RISK_LABEL(inv.riskScore)} · ${inv.riskScore}/100`],
-            ].map(([label, value]) => (
+            {([
+              ['Buyer offtaker', inv.buyerName, false],
+              ['Gross APY', `${inv.expectedYieldPct}%`, true],
+              ['Platform fee', `${FEE_PCT}%`, false],
+              ['Net APY to you', `${Math.max(0, inv.expectedYieldPct - FEE_PCT).toFixed(1)}%`, true],
+              ['Term', `${inv.termDays}d · due ${inv.dueDate}`, false],
+              ['Risk', `${RISK_LABEL(inv.riskScore)} · ${inv.riskScore}/100`, false],
+            ] as [string, string, boolean][]).map(([label, value, isGold]) => (
               <div
                 key={label}
                 className="flex items-center justify-between px-4 py-2.5"
@@ -306,8 +334,8 @@ const FundingModal: React.FC<{
               >
                 <span className="text-[11px]" style={{ color: 'var(--ink-subtle)' }}>{label}</span>
                 <span
-                  className="text-[12px] font-semibold text-ink"
-                  style={label === 'Expected yield' ? { color: '#B8821E' } : {}}
+                  className="text-[12px] font-semibold font-tnum"
+                  style={{ color: isGold ? '#B8821E' : 'var(--ink)' }}
                 >
                   {value}
                 </span>
@@ -781,12 +809,12 @@ export const MarketplaceBrowse: React.FC = () => {
               </svg>
             </div>
             <p className="text-[13px] font-semibold text-ink mb-1">
-              {live.length === 0 ? 'No live opportunities right now' : 'No matches'}
+              {live.length === 0 ? 'Pool is empty right now' : 'No matches for that filter'}
             </p>
-            <p className="text-[11px]" style={{ color: 'var(--ink-faint)' }}>
+            <p className="text-[11px] max-w-[240px] text-center leading-relaxed" style={{ color: 'var(--ink-faint)' }}>
               {live.length === 0
-                ? 'New invoices appear here when approved by the admin team.'
-                : 'Try clearing the search or switching filter.'}
+                ? 'Verified sellers submit invoices every day. Advances typically clear admin review in under 2 hours.'
+                : 'Try a different category or clear the search to see all live invoices.'}
             </p>
           </div>
         ) : (
@@ -797,6 +825,7 @@ export const MarketplaceBrowse: React.FC = () => {
               selected={selected.includes(inv.id)}
               onToggle={() => toggleSelect(inv.id)}
               onFund={() => { reset(); setModal(inv); }}
+              lenderPosition={inv.fundedByLenderId === lender.id ? inv.advanceAmount : undefined}
             />
           ))
         )}

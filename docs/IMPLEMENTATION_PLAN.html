@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Vesto — Implementation Plan &amp; Roadmap</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet"/>
+<style>
+  :root{--canvas:#F8F6F1;--ink:#0D1824;--ink-subtle:#3A4A5C;--ink-muted:#5E6E82;--gold:#B8821E;--gold-bg:rgba(184,130,30,0.08);--gold-border:rgba(184,130,30,0.22);--cream:#FFFFFF;--border:rgba(13,24,36,0.10);--navy:#0D1824;--green:#1A6645;--red:#8C1A1A;--purple:#4338CA;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{background:var(--canvas);color:var(--ink);font-family:'Space Grotesk',sans-serif;font-size:14px;line-height:1.6;}
+  body{max-width:900px;margin:0 auto;padding:60px 48px 100px;}
+  @media print{body{padding:20px 32px;max-width:100%;} h2{page-break-before:always;} h2:first-of-type{page-break-before:avoid;} .sprint-card{page-break-inside:avoid;}}
+  .cover{padding:72px 0 60px;border-bottom:2px solid var(--gold);margin-bottom:56px;}
+  .cover-label{font-size:10px;letter-spacing:0.14em;text-transform:uppercase;font-weight:600;color:var(--gold);margin-bottom:20px;}
+  .cover-title{font-size:48px;font-weight:700;letter-spacing:-0.04em;line-height:1.0;color:var(--ink);margin-bottom:16px;}
+  .cover-sub{font-size:17px;color:var(--ink-subtle);max-width:520px;line-height:1.5;margin-bottom:32px;}
+  .cover-meta{display:flex;gap:40px;flex-wrap:wrap;}
+  .cover-meta-item label{display:block;font-size:9px;text-transform:uppercase;letter-spacing:0.10em;font-weight:600;color:var(--ink-muted);margin-bottom:4px;}
+  .cover-meta-item span{font-size:13px;font-weight:600;color:var(--ink);}
+  h2{font-size:26px;font-weight:700;letter-spacing:-0.03em;color:var(--ink);margin:48px 0 20px;padding-top:8px;border-top:2px solid var(--ink);}
+  h3{font-size:16px;font-weight:600;letter-spacing:-0.015em;color:var(--ink);margin:28px 0 10px;}
+  h4{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.07em;color:var(--ink-muted);margin:20px 0 8px;}
+  p{color:var(--ink-subtle);margin-bottom:12px;font-size:13.5px;line-height:1.65;}
+  strong{color:var(--ink);font-weight:600;}
+  ul,ol{color:var(--ink-subtle);font-size:13.5px;padding-left:20px;margin-bottom:12px;}
+  li{margin-bottom:5px;line-height:1.55;}
+
+  /* Sprint card */
+  .sprint-card{background:white;border:1px solid var(--border);border-radius:13px;overflow:hidden;margin:16px 0;}
+  .sprint-header{padding:16px 22px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);}
+  .sprint-num{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.10em;color:var(--gold);}
+  .sprint-title{font-size:15px;font-weight:600;color:var(--ink);letter-spacing:-0.012em;}
+  .sprint-dates{font-size:11px;color:var(--ink-muted);font-family:'JetBrains Mono',monospace;}
+  .sprint-body{padding:20px 22px;}
+  .sprint-section{margin-bottom:14px;}
+  .sprint-section-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.10em;color:var(--ink-muted);margin-bottom:6px;}
+  .sprint-body ul{font-size:12.5px;margin-bottom:0;}
+  .sprint-body li{margin-bottom:4px;}
+  .ac-item{display:flex;align-items:flex-start;gap:8px;padding:5px 0;font-size:12px;}
+  .ac-check{width:16px;height:16px;border-radius:4px;background:rgba(26,102,69,0.12);border:1.5px solid rgba(26,102,69,0.25);flex-shrink:0;margin-top:1px;}
+
+  /* Phase bar */
+  .phase-timeline{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:24px 0;}
+  .phase-box{border-radius:11px;padding:20px;position:relative;overflow:hidden;}
+  .phase-v1{background:linear-gradient(160deg,#0D1824,#1A2A3E);color:white;}
+  .phase-v2{background:rgba(184,130,30,0.06);border:1.5px solid rgba(184,130,30,0.20);}
+  .phase-v3{background:rgba(67,56,202,0.05);border:1.5px solid rgba(67,56,202,0.18);}
+  .phase-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+  .phase-v1::before{background:linear-gradient(90deg,#B8821E,#E9BE68);}
+  .phase-v2::before{background:linear-gradient(90deg,#B8821E 0%,rgba(184,130,30,0.3) 100%);}
+  .phase-v3::before{background:linear-gradient(90deg,#4338CA,rgba(67,56,202,0.3));}
+  .phase-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;margin-bottom:8px;}
+  .phase-v1 .phase-label{color:rgba(255,255,255,0.40);}
+  .phase-v2 .phase-label{color:var(--gold);}
+  .phase-v3 .phase-label{color:#4338CA;}
+  .phase-title{font-size:15px;font-weight:700;letter-spacing:-0.015em;margin-bottom:4px;}
+  .phase-v1 .phase-title{color:white;}
+  .phase-v2 .phase-title,.phase-v3 .phase-title{color:var(--ink);}
+  .phase-duration{font-size:11px;}
+  .phase-v1 .phase-duration{color:rgba(255,255,255,0.45);}
+  .phase-v2 .phase-duration,.phase-v3 .phase-duration{color:var(--ink-muted);}
+
+  /* Risk register */
+  .risk-row{display:grid;grid-template-columns:3fr 1fr 1fr 2fr;gap:12px;padding:12px 16px;border-radius:9px;margin-bottom:8px;background:white;border:1px solid var(--border);}
+  .risk-title{font-size:12.5px;font-weight:600;color:var(--ink);}
+  .risk-cell{font-size:12px;color:var(--ink-subtle);}
+  .risk-badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;}
+  .risk-high{background:rgba(140,26,26,0.10);color:#8C1A1A;border:1px solid rgba(140,26,26,0.18);}
+  .risk-med{background:rgba(184,130,30,0.10);color:#B8821E;border:1px solid rgba(184,130,30,0.18);}
+  .risk-low{background:rgba(26,102,69,0.10);color:#1A6645;border:1px solid rgba(26,102,69,0.18);}
+
+  /* Launch checklist */
+  .checklist{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:20px 0;}
+  .checklist-item{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;background:white;border:1px solid var(--border);border-radius:9px;}
+  .checklist-box{width:18px;height:18px;border-radius:4px;border:1.5px solid var(--border);flex-shrink:0;margin-top:1px;}
+  .checklist-text{font-size:12px;color:var(--ink-subtle);line-height:1.4;}
+  .checklist-text strong{color:var(--ink);}
+
+  /* Cost table */
+  table{width:100%;border-collapse:collapse;margin:20px 0;font-size:12.5px;}
+  th{background:var(--ink);color:white;padding:10px 14px;text-align:left;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:0.06em;}
+  td{padding:10px 14px;border-bottom:1px solid var(--border);color:var(--ink-subtle);vertical-align:top;}
+  tr:last-child td{border-bottom:none;}
+  tr:nth-child(even) td{background:rgba(13,24,36,0.025);}
+  td strong{color:var(--ink);}
+  td code{font-family:'JetBrains Mono',monospace;font-size:11px;background:rgba(13,24,36,0.07);padding:1px 5px;border-radius:4px;color:var(--ink);}
+  .pull-quote{position:relative;background:var(--navy);color:rgba(255,255,255,0.88);border-radius:13px;padding:28px 32px;margin:32px 0;overflow:hidden;}
+  .pull-quote::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#B8821E 30%,#E9BE68 60%,#B8821E 85%,transparent);}
+  .pull-quote p{color:rgba(255,255,255,0.80);font-size:15px;font-weight:500;line-height:1.55;margin:0;}
+  .pull-quote .quote-attr{font-size:10px;text-transform:uppercase;letter-spacing:0.12em;color:rgba(255,255,255,0.35);margin-top:12px;font-weight:600;}
+  .divider{height:1px;background:var(--border);margin:40px 0;}
+  .footnote{font-size:11px;color:var(--ink-muted);border-top:1px solid var(--border);padding-top:16px;margin-top:60px;}
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="cover-label">Vesto · Implementation Plan &amp; Roadmap · V1.0</div>
+  <div class="cover-title">Implementation<br/>Plan &amp;<br/>Roadmap</div>
+  <div class="cover-sub">V1 sprint plan (6 × 2-week sprints), V2/V3 phased roadmap, risk register, cost estimates, team structure, and a 25-item launch checklist.</div>
+  <div class="cover-meta">
+    <div class="cover-meta-item"><label>V1 Duration</label><span>12 weeks (6 sprints × 2 weeks)</span></div>
+    <div class="cover-meta-item"><label>V1 Target Launch</label><span>Q1 2027 (Arc Mainnet)</span></div>
+    <div class="cover-meta-item"><label>Current Status</label><span>Testnet build complete</span></div>
+    <div class="cover-meta-item"><label>Version</label><span>1.0 — September 2026</span></div>
+  </div>
+</div>
+
+<!-- PHASE OVERVIEW -->
+<h2>1. Phase Overview</h2>
+
+<div class="phase-timeline">
+  <div class="phase-box phase-v1">
+    <div class="phase-label">Phase 1</div>
+    <div class="phase-title">V1 Production</div>
+    <div class="phase-duration">0–3 months · Oct–Dec 2026</div>
+  </div>
+  <div class="phase-box phase-v2">
+    <div class="phase-label">Phase 2</div>
+    <div class="phase-title">V2 Scale</div>
+    <div class="phase-duration">3–9 months · Jan–Jun 2027</div>
+  </div>
+  <div class="phase-box phase-v3">
+    <div class="phase-label">Phase 3</div>
+    <div class="phase-title">V3 Protocol</div>
+    <div class="phase-duration">9–18 months · Jul 2027–Mar 2028</div>
+  </div>
+</div>
+
+<div class="pull-quote">
+  <p>The V1 goal is not perfection. It is a single verified seller, a single lender, and a single funded invoice settled onchain. Everything else is a distraction until that flow works end-to-end on mainnet with real money.</p>
+  <div class="quote-attr">V1 definition of done</div>
+</div>
+
+<!-- V1 SPRINTS -->
+<h2>2. V1 Sprint Plan</h2>
+<p>Current state: testnet build complete with mock in-memory state. V1 production requires: Supabase persistence, KYC API integration, Arc Mainnet deployment, contract source verification, production USDC address, security audit, and performance optimisation.</p>
+
+<div class="sprint-card">
+  <div class="sprint-header">
+    <div><div class="sprint-num">Sprint 1</div><div class="sprint-title">Supabase wiring + auth</div></div>
+    <div class="sprint-dates">Weeks 1–2 · Oct 1–14</div>
+  </div>
+  <div class="sprint-body">
+    <div class="sprint-section">
+      <div class="sprint-section-label">Deliverables</div>
+      <ul>
+        <li>Supabase project created, schema migrated (all 7 tables from Backend Schema doc)</li>
+        <li>Supabase Auth configured: email OTP for sellers, wallet-sign message for lenders</li>
+        <li>AppContext replaced with Supabase-backed service layer (src/services/supabaseService.ts)</li>
+        <li>RLS policies deployed and tested for all three roles</li>
+        <li>KYC document upload wired to Supabase Storage (kyc-documents bucket)</li>
+        <li>Environment variables set in production .env</li>
+      </ul>
+    </div>
+    <div class="sprint-section">
+      <div class="sprint-section-label">Acceptance criteria</div>
+      <div class="ac-item"><div class="ac-check"></div>Seller can sign up, submit Tier 1 verification, and see their profile persisted after page refresh</div>
+      <div class="ac-item"><div class="ac-check"></div>Lender can sign up and see portfolio after page refresh</div>
+      <div class="ac-item"><div class="ac-check"></div>Admin cannot read seller documents via lender credentials (RLS verified)</div>
+      <div class="ac-item"><div class="ac-check"></div>Invoice submission writes to Supabase invoices table</div>
+      <div class="ac-item"><div class="ac-check"></div>TypeScript: 0 errors. Build: clean.</div>
+    </div>
+  </div>
+</div>
+
+<div class="sprint-card">
+  <div class="sprint-header">
+    <div><div class="sprint-num">Sprint 2</div><div class="sprint-title">KYC API integration</div></div>
+    <div class="sprint-dates">Weeks 3–4 · Oct 15–28</div>
+  </div>
+  <div class="sprint-body">
+    <div class="sprint-section">
+      <div class="sprint-section-label">Deliverables</div>
+      <ul>
+        <li>Integrate Smile Identity (Africa) or Onfido (global) for automated document verification</li>
+        <li>Cleanverse AI document analysis wired to actual API (currently simulated)</li>
+        <li>Webhook from KYC provider triggers process-verification Edge Function</li>
+        <li>Admin queue updated: AI confidence score shown alongside manual review fields</li>
+        <li>Fallback: manual-only mode when KYC API is unavailable</li>
+        <li>KYC provider selection documented and signed off by legal</li>
+      </ul>
+    </div>
+    <div class="sprint-section">
+      <div class="sprint-section-label">Acceptance criteria</div>
+      <div class="ac-item"><div class="ac-check"></div>Uploaded ID triggers automated analysis within 30 seconds</div>
+      <div class="ac-item"><div class="ac-check"></div>AI result (pass/fail/uncertain + confidence) appears in admin queue</div>
+      <div class="ac-item"><div class="ac-check"></div>Manual override available regardless of AI result</div>
+      <div class="ac-item"><div class="ac-check"></div>Failed KYC API call degrades gracefully to manual-only queue</div>
+    </div>
+  </div>
+</div>
+
+<div class="sprint-card">
+  <div class="sprint-header">
+    <div><div class="sprint-num">Sprint 3</div><div class="sprint-title">Arc Mainnet deployment + contract verification</div></div>
+    <div class="sprint-dates">Weeks 5–6 · Oct 29–Nov 11</div>
+  </div>
+  <div class="sprint-body">
+    <div class="sprint-section">
+      <div class="sprint-section-label">Deliverables</div>
+      <ul>
+        <li>VestoEscrow.sol deployed to Arc Mainnet with production USDC address and hardware-wallet admin key</li>
+        <li>Contract source verified on Arc explorer via <code>forge verify-contract</code></li>
+        <li>VITE_VESTO_ESCROW_ADDRESS and VITE_USDC_ADDRESS set to mainnet values in production .env</li>
+        <li>Wagmi config updated with Arc Mainnet chain (Chain ID + RPC)</li>
+        <li>All four custom hooks tested against mainnet contract</li>
+        <li>Testnet config preserved as a toggle for development</li>
+      </ul>
+    </div>
+    <div class="sprint-section">
+      <div class="sprint-section-label">Acceptance criteria</div>
+      <div class="ac-item"><div class="ac-check"></div>Contract source verified and viewable on Arc mainnet explorer</div>
+      <div class="ac-item"><div class="ac-check"></div>Funding modal successfully executes approve + fundInvoice on mainnet with real USDC</div>
+      <div class="ac-item"><div class="ac-check"></div>claimPayout() confirmed on mainnet with payout arriving in seller wallet</div>
+      <div class="ac-item"><div class="ac-check"></div>Admin key is a hardware wallet (Ledger/Trezor) — not a hot key</div>
+    </div>
+  </div>
+</div>
+
+<div class="sprint-card">
+  <div class="sprint-header">
+    <div><div class="sprint-num">Sprint 4</div><div class="sprint-title">Admin hardening + audit trail</div></div>
+    <div class="sprint-dates">Weeks 7–8 · Nov 12–25</div>
+  </div>
+  <div class="sprint-body">
+    <div class="sprint-section">
+      <div class="sprint-section-label">Deliverables</div>
+      <ul>
+        <li>Admin notes persisted to Supabase on every approve/reject action</li>
+        <li>Admin 2FA replaced with production auth: TOTP (Google Authenticator) replacing demo passcode</li>
+        <li>Onchain event listener deployed (sync-onchain-event Edge Function)</li>
+        <li>Invoice status in Supabase kept in sync with contract events in real time</li>
+        <li>Dispute resolution wired to resolveDispute() contract call</li>
+        <li>Analytics screen pulling from aggregate-analytics Edge Function (live data, not mock)</li>
+      </ul>
+    </div>
+    <div class="sprint-section">
+      <div class="sprint-section-label">Acceptance criteria</div>
+      <div class="ac-item"><div class="ac-check"></div>Every admin action (approve, reject, flag, resolve) writes to admin_notes table</div>
+      <div class="ac-item"><div class="ac-check"></div>Invoice status in Supabase matches contract state within 15 seconds of onchain event</div>
+      <div class="ac-item"><div class="ac-check"></div>Analytics KPI tiles show live data, not mock numbers</div>
+      <div class="ac-item"><div class="ac-check"></div>Admin login requires TOTP — demo passcode 123456 removed</div>
+    </div>
+  </div>
+</div>
+
+<div class="sprint-card">
+  <div class="sprint-header">
+    <div><div class="sprint-num">Sprint 5</div><div class="sprint-title">Performance + bundle optimisation</div></div>
+    <div class="sprint-dates">Weeks 9–10 · Nov 26–Dec 9</div>
+  </div>
+  <div class="sprint-body">
+    <div class="sprint-section">
+      <div class="sprint-section-label">Deliverables</div>
+      <ul>
+        <li>Code splitting: dynamic imports for Admin screens, Lender screens, Seller screens (three separate chunks)</li>
+        <li>Bundle size target: &lt;500KB gzipped main bundle</li>
+        <li>Loading skeleton states for all onchain data (balance, pending claim, portfolio)</li>
+        <li>Error boundary components for each role's screen tree</li>
+        <li>PWA manifest: offline error screen when network unavailable</li>
+        <li>Lighthouse score: Performance ≥85, Accessibility ≥90</li>
+      </ul>
+    </div>
+    <div class="sprint-section">
+      <div class="sprint-section-label">Acceptance criteria</div>
+      <div class="ac-item"><div class="ac-check"></div>Initial page load &lt;2 seconds on 4G connection</div>
+      <div class="ac-item"><div class="ac-check"></div>Gzipped main bundle &lt;500KB</div>
+      <div class="ac-item"><div class="ac-check"></div>No spinner or blank state on balance hero — skeleton placeholder shown during load</div>
+      <div class="ac-item"><div class="ac-check"></div>Error boundary catches and displays human error messages on React crashes</div>
+    </div>
+  </div>
+</div>
+
+<div class="sprint-card">
+  <div class="sprint-header">
+    <div><div class="sprint-num">Sprint 6</div><div class="sprint-title">Security audit + launch prep</div></div>
+    <div class="sprint-dates">Weeks 11–12 · Dec 10–23</div>
+  </div>
+  <div class="sprint-body">
+    <div class="sprint-section">
+      <div class="sprint-section-label">Deliverables</div>
+      <ul>
+        <li>Independent third-party security audit of VestoEscrow.sol</li>
+        <li>All critical and high audit findings resolved (no launch with open criticals)</li>
+        <li>Bug bounty program set up on Immunefi or similar</li>
+        <li>Legal opinion on securities classification obtained for target jurisdictions</li>
+        <li>Privacy policy and terms of service drafted and reviewed</li>
+        <li>Production monitoring: Sentry for frontend errors, Supabase alerts for Edge Function failures</li>
+        <li>Launch checklist (see section 6) completed and signed off</li>
+      </ul>
+    </div>
+    <div class="sprint-section">
+      <div class="sprint-section-label">Acceptance criteria</div>
+      <div class="ac-item"><div class="ac-check"></div>Audit report received with no open Critical or High findings</div>
+      <div class="ac-item"><div class="ac-check"></div>All 25 launch checklist items completed</div>
+      <div class="ac-item"><div class="ac-check"></div>End-to-end live test: real seller funded by real lender on Arc Mainnet</div>
+      <div class="ac-item"><div class="ac-check"></div>Go/no-go sign-off from product, legal, and security</div>
+    </div>
+  </div>
+</div>
+
+<!-- V2/V3 ROADMAP -->
+<h2>3. V2 &amp; V3 Roadmap</h2>
+
+<h3>V2 (3–9 months: Jan–Jun 2027) — Scale</h3>
+<ul>
+  <li><strong>Institutional lender onboarding:</strong> Whitelisted lender pools with dedicated allocation limits. KYC at the institutional level. Reporting dashboards.</li>
+  <li><strong>Multi-chain USDC via CCTP:</strong> Lenders on Base, Arbitrum, and Polygon can fund Arc invoices. Frontend: Circle Bridge Kit integration.</li>
+  <li><strong>Pooled capital allocation:</strong> VestoPool.sol ERC-4626 vault. Multiple lenders share a pool. Risk-weighted allocation algorithm runs off-chain.</li>
+  <li><strong>Yield accrual ledger:</strong> Per-invoice, per-lender yield tracking. Auto-reinvest engine: claimed yield immediately allocated to next available invoice.</li>
+  <li><strong>Mobile-responsive hardening:</strong> Full QA pass on mobile devices. Touch targets, scroll behaviour, keyboard avoidance on forms.</li>
+  <li><strong>API access for institutional lenders:</strong> REST API for programmatic invoice browsing, funding, and portfolio reads. Rate-limited, API-key authenticated.</li>
+</ul>
+
+<h3>V3 (9–18 months: Jul 2027–Mar 2028) — Protocol</h3>
+<ul>
+  <li><strong>Tokenised invoice NFTs (ERC-1155):</strong> Each funded invoice mints fractional position tokens. Enables partial funding and secondary market.</li>
+  <li><strong>Secondary market:</strong> Lenders can list and trade invoice position tokens. Order book on Arc. Settlement in USDC.</li>
+  <li><strong>On-chain credit scoring:</strong> Soul-Bound Token (ERC-5192) attesting repayment history. Score improves advance rate and credit limit automatically without admin action.</li>
+  <li><strong>VESTO governance token:</strong> Protocol parameter voting. Fee tier adjustment, pool allocation weight governance. Token distribution to early sellers and lenders.</li>
+  <li><strong>ERC-8004 agent identity:</strong> Lender agents registered in the Arc identity registry. Programmatic invoice funding by autonomous agents.</li>
+</ul>
+
+<!-- RISK REGISTER -->
+<h2>4. Risk Register</h2>
+
+<div style="margin:20px 0;">
+  <div class="risk-row" style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;background:rgba(13,24,36,0.05);color:var(--ink-muted);">
+    <div>Risk</div><div>Probability</div><div>Impact</div><div>Mitigation</div>
+  </div>
+  <div class="risk-row">
+    <div><div class="risk-title">Smart contract exploit</div></div>
+    <div><span class="risk-badge risk-low">Low</span></div>
+    <div><span class="risk-badge risk-high">Critical</span></div>
+    <div class="risk-cell">Third-party audit before mainnet. ReentrancyGuard + SafeERC20. Bug bounty. TVL cap in V1 ($50k max escrow).</div>
+  </div>
+  <div class="risk-row">
+    <div><div class="risk-title">Securities classification (regulatory)</div></div>
+    <div><span class="risk-badge risk-med">Medium</span></div>
+    <div><span class="risk-badge risk-high">High</span></div>
+    <div class="risk-cell">Legal opinion before mainnet. Geo-restrict to non-regulated jurisdictions in V1. Testnet-only until cleared.</div>
+  </div>
+  <div class="risk-row">
+    <div><div class="risk-title">KYC document fraud</div></div>
+    <div><span class="risk-badge risk-med">Medium</span></div>
+    <div><span class="risk-badge risk-high">High</span></div>
+    <div class="risk-cell">AI + manual two-layer review. Tiered credit limits cap exposure. Dispute resolution workflow. Seller stake in reputation (credit limit grows with history).</div>
+  </div>
+  <div class="risk-row">
+    <div><div class="risk-title">Low lender liquidity at launch</div></div>
+    <div><span class="risk-badge risk-high">High</span></div>
+    <div><span class="risk-badge risk-med">Medium</span></div>
+    <div class="risk-cell">Bootstrapped lender program: team deploys $20k initial capital. Invoice listing gated until pool reaches $10k minimum. Private beta with 5 pre-committed lenders.</div>
+  </div>
+  <div class="risk-row">
+    <div><div class="risk-title">Arc network downtime</div></div>
+    <div><span class="risk-badge risk-low">Low</span></div>
+    <div><span class="risk-badge risk-med">Medium</span></div>
+    <div class="risk-cell">Frontend degrades gracefully (read-only mode). Off-chain metadata preserved in Supabase. Invoices re-listable after recovery. SLA monitoring on Arc RPC.</div>
+  </div>
+  <div class="risk-row">
+    <div><div class="risk-title">Admin key compromise</div></div>
+    <div><span class="risk-badge risk-low">Low</span></div>
+    <div><span class="risk-badge risk-high">High</span></div>
+    <div class="risk-cell">Hardware wallet requirement for admin key. Multi-sig in V2. Key rotation procedure documented. Admin functions limited (cannot withdraw funds, only manage state).</div>
+  </div>
+  <div class="risk-row">
+    <div><div class="risk-title">Supabase service outage</div></div>
+    <div><span class="risk-badge risk-low">Low</span></div>
+    <div><span class="risk-badge risk-med">Medium</span></div>
+    <div class="risk-cell">Contract state is always correct regardless of Supabase. Frontend can read onchain data directly. Supabase outage affects admin UI only — no money at risk.</div>
+  </div>
+  <div class="risk-row">
+    <div><div class="risk-title">USDC blocklist (seller or lender)</div></div>
+    <div><span class="risk-badge risk-low">Low</span></div>
+    <div><span class="risk-badge risk-low">Low</span></div>
+    <div class="risk-cell">Pull-claim architecture: no push transfers. Blocked address simply cannot claim — escrow funds not locked. Admin dispute resolution handles edge cases.</div>
+  </div>
+</div>
+
+<!-- TEAM STRUCTURE -->
+<h2>5. Team Structure</h2>
+
+<table>
+  <thead><tr><th>Role</th><th>Responsibility</th><th>V1 FTE</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Product Owner</strong></td><td>Roadmap, sprint planning, stakeholder communication, launch checklist owner</td><td>1.0</td></tr>
+    <tr><td><strong>Frontend Engineer (Lead)</strong></td><td>React/wagmi integration, Supabase wiring, component architecture, performance optimisation</td><td>1.0</td></tr>
+    <tr><td><strong>Smart Contract Engineer</strong></td><td>VestoEscrow deployment, verification, audit remediation, V2 pool contracts</td><td>0.5</td></tr>
+    <tr><td><strong>Backend Engineer</strong></td><td>Supabase schema, Edge Functions, onchain event listener, KYC API integration</td><td>1.0</td></tr>
+    <tr><td><strong>Operations / Admin</strong></td><td>KYC review queue, invoice oversight, dispute resolution, seller onboarding support</td><td>0.5</td></tr>
+    <tr><td><strong>Legal Counsel</strong></td><td>Securities opinion, privacy policy, terms of service, KYC regulatory compliance</td><td>0.2 (external)</td></tr>
+    <tr><td><strong>Security Auditor</strong></td><td>Smart contract audit, bug bounty setup, security review of Supabase RLS policies</td><td>Sprint 6 only (external)</td></tr>
+  </tbody>
+</table>
+
+<!-- COST ESTIMATES -->
+<h2>6. Cost Estimates — V1</h2>
+
+<table>
+  <thead><tr><th>Item</th><th>Provider</th><th>Estimated Monthly</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Supabase</strong></td><td>Supabase</td><td>$25/month</td><td>Pro tier: 8GB database, 100GB storage, 2M Edge Function invocations</td></tr>
+    <tr><td><strong>Frontend hosting</strong></td><td>Netlify</td><td>$19/month</td><td>Pro tier: team access, 1TB bandwidth, branch deploys</td></tr>
+    <tr><td><strong>KYC API</strong></td><td>Smile Identity / Onfido</td><td>$2–5 per verification</td><td>Variable; budget $500/month for V1 (100 verifications)</td></tr>
+    <tr><td><strong>Arc RPC</strong></td><td>Arc public RPC</td><td>$0</td><td>Public RPC for V1; dedicated node in V2 if rate limits hit</td></tr>
+    <tr><td><strong>Monitoring</strong></td><td>Sentry</td><td>$26/month</td><td>Team plan: error tracking, performance monitoring</td></tr>
+    <tr><td><strong>Smart contract audit</strong></td><td>External (one-time)</td><td>—</td><td>$15,000–$40,000 one-time cost for VestoEscrow.sol</td></tr>
+    <tr><td><strong>Legal opinion</strong></td><td>External (one-time)</td><td>—</td><td>$5,000–$15,000 one-time for securities classification memo</td></tr>
+    <tr><td><strong>Total recurring V1</strong></td><td></td><td>~$600/month</td><td>At $50k/month volume, platform fee revenue ($1,400) > infrastructure costs</td></tr>
+  </tbody>
+</table>
+
+<!-- LAUNCH CHECKLIST -->
+<h2>7. Launch Checklist (25 items)</h2>
+
+<div class="checklist">
+  <div class="checklist-item"><div class="checklist-box"></div><div class="checklist-text"><strong>Contract audit complete</strong> — no open Critical or High findings</div></div>
+  <div class="checklist-item"><div class="checklist-box"></div><div class="checklist-text"><strong>Contract source verified</strong> on Arc Mainnet explorer</div></div>
+  <div class="checklist-item"><div class="checklist-box"></div><div class="checklist-text"><strong>Admin key is hardware wallet</strong> — Ledger or Trezor, not hot key</div></div>
+  <div class="checklist-item"><div class="checklist-box"></div><div class="checklist-text"><strong>TVL cap set</strong> — $50,000 max escrow in V1 contract</div></div>
+  <div class="checklist-item"><div class="checklist-box"></div><div class="checklist-text"><strong>Legal opinion received</strong> on securities classification</div></div>
+  <div class="checklist-item"><div class="checklist-box"></div><div class="checklist-text"><strong>Privacy policy published</strong> and linked from footer</div></div>
+  <div class="checklist-item"><div class="checklist-box"></div><div class="checklist-text"><strong>Terms of service published</strong> and linked from sign-up</div></div>
+  <div class="checklist-item"><div class="checklist-box"></div><div class="checklist-text"><strong>GDPR data deletion</strong> workflow tested end-to-end</div></div>
+  <div class="checklist-item"><div class="checklist-box"></div><div class="checklist-text"><strong>Supabase RLS policies verified</strong> — cross-role data leakage tested</div></div>
+  <div class="checklist-item"><div class="checklist-box"></div><div class="checklist-text"><strong>KYC API live</strong> and webhook confirmed on production environment</div></div>
+  <div class="checklist-item"><div class="checklist-box"></div><div class="checklist-text"><strong>Onchain event listener running</strong> — Supabase sync latency &lt;15s</div></div>
+  <div class="checklist-item"><div class="checklist-box"></div><div class="checklist-text"><strong>Admin TOTP live</strong> — demo passcode removed</div></div>
+  <div class="checklist-item"><div class="checklist-box"></div><div class="checklist-text"><strong>End-to-end test on mainnet</strong> — real USDC, real seller, real lender</div></div>
+  <div class="checklist-item"><div class="checklist-box"></div><div class="checklist-text"><strong>Mobile QA complete</strong> — iPhone SE, Galaxy S22 tested</div></div>
+  <div class="checklist-item"><div class="checklist-box"></div><div class="checklist-text"><strong>Lighthouse score ≥85 Performance</strong>, ≥90 Accessibility</div></div>
+  <div class="checklist-item"><div class="checklist-box"></div><div class="checklist-text"><strong>Sentry monitoring live</strong> — test alert received</div></div>
+  <div class="checklist-item"><div class="checklist-box"></div><div class="checklist-text"><strong>Bundle size &lt;500KB gzipped</strong> — code splitting confirmed</div></div>
+  <div class="checklist-item"><div class="checklist-box"></div><div class="checklist-text"><strong>Risk disclosure accepted gate</strong> — lender cannot bypass</div></div>
+  <div class="checklist-item"><div class="checklist-box"></div><div class="checklist-text"><strong>Credit limit enforcement tested</strong> — cannot exceed limit onchain or off</div></div>
+  <div class="checklist-item"><div class="checklist-box"></div><div class="checklist-text"><strong>Dispute resolution tested</strong> — both refund-lender and pay-seller paths confirmed</div></div>
+  <div class="checklist-item"><div class="checklist-box"></div><div class="checklist-text"><strong>Bug bounty program live</strong> on Immunefi (minimum $1,000 reward for critical)</div></div>
+  <div class="checklist-item"><div class="checklist-box"></div><div class="checklist-text"><strong>Incident response plan written</strong> — who does what if contract is exploited</div></div>
+  <div class="checklist-item"><div class="checklist-box"></div><div class="checklist-text"><strong>5 pre-committed lenders</strong> ready to deploy capital on day 1</div></div>
+  <div class="checklist-item"><div class="checklist-box"></div><div class="checklist-text"><strong>3 pre-verified sellers</strong> with invoices ready for marketplace listing</div></div>
+  <div class="checklist-item"><div class="checklist-box"></div><div class="checklist-text"><strong>Go/no-go sign-off</strong> from product, legal, and security leads</div></div>
+</div>
+
+<div class="divider"></div>
+<div class="footnote">Vesto Implementation Plan &amp; Roadmap · Version 1.0 · September 2026 · Confidential — for authorised recipients only. Timeline estimates are illustrative and subject to revision based on team capacity and external dependencies. Cost estimates are approximations and may vary based on usage and negotiated contracts.</div>
+
+</body>
+</html>

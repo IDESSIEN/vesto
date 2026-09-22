@@ -2,10 +2,62 @@ import React, { useState, useRef, useEffect } from 'react';
 import { ConnectKitButton } from 'connectkit';
 import { useApp } from '../../context/AppContext';
 
+const SellerIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="1" y="4" width="12" height="9" rx="1.5"/><path d="M4 4V3a3 3 0 0 1 6 0v1"/><path d="M7 8v2"/>
+  </svg>
+);
+const LenderIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="1" y="5" width="12" height="8" rx="1.5"/><path d="M1 8h12"/><path d="M4 2h6"/><path d="M2 5V3.5A1.5 1.5 0 0 1 3.5 2h7A1.5 1.5 0 0 1 12 3.5V5"/>
+  </svg>
+);
+const AdminIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M7 1L2 3.5v3.5C2 10.09 4.24 12.81 7 13c2.76-.19 5-2.91 5-6V3.5L7 1z"/>
+    <path d="M5 7l1.5 1.5L9 5.5"/>
+  </svg>
+);
+const ChevronIcon = ({ up }: { up?: boolean }) => (
+  <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    {up ? <path d="M2 7.5l3.5-3 3.5 3"/> : <path d="M2 3.5l3.5 3 3.5-3"/>}
+  </svg>
+);
+const LogoutIcon = () => (
+  <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M5.5 13H2.5A1.5 1.5 0 0 1 1 11.5v-8A1.5 1.5 0 0 1 2.5 2h3"/><path d="M10 10.5l3.5-3-3.5-3"/><path d="M13.5 7.5H5.5"/>
+  </svg>
+);
+const SuccessIcon = () => (
+  <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="6.5" cy="6.5" r="5.5"/><path d="M4 6.5l2 2 3-3"/>
+  </svg>
+);
+const WarningIcon = () => (
+  <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M6.5 1L1 11h11L6.5 1z"/><path d="M6.5 5v3"/><circle cx="6.5" cy="9.5" r="0.6" fill="currentColor"/>
+  </svg>
+);
+const InfoIcon = () => (
+  <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="6.5" cy="6.5" r="5.5"/><path d="M6.5 5.5v4"/><circle cx="6.5" cy="3.8" r="0.6" fill="currentColor"/>
+  </svg>
+);
+
 export const Navbar: React.FC = () => {
   const { currentRole, setCurrentRole, notification, sellerOnboarded, lenderOnboarded, adminOnboarded, seller, lender, signOut } = useApp();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [roleOpen, setRoleOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const roleRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (roleRef.current && !roleRef.current.contains(e.target as Node)) setRoleOpen(false);
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
 
   const isAuthenticated =
     (currentRole === 'seller' && sellerOnboarded) ||
@@ -20,7 +72,6 @@ export const Navbar: React.FC = () => {
   const rawInitials = displayName.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
   const initials = rawInitials || currentRole[0].toUpperCase();
 
-  // Close menu on outside click
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) setMenuOpen(false);
@@ -30,145 +81,187 @@ export const Navbar: React.FC = () => {
   }, []);
 
   const roles = [
-    { id: 'seller' as const, label: 'Seller',  icon: 'storefront' },
-    { id: 'lender' as const, label: 'Lender',  icon: 'account_balance' },
-    { id: 'admin'  as const, label: 'Admin',   icon: 'admin_panel_settings' },
+    { id: 'seller' as const, label: 'Seller', Icon: SellerIcon },
+    { id: 'lender' as const, label: 'Lender', Icon: LenderIcon },
+    { id: 'admin'  as const, label: 'Admin',  Icon: AdminIcon  },
   ];
 
+  const ActiveIcon = roles.find(r => r.id === currentRole)?.Icon ?? SellerIcon;
+
   return (
-    <header className="sticky top-0 z-40 shadow-nav" style={{ background: 'var(--accent)' }}>
+    <header className="sticky top-0 z-40" style={{
+      background: 'var(--accent)',
+      boxShadow: '0 1px 0 rgba(255,255,255,0.07), 0 4px 24px rgba(10,22,40,0.22)',
+    }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center h-18 gap-4">
+        <div className="flex items-center gap-4" style={{ height: '62px' }}>
 
           {/* Logo */}
           <div
-            className="flex items-center gap-3 cursor-pointer select-none shrink-0"
+            className="flex items-center gap-2.5 cursor-pointer select-none shrink-0"
             onClick={() => setCurrentRole('seller')}
           >
-            {/* Gold mark */}
             <div
-              className="w-9 h-9 rounded-xl flex items-center justify-center shadow-gold shrink-0"
-              style={{ background: 'linear-gradient(135deg, #C9922A 0%, #E8B96A 100%)' }}
+              className="flex items-center justify-center shrink-0"
+              style={{
+                width: '34px', height: '34px',
+                background: 'linear-gradient(135deg,#C9922A,#E8B96A)',
+                borderRadius: '9px',
+                boxShadow: '0 2px 8px rgba(201,146,42,0.35)',
+              }}
             >
-              <span className="font-headline font-bold text-white text-lg leading-none" style={{ letterSpacing: '-0.02em' }}>
-                V
-              </span>
+              <span style={{ fontFamily: 'Space Grotesk, sans-serif', fontWeight: 800, color: '#fff', fontSize: '17px', letterSpacing: '-0.04em', lineHeight: 1 }}>V</span>
             </div>
-            <div className="flex flex-col leading-none">
-              <span
-                className="font-headline font-bold text-xl tracking-tight text-white"
-                style={{ letterSpacing: '-0.03em' }}
-              >
-                VESTO
-              </span>
-              <span
-                className="text-[9px] uppercase tracking-[0.12em] font-semibold mt-0.5"
-                style={{ color: 'var(--gold-light)' }}
-              >
-                Invoice Capital, Onchain
-              </span>
+            <div style={{ lineHeight: 1 }}>
+              <div style={{ fontFamily: 'Space Grotesk, sans-serif', fontWeight: 800, color: '#fff', fontSize: '18px', letterSpacing: '-0.04em' }}>VESTO</div>
+              <div style={{ fontSize: '8px', letterSpacing: '0.13em', fontWeight: 600, color: 'var(--gold-light)', textTransform: 'uppercase', marginTop: '2px' }}>Invoice Capital, Onchain</div>
             </div>
           </div>
 
-          {/* Right: Role Switcher + Wallet */}
-          <div className="flex items-center gap-3 ml-auto">
+          {/* Right section */}
+          <div className="flex items-center gap-2 ml-auto">
 
-            {/* Role pill */}
+            {/* Role switcher — desktop (always visible) */}
             <nav
-              className="hidden sm:flex items-center gap-0.5 p-1 rounded-full"
-              style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)' }}
+              className="hidden sm:flex items-center gap-0.5 p-[3px]"
+              style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.10)', borderRadius: '999px' }}
             >
-              {roles.map(({ id, label, icon }) => {
+              {roles.map(({ id, label, Icon }) => {
                 const active = currentRole === id;
                 return (
                   <button
                     key={id}
                     onClick={() => setCurrentRole(id)}
-                    className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 flex items-center gap-1.5 ${
-                      active
-                        ? 'text-primary shadow-sm'
-                        : 'text-white/70 hover:text-white'
-                    }`}
-                    style={active ? { background: 'linear-gradient(135deg, #C9922A 0%, #E8B96A 100%)' } : {}}
+                    className="flex items-center gap-1.5 transition-all duration-150"
+                    style={{
+                      padding: '5px 14px',
+                      borderRadius: '999px',
+                      fontSize: '12px',
+                      fontWeight: active ? 700 : 500,
+                      color: active ? '#0A1628' : 'rgba(255,255,255,0.65)',
+                      background: active ? 'linear-gradient(135deg,#C9922A,#E8B96A)' : 'transparent',
+                      letterSpacing: active ? '-0.01em' : '0',
+                    }}
                   >
-                    <span className="material-symbols-outlined text-[15px]">{icon}</span>
+                    <Icon />
                     <span>{label}</span>
                   </button>
                 );
               })}
             </nav>
 
-            {/* Mobile role pills (icons only) */}
-            <nav
-              className="flex sm:hidden items-center gap-0.5 p-1 rounded-full"
-              style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)' }}
-            >
-              {roles.map(({ id, icon }) => {
-                const active = currentRole === id;
-                return (
-                  <button
-                    key={id}
-                    onClick={() => setCurrentRole(id)}
-                    className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${
-                      active ? 'text-primary' : 'text-white/70'
-                    }`}
-                    style={active ? { background: 'linear-gradient(135deg, #C9922A 0%, #E8B96A 100%)' } : {}}
-                  >
-                    <span className="material-symbols-outlined text-[16px]">{icon}</span>
-                  </button>
-                );
-              })}
-            </nav>
+            {/* Role switcher — mobile: tap the active-role icon to expand a dropdown */}
+            <div className="relative flex sm:hidden" ref={roleRef}>
+              <button
+                onClick={() => setRoleOpen(o => !o)}
+                style={{
+                  width: '34px', height: '34px',
+                  borderRadius: '999px',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  color: '#0A1628',
+                  background: 'linear-gradient(135deg,#C9922A,#E8B96A)',
+                  border: 'none',
+                  flexShrink: 0,
+                }}
+                aria-label="Switch role"
+              >
+                <ActiveIcon />
+              </button>
 
-            {/* Wallet button */}
+              {roleOpen && (
+                <div
+                  className="absolute right-0 top-full z-50 overflow-hidden"
+                  style={{
+                    marginTop: '8px',
+                    background: '#0D1824',
+                    border: '1px solid rgba(255,255,255,0.12)',
+                    borderRadius: '13px',
+                    boxShadow: '0 20px 48px rgba(5,11,20,0.55)',
+                    minWidth: '140px',
+                  }}
+                >
+                  {roles.map(({ id, label, Icon }) => {
+                    const active = currentRole === id;
+                    return (
+                      <button
+                        key={id}
+                        onClick={() => { setCurrentRole(id); setRoleOpen(false); }}
+                        className="w-full flex items-center gap-2.5 transition-colors"
+                        style={{
+                          padding: '11px 16px',
+                          fontSize: '13px',
+                          fontWeight: active ? 700 : 500,
+                          color: active ? '#E9BE68' : 'rgba(255,255,255,0.65)',
+                          background: active ? 'rgba(184,130,30,0.12)' : 'transparent',
+                          borderBottom: '1px solid rgba(255,255,255,0.06)',
+                        }}
+                        onMouseEnter={e => { if (!active) (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.06)'; }}
+                        onMouseLeave={e => { if (!active) (e.currentTarget as HTMLButtonElement).style.background = 'transparent'; }}
+                      >
+                        <Icon />
+                        {label}
+                        {active && (
+                          <svg width="10" height="10" viewBox="0 0 10 10" fill="none" className="ml-auto">
+                            <path d="M1.5 5L3.8 7.5L8.5 2.5" stroke="#E9BE68" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+                          </svg>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+
+            {/* ConnectKit — CSS in index.css collapses to icon-only on mobile */}
             <ConnectKitButton />
 
-            {/* Avatar + Sign Out (only when authenticated) */}
+            {/* Avatar + sign-out */}
             {isAuthenticated && (
               <div className="relative" ref={menuRef}>
                 <button
                   onClick={() => setMenuOpen(o => !o)}
-                  className="flex items-center gap-2 pl-1 pr-2.5 py-1 rounded-full transition-all"
+                  className="flex items-center gap-1.5 transition-all"
                   style={{
-                    background: menuOpen ? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,0.10)',
-                    border: '1px solid rgba(255,255,255,0.18)',
+                    padding: '3px 8px 3px 3px',
+                    borderRadius: '999px',
+                    background: menuOpen ? 'rgba(255,255,255,0.14)' : 'rgba(255,255,255,0.09)',
+                    border: '1px solid rgba(255,255,255,0.15)',
                   }}
                 >
-                  {/* Avatar circle */}
-                  <div
-                    className="w-7 h-7 rounded-full flex items-center justify-center font-headline font-extrabold text-[11px] shrink-0"
-                    style={{ background: 'linear-gradient(135deg,#C9922A,#E8B96A)', color: '#0A1628' }}
-                  >
-                    {initials}
-                  </div>
-                  <span className="hidden sm:block text-white text-xs font-semibold max-w-[80px] truncate">{displayName}</span>
-                  <span className="material-symbols-outlined text-white/70 text-[14px]">
-                    {menuOpen ? 'expand_less' : 'expand_more'}
-                  </span>
+                  <div style={{
+                    width: '26px', height: '26px', borderRadius: '999px',
+                    background: 'linear-gradient(135deg,#C9922A,#E8B96A)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontWeight: 800, fontSize: '10px', color: '#0A1628',
+                    letterSpacing: '-0.01em', flexShrink: 0,
+                  }}>{initials}</div>
+                  <span className="hidden sm:block" style={{ color: '#fff', fontSize: '11.5px', fontWeight: 600, maxWidth: '76px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{displayName}</span>
+                  <span style={{ color: 'rgba(255,255,255,0.55)', display: 'flex', alignItems: 'center' }}><ChevronIcon up={menuOpen} /></span>
                 </button>
 
-                {/* Dropdown */}
                 {menuOpen && (
                   <div
-                    className="absolute right-0 top-full mt-2 w-52 rounded-2xl overflow-hidden z-50"
+                    className="absolute right-0 top-full z-50 overflow-hidden"
                     style={{
-                      background: 'var(--surface-card)',
+                      marginTop: '8px', width: '196px',
+                      background: 'var(--cream)',
                       border: '1px solid var(--border)',
-                      boxShadow: '0 16px 48px rgba(10,22,40,0.18)',
+                      borderRadius: '13px',
+                      boxShadow: '0 20px 48px rgba(10,22,40,0.18)',
                     }}
                   >
-                    {/* User info header */}
-                    <div className="px-4 py-3 border-b" style={{ borderColor: 'var(--border)' }}>
-                      <p className="text-xs font-extrabold text-primary truncate">{displayName}</p>
-                      <p className="text-[10px] text-secondary mt-0.5 capitalize">{currentRole} account</p>
+                    <div style={{ padding: '12px 16px 10px', borderBottom: '1px solid var(--border)' }}>
+                      <p style={{ fontSize: '12px', fontWeight: 700, color: 'var(--ink)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{displayName}</p>
+                      <p style={{ fontSize: '10px', color: 'var(--ink-subtle)', marginTop: '1px', textTransform: 'capitalize' }}>{currentRole} account</p>
                     </div>
-                    {/* Sign out */}
                     <button
                       onClick={() => { setMenuOpen(false); signOut(); }}
-                      className="w-full flex items-center gap-3 px-4 py-3 text-sm font-semibold transition-all hover:bg-red-50 group"
-                      style={{ color: '#DC2626' }}
+                      className="w-full flex items-center gap-2.5 transition-colors"
+                      style={{ padding: '10px 16px', fontSize: '13px', fontWeight: 600, color: '#DC2626' }}
+                      onMouseEnter={e => (e.currentTarget.style.background = 'rgba(220,38,38,0.04)')}
+                      onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
                     >
-                      <span className="material-symbols-outlined text-[18px] group-hover:scale-110 transition-transform">logout</span>
+                      <LogoutIcon />
                       Sign out
                     </button>
                   </div>
@@ -179,27 +272,18 @@ export const Navbar: React.FC = () => {
         </div>
       </div>
 
-      {/* Toast notification strip */}
+      {/* Toast strip */}
       {notification && (
         <div
-          className={`w-full text-center py-2 px-4 text-xs font-semibold flex items-center justify-center gap-2 transition-all duration-300 ${
-            notification.type === 'success'
-              ? 'bg-success-shamrock/90 text-white'
-              : notification.type === 'warning'
-              ? 'text-primary'
-              : 'text-white'
-          }`}
-          style={
-            notification.type === 'warning'
-              ? { background: 'var(--gold-bg)', borderTop: '1px solid var(--gold-light)' }
-              : notification.type === 'info'
-              ? { background: 'rgba(255,255,255,0.10)', borderTop: '1px solid rgba(255,255,255,0.12)' }
-              : {}
-          }
+          className="w-full text-center py-1.5 px-4 flex items-center justify-center gap-2"
+          style={{
+            fontSize: '12px', fontWeight: 600,
+            background: notification.type === 'success' ? 'rgba(4,120,87,0.85)' : notification.type === 'warning' ? 'var(--gold-bg)' : 'rgba(255,255,255,0.08)',
+            borderTop: notification.type === 'warning' ? '1px solid rgba(201,146,42,0.3)' : '1px solid rgba(255,255,255,0.08)',
+            color: notification.type === 'success' ? '#fff' : notification.type === 'warning' ? 'var(--primary)' : '#fff',
+          }}
         >
-          <span className="material-symbols-outlined text-[15px]">
-            {notification.type === 'success' ? 'check_circle' : notification.type === 'warning' ? 'warning' : 'info'}
-          </span>
+          {notification.type === 'success' ? <SuccessIcon /> : notification.type === 'warning' ? <WarningIcon /> : <InfoIcon />}
           <span>{notification.message}</span>
         </div>
       )}

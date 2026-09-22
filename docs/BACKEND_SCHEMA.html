@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Vesto — Backend Schema &amp; Data Architecture</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet"/>
+<style>
+  :root{--canvas:#F8F6F1;--ink:#0D1824;--ink-subtle:#3A4A5C;--ink-muted:#5E6E82;--gold:#B8821E;--gold-bg:rgba(184,130,30,0.08);--gold-border:rgba(184,130,30,0.22);--cream:#FFFFFF;--border:rgba(13,24,36,0.10);--navy:#0D1824;--green:#1A6645;--red:#8C1A1A;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{background:var(--canvas);color:var(--ink);font-family:'Space Grotesk',sans-serif;font-size:14px;line-height:1.6;}
+  body{max-width:900px;margin:0 auto;padding:60px 48px 100px;}
+  @media print{body{padding:20px 32px;max-width:100%;} h2{page-break-before:always;} h2:first-of-type{page-break-before:avoid;} .code-block{page-break-inside:avoid;}}
+  .cover{padding:72px 0 60px;border-bottom:2px solid var(--gold);margin-bottom:56px;}
+  .cover-label{font-size:10px;letter-spacing:0.14em;text-transform:uppercase;font-weight:600;color:var(--gold);margin-bottom:20px;}
+  .cover-title{font-size:48px;font-weight:700;letter-spacing:-0.04em;line-height:1.0;color:var(--ink);margin-bottom:16px;}
+  .cover-sub{font-size:17px;color:var(--ink-subtle);max-width:520px;line-height:1.5;margin-bottom:32px;}
+  .cover-meta{display:flex;gap:40px;flex-wrap:wrap;}
+  .cover-meta-item label{display:block;font-size:9px;text-transform:uppercase;letter-spacing:0.10em;font-weight:600;color:var(--ink-muted);margin-bottom:4px;}
+  .cover-meta-item span{font-size:13px;font-weight:600;color:var(--ink);}
+  h2{font-size:26px;font-weight:700;letter-spacing:-0.03em;color:var(--ink);margin:48px 0 20px;padding-top:8px;border-top:2px solid var(--ink);}
+  h3{font-size:16px;font-weight:600;letter-spacing:-0.015em;color:var(--ink);margin:28px 0 10px;}
+  h4{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.07em;color:var(--ink-muted);margin:20px 0 8px;}
+  p{color:var(--ink-subtle);margin-bottom:12px;font-size:13.5px;line-height:1.65;}
+  strong{color:var(--ink);font-weight:600;}
+  ul{color:var(--ink-subtle);font-size:13.5px;padding-left:20px;margin-bottom:12px;}
+  li{margin-bottom:5px;line-height:1.55;}
+  .code-block{background:var(--navy);color:rgba(255,255,255,0.85);font-family:'JetBrains Mono',monospace;font-size:11px;line-height:1.8;border-radius:11px;padding:22px 24px;margin:18px 0;overflow-x:auto;position:relative;white-space:pre;}
+  .code-block::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#B8821E 30%,#E9BE68 60%,#B8821E 85%,transparent);}
+  .cc{color:rgba(255,255,255,0.30);}
+  .ck{color:#E9BE68;}
+  .ct{color:#93C5FD;}
+  .cs{color:#6EE7B7;}
+  .cn{color:#FDA4AF;}
+  table{width:100%;border-collapse:collapse;margin:20px 0;font-size:12px;}
+  th{background:var(--ink);color:white;padding:9px 12px;text-align:left;font-weight:600;font-size:10.5px;text-transform:uppercase;letter-spacing:0.06em;}
+  td{padding:9px 12px;border-bottom:1px solid var(--border);color:var(--ink-subtle);vertical-align:top;}
+  tr:last-child td{border-bottom:none;}
+  tr:nth-child(even) td{background:rgba(13,24,36,0.025);}
+  td strong{color:var(--ink);}
+  td code{font-family:'JetBrains Mono',monospace;font-size:10.5px;background:rgba(13,24,36,0.07);padding:1px 5px;border-radius:4px;color:var(--ink);}
+  .pull-quote{position:relative;background:var(--navy);color:rgba(255,255,255,0.88);border-radius:13px;padding:28px 32px;margin:32px 0;overflow:hidden;}
+  .pull-quote::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#B8821E 30%,#E9BE68 60%,#B8821E 85%,transparent);}
+  .pull-quote p{color:rgba(255,255,255,0.80);font-size:14px;font-weight:500;line-height:1.6;margin:0;}
+  .pull-quote .quote-attr{font-size:10px;text-transform:uppercase;letter-spacing:0.12em;color:rgba(255,255,255,0.35);margin-top:12px;font-weight:600;}
+  .divider{height:1px;background:var(--border);margin:40px 0;}
+  .footnote{font-size:11px;color:var(--ink-muted);border-top:1px solid var(--border);padding-top:16px;margin-top:60px;}
+  .table-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.10em;color:var(--gold);margin:28px 0 10px;}
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="cover-label">Vesto · Backend Schema &amp; Data Architecture · V1.0</div>
+  <div class="cover-title">Backend Schema<br/>&amp; Data<br/>Architecture</div>
+  <div class="cover-sub">Full Supabase/Postgres schema, RLS policies, Storage bucket structure, Edge Function contracts, onchain sync pattern, and V2/V3 schema evolution.</div>
+  <div class="cover-meta">
+    <div class="cover-meta-item"><label>Backend</label><span>Supabase (Postgres + RLS + Storage + Edge Functions)</span></div>
+    <div class="cover-meta-item"><label>V1 Status</label><span>Schema designed — not yet wired (Sprint 1 of V2)</span></div>
+    <div class="cover-meta-item"><label>V2 Backend</label><span>Postgres + Node.js API (migration path documented)</span></div>
+    <div class="cover-meta-item"><label>Version</label><span>1.0 — September 2026</span></div>
+  </div>
+</div>
+
+<!-- 1. DESIGN PRINCIPLES -->
+<h2>1. Data Architecture Principles</h2>
+
+<div class="pull-quote">
+  <p>Smart contracts handle money. Supabase handles metadata. These two concerns must never bleed into each other. The contract is the source of truth for USDC balances and invoice funding states. Supabase is the source of truth for identity, documents, descriptions, and admin notes. Any sync between them flows one way: onchain events write to Supabase via Edge Functions. Supabase never writes to the contract.</p>
+  <div class="quote-attr">Architectural boundary</div>
+</div>
+
+<h4>What lives where</h4>
+<table>
+  <thead><tr><th>Onchain (VestoEscrow)</th><th>Off-chain (Supabase)</th></tr></thead>
+  <tbody>
+    <tr><td>USDC escrow balances</td><td>Seller and lender profile metadata</td></tr>
+    <tr><td>Invoice funding state (0/1/2/3)</td><td>Invoice description, buyer details, document URLs</td></tr>
+    <tr><td>Pending claim amounts</td><td>KYC documents and verification decisions</td></tr>
+    <tr><td>Event log (InvoiceFunded, PayoutClaimed, etc.)</td><td>Admin notes, dispute records, audit trail</td></tr>
+    <tr><td>Invoice advance amounts</td><td>Risk scores, advance rates, yield percentages</td></tr>
+  </tbody>
+</table>
+
+<!-- 2. CORE TABLES -->
+<h2>2. Core Tables</h2>
+
+<h3>2.1 profiles</h3>
+<div class="code-block"><span class="ck">CREATE TABLE</span> profiles (
+  id              <span class="ct">UUID</span>         <span class="ck">PRIMARY KEY DEFAULT</span> gen_random_uuid(),
+  user_id         <span class="ct">UUID</span>         <span class="ck">REFERENCES</span> auth.users(id) <span class="ck">ON DELETE CASCADE UNIQUE</span>,
+  role            <span class="ct">TEXT</span>         <span class="ck">NOT NULL CHECK</span> (role <span class="ck">IN</span> (<span class="cs">'seller'</span>, <span class="cs">'lender'</span>, <span class="cs">'admin'</span>)),
+  full_name       <span class="ct">TEXT</span>         <span class="ck">NOT NULL</span>,
+  email           <span class="ct">TEXT</span>,
+  wallet_address  <span class="ct">TEXT</span>,         <span class="cc">-- connected EVM wallet</span>
+  created_at      <span class="ct">TIMESTAMPTZ</span>  <span class="ck">DEFAULT NOW()</span>,
+  updated_at      <span class="ct">TIMESTAMPTZ</span>  <span class="ck">DEFAULT NOW()</span>
+);</div>
+
+<h3>2.2 seller_profiles</h3>
+<div class="code-block"><span class="ck">CREATE TABLE</span> seller_profiles (
+  id                  <span class="ct">UUID</span>         <span class="ck">PRIMARY KEY REFERENCES</span> profiles(id) <span class="ck">ON DELETE CASCADE</span>,
+  business_name       <span class="ct">TEXT</span>         <span class="ck">NOT NULL</span>,
+  operating_country   <span class="ct">TEXT</span>         <span class="ck">NOT NULL</span>,
+  category            <span class="ct">TEXT</span>         <span class="ck">NOT NULL</span>,
+  phone_prefix        <span class="ct">TEXT</span>,
+  phone_number        <span class="ct">TEXT</span>,
+  tax_id              <span class="ct">TEXT</span>,
+  verification_tier   <span class="ct">SMALLINT</span>     <span class="ck">NOT NULL DEFAULT</span> <span class="cn">0</span>,   <span class="cc">-- 0, 1, 2</span>
+  kyc_status_tier1    <span class="ct">TEXT</span>         <span class="ck">DEFAULT</span> <span class="cs">'none'</span>,        <span class="cc">-- none|pending|verified|rejected</span>
+  kyc_status_tier2    <span class="ct">TEXT</span>         <span class="ck">DEFAULT</span> <span class="cs">'none'</span>,
+  credit_limit        <span class="ct">NUMERIC(12,2)</span> <span class="ck">NOT NULL DEFAULT</span> <span class="cn">0</span>,
+  used_limit          <span class="ct">NUMERIC(12,2)</span> <span class="ck">NOT NULL DEFAULT</span> <span class="cn">0</span>,
+  total_financed      <span class="ct">NUMERIC(12,2)</span> <span class="ck">NOT NULL DEFAULT</span> <span class="cn">0</span>,
+  tier1_doc_url       <span class="ct">TEXT</span>,
+  tier2_doc_url       <span class="ct">TEXT</span>,
+  tier2_video_url     <span class="ct">TEXT</span>,
+  bank_statement_url  <span class="ct">TEXT</span>
+);</div>
+
+<h3>2.3 lender_profiles</h3>
+<div class="code-block"><span class="ck">CREATE TABLE</span> lender_profiles (
+  id                  <span class="ct">UUID</span>         <span class="ck">PRIMARY KEY REFERENCES</span> profiles(id) <span class="ck">ON DELETE CASCADE</span>,
+  account_type        <span class="ct">TEXT</span>         <span class="ck">NOT NULL DEFAULT</span> <span class="cs">'individual'</span>,
+  investor_tier       <span class="ct">TEXT</span>         <span class="ck">DEFAULT</span> <span class="cs">'retail'</span>,
+  target_allocation   <span class="ct">NUMERIC(12,2)</span> <span class="ck">DEFAULT</span> <span class="cn">0</span>,
+  total_invested      <span class="ct">NUMERIC(12,2)</span> <span class="ck">DEFAULT</span> <span class="cn">0</span>,
+  total_yield_earned  <span class="ct">NUMERIC(12,2)</span> <span class="ck">DEFAULT</span> <span class="cn">0</span>,
+  risk_accepted       <span class="ct">BOOLEAN</span>      <span class="ck">DEFAULT FALSE</span>,
+  risk_accepted_at    <span class="ct">TIMESTAMPTZ</span>,
+  auto_invest_enabled <span class="ct">BOOLEAN</span>      <span class="ck">DEFAULT FALSE</span>
+);</div>
+
+<h3>2.4 invoices</h3>
+<div class="code-block"><span class="ck">CREATE TABLE</span> invoices (
+  id                    <span class="ct">UUID</span>         <span class="ck">PRIMARY KEY DEFAULT</span> gen_random_uuid(),
+  seller_id             <span class="ct">UUID</span>         <span class="ck">NOT NULL REFERENCES</span> seller_profiles(id),
+  contract_invoice_id   <span class="ct">BYTEA</span>,        <span class="cc">-- bytes32 hash used onchain</span>
+  buyer_name            <span class="ct">TEXT</span>         <span class="ck">NOT NULL</span>,
+  buyer_tax_id          <span class="ct">TEXT</span>,
+  buyer_country         <span class="ct">TEXT</span>,
+  amount                <span class="ct">NUMERIC(12,2)</span> <span class="ck">NOT NULL</span>,
+  advance_rate_pct      <span class="ct">SMALLINT</span>     <span class="ck">NOT NULL</span>,       <span class="cc">-- 85 or 90</span>
+  advance_amount        <span class="ct">NUMERIC(12,2)</span> <span class="ck">NOT NULL</span>,
+  fee_pct               <span class="ct">NUMERIC(5,2)</span>  <span class="ck">NOT NULL DEFAULT</span> <span class="cn">2.0</span>,
+  fee_amount            <span class="ct">NUMERIC(12,2)</span> <span class="ck">NOT NULL</span>,
+  expected_yield_pct    <span class="ct">NUMERIC(5,2)</span>,
+  due_date              <span class="ct">DATE</span>         <span class="ck">NOT NULL</span>,
+  term_days             <span class="ct">SMALLINT</span>,
+  risk_tier             <span class="ct">TEXT</span>,         <span class="cc">-- A+, A, B+, B</span>
+  risk_score            <span class="ct">SMALLINT</span>,     <span class="cc">-- 0-100</span>
+  status                <span class="ct">TEXT</span>         <span class="ck">NOT NULL DEFAULT</span> <span class="cs">'pending_admin_approval'</span>,
+  doc_name              <span class="ct">TEXT</span>,
+  doc_url               <span class="ct">TEXT</span>,
+  funded_by_lender_id   <span class="ct">UUID</span>         <span class="ck">REFERENCES</span> lender_profiles(id),
+  funded_at             <span class="ct">TIMESTAMPTZ</span>,
+  repaid_at             <span class="ct">TIMESTAMPTZ</span>,
+  flag_reason           <span class="ct">TEXT</span>,
+  seller_verification_tier <span class="ct">SMALLINT</span>,
+  created_at            <span class="ct">TIMESTAMPTZ</span>  <span class="ck">DEFAULT NOW()</span>,
+  updated_at            <span class="ct">TIMESTAMPTZ</span>  <span class="ck">DEFAULT NOW()</span>
+);
+<span class="ck">CREATE INDEX</span> idx_invoices_seller_id   <span class="ck">ON</span> invoices(seller_id);
+<span class="ck">CREATE INDEX</span> idx_invoices_status       <span class="ck">ON</span> invoices(status);
+<span class="ck">CREATE INDEX</span> idx_invoices_funded_by    <span class="ck">ON</span> invoices(funded_by_lender_id);</div>
+
+<h3>2.5 verification_requests</h3>
+<div class="code-block"><span class="ck">CREATE TABLE</span> verification_requests (
+  id                    <span class="ct">UUID</span>         <span class="ck">PRIMARY KEY DEFAULT</span> gen_random_uuid(),
+  seller_id             <span class="ct">UUID</span>         <span class="ck">NOT NULL REFERENCES</span> seller_profiles(id),
+  tier                  <span class="ct">SMALLINT</span>     <span class="ck">NOT NULL CHECK</span> (tier <span class="ck">IN</span> (<span class="cn">1</span>, <span class="cn">2</span>)),
+  document_type         <span class="ct">TEXT</span>         <span class="ck">NOT NULL</span>,
+  document_url          <span class="ct">TEXT</span>,
+  video_url             <span class="ct">TEXT</span>,
+  status                <span class="ct">TEXT</span>         <span class="ck">NOT NULL DEFAULT</span> <span class="cs">'pending'</span>,
+  risk_score_suggested  <span class="ct">SMALLINT</span>,
+  cleanverse_status     <span class="ct">TEXT</span>,         <span class="cc">-- pass | fail | uncertain</span>
+  cleanverse_confidence <span class="ct">NUMERIC(5,2)</span>,
+  cleanverse_reason     <span class="ct">TEXT</span>,
+  submitted_at          <span class="ct">TIMESTAMPTZ</span>  <span class="ck">DEFAULT NOW()</span>,
+  reviewed_at           <span class="ct">TIMESTAMPTZ</span>,
+  reviewed_by           <span class="ct">UUID</span>         <span class="ck">REFERENCES</span> profiles(id)
+);</div>
+
+<h3>2.6 admin_notes</h3>
+<div class="code-block"><span class="ck">CREATE TABLE</span> admin_notes (
+  id            <span class="ct">UUID</span>         <span class="ck">PRIMARY KEY DEFAULT</span> gen_random_uuid(),
+  admin_id      <span class="ct">UUID</span>         <span class="ck">NOT NULL REFERENCES</span> profiles(id),
+  entity_type   <span class="ct">TEXT</span>         <span class="ck">NOT NULL</span>,  <span class="cc">-- 'invoice' | 'verification' | 'dispute'</span>
+  entity_id     <span class="ct">UUID</span>         <span class="ck">NOT NULL</span>,
+  note          <span class="ct">TEXT</span>         <span class="ck">NOT NULL</span>,
+  created_at    <span class="ct">TIMESTAMPTZ</span>  <span class="ck">DEFAULT NOW()</span>
+);
+<span class="ck">CREATE INDEX</span> idx_admin_notes_entity <span class="ck">ON</span> admin_notes(entity_type, entity_id);</div>
+
+<h3>2.7 disputes</h3>
+<div class="code-block"><span class="ck">CREATE TABLE</span> disputes (
+  id              <span class="ct">UUID</span>         <span class="ck">PRIMARY KEY DEFAULT</span> gen_random_uuid(),
+  invoice_id      <span class="ct">UUID</span>         <span class="ck">NOT NULL REFERENCES</span> invoices(id),
+  raised_by_id    <span class="ct">UUID</span>         <span class="ck">NOT NULL REFERENCES</span> profiles(id),
+  raised_by_role  <span class="ct">TEXT</span>         <span class="ck">NOT NULL</span>,
+  reason          <span class="ct">TEXT</span>         <span class="ck">NOT NULL</span>,
+  status          <span class="ct">TEXT</span>         <span class="ck">NOT NULL DEFAULT</span> <span class="cs">'open'</span>,  <span class="cc">-- open | resolved</span>
+  resolution      <span class="ct">TEXT</span>,         <span class="cc">-- refund_lender | pay_seller</span>
+  resolved_by_id  <span class="ct">UUID</span>         <span class="ck">REFERENCES</span> profiles(id),
+  created_at      <span class="ct">TIMESTAMPTZ</span>  <span class="ck">DEFAULT NOW()</span>,
+  resolved_at     <span class="ct">TIMESTAMPTZ</span>
+);</div>
+
+<!-- 3. RLS POLICIES -->
+<h2>3. Row-Level Security Policies</h2>
+
+<div class="code-block"><span class="cc">-- Enable RLS on all tables</span>
+<span class="ck">ALTER TABLE</span> profiles              <span class="ck">ENABLE ROW LEVEL SECURITY</span>;
+<span class="ck">ALTER TABLE</span> seller_profiles       <span class="ck">ENABLE ROW LEVEL SECURITY</span>;
+<span class="ck">ALTER TABLE</span> lender_profiles       <span class="ck">ENABLE ROW LEVEL SECURITY</span>;
+<span class="ck">ALTER TABLE</span> invoices              <span class="ck">ENABLE ROW LEVEL SECURITY</span>;
+<span class="ck">ALTER TABLE</span> verification_requests <span class="ck">ENABLE ROW LEVEL SECURITY</span>;
+<span class="ck">ALTER TABLE</span> admin_notes           <span class="ck">ENABLE ROW LEVEL SECURITY</span>;
+<span class="ck">ALTER TABLE</span> disputes              <span class="ck">ENABLE ROW LEVEL SECURITY</span>;
+
+<span class="cc">-- ── SELLER POLICIES ──────────────────────────────────────────────</span>
+<span class="cc">-- Sellers can only see and edit their own profile</span>
+<span class="ck">CREATE POLICY</span> seller_own_profile <span class="ck">ON</span> seller_profiles
+  <span class="ck">FOR ALL USING</span> (id = (
+    <span class="ck">SELECT</span> id <span class="ck">FROM</span> profiles <span class="ck">WHERE</span> user_id = auth.uid()
+  ));
+
+<span class="cc">-- Sellers can only see their own invoices (+ published marketplace ones)</span>
+<span class="ck">CREATE POLICY</span> seller_own_invoices <span class="ck">ON</span> invoices
+  <span class="ck">FOR SELECT USING</span> (
+    seller_id = (SELECT id FROM profiles WHERE user_id = auth.uid())
+    <span class="ck">OR</span> status = <span class="cs">'published_marketplace'</span>
+  );
+<span class="ck">CREATE POLICY</span> seller_insert_invoices <span class="ck">ON</span> invoices
+  <span class="ck">FOR INSERT WITH CHECK</span> (
+    seller_id = (SELECT id FROM profiles WHERE user_id = auth.uid())
+  );
+
+<span class="cc">-- ── LENDER POLICIES ──────────────────────────────────────────────</span>
+<span class="cc">-- Lenders can see their own profile + published invoices</span>
+<span class="ck">CREATE POLICY</span> lender_marketplace <span class="ck">ON</span> invoices
+  <span class="ck">FOR SELECT USING</span> (status = <span class="cs">'published_marketplace'</span>);
+<span class="ck">CREATE POLICY</span> lender_own_portfolio <span class="ck">ON</span> invoices
+  <span class="ck">FOR SELECT USING</span> (
+    funded_by_lender_id = (SELECT id FROM lender_profiles WHERE id = (
+      SELECT id FROM profiles WHERE user_id = auth.uid()
+    ))
+  );
+
+<span class="cc">-- ── ADMIN POLICIES ───────────────────────────────────────────────</span>
+<span class="cc">-- Admins have full access to all tables</span>
+<span class="ck">CREATE POLICY</span> admin_all_access <span class="ck">ON</span> invoices
+  <span class="ck">FOR ALL USING</span> (
+    EXISTS (SELECT 1 FROM profiles WHERE user_id = auth.uid() AND role = <span class="cs">'admin'</span>)
+  );
+<span class="cc">-- (Same pattern repeated for all tables)</span></div>
+
+<!-- 4. STORAGE BUCKETS -->
+<h2>4. Supabase Storage Buckets</h2>
+
+<table>
+  <thead><tr><th>Bucket</th><th>Path Pattern</th><th>Access</th><th>Contents</th></tr></thead>
+  <tbody>
+    <tr><td><code>kyc-documents</code></td><td><code>{seller_id}/tier{1|2}/{filename}</code></td><td>Seller: own path. Admin: all paths. Lender: none.</td><td>National ID photos, passport scans, tax PIN PDFs, bank statements</td></tr>
+    <tr><td><code>invoice-documents</code></td><td><code>{seller_id}/{invoice_id}/{filename}</code></td><td>Seller: own path. Lender: read published. Admin: all.</td><td>Commercial invoice PDFs, bills of lading, purchase orders</td></tr>
+    <tr><td><code>verification-videos</code></td><td><code>{seller_id}/tier2/selfie_{timestamp}.webm</code></td><td>Seller: own path. Admin: all. Lender: none.</td><td>Tier 2 video selfie recordings</td></tr>
+  </tbody>
+</table>
+
+<p><strong>Retention policy:</strong> KYC documents are retained for the duration of the seller's active account. On account deletion, documents are purged within 30 days per GDPR Article 17. Purge is triggered by a Supabase Edge Function called by the account deletion webhook.</p>
+
+<!-- 5. EDGE FUNCTIONS -->
+<h2>5. Edge Function Contracts</h2>
+
+<h3>5.1 process-verification</h3>
+<p>Triggered by: admin action (approve/reject in VerificationQueue). Updates <code>verification_requests.status</code>, writes to <code>admin_notes</code>, and updates <code>seller_profiles.verification_tier</code> and <code>credit_limit</code> atomically.</p>
+<div class="code-block"><span class="cc">// Input</span>
+{ verification_request_id: <span class="ct">string</span>, action: <span class="cs">'approve'</span> | <span class="cs">'reject'</span>, admin_note?: <span class="ct">string</span> }
+
+<span class="cc">// On approve:</span>
+<span class="cc">// 1. Set verification_requests.status = 'approved'</span>
+<span class="cc">// 2. Set seller_profiles.verification_tier = request.tier</span>
+<span class="cc">// 3. Set seller_profiles.credit_limit = tier === 1 ? 500 : 5000</span>
+<span class="cc">// 4. Set seller_profiles.kyc_status_tier{n} = 'verified'</span>
+<span class="cc">// 5. Insert admin_notes record</span>
+<span class="cc">// 6. Send notification to seller (email / webhook)</span>
+
+<span class="cc">// On reject:</span>
+<span class="cc">// 1. Set verification_requests.status = 'rejected'</span>
+<span class="cc">// 2. Set seller_profiles.kyc_status_tier{n} = 'rejected'</span>
+<span class="cc">// 3. Insert admin_notes with rejection reason</span></div>
+
+<h3>5.2 sync-onchain-event</h3>
+<p>Triggered by: Arc RPC event listener (polling InvoiceFunded, PayoutClaimed, DisputeResolved events). Keeps Supabase invoice status in sync with the contract state.</p>
+<div class="code-block"><span class="cc">// Input: decoded Arc event</span>
+{ event: <span class="cs">'InvoiceFunded'</span> | <span class="cs">'PayoutClaimed'</span> | <span class="cs">'DisputeResolved'</span>, args: <span class="ct">any</span>, txHash: <span class="ct">string</span> }
+
+<span class="cc">// InvoiceFunded → invoices.status = 'funded', invoices.funded_at = now()</span>
+<span class="cc">// PayoutClaimed → invoices.status = 'repaid', invoices.repaid_at = now()</span>
+<span class="cc">// DisputeResolved → invoices.status = 'repaid' | 'flagged'</span></div>
+
+<h3>5.3 aggregate-analytics</h3>
+<p>Triggered by: cron job every 15 minutes. Computes platform-level metrics and writes to <code>platform_analytics</code> materialised view. Served to the admin Analytics Overview screen.</p>
+<div class="code-block"><span class="cc">// Output written to platform_analytics table</span>
+{
+  total_volume_usd:      <span class="ct">number</span>,  <span class="cc">// sum(invoices.amount) where status != 'pending'</span>
+  active_liquidity_usd:  <span class="ct">number</span>,  <span class="cc">// sum(invoices.advance_amount) where status = 'funded'</span>
+  average_yield_apy:     <span class="ct">number</span>,  <span class="cc">// avg(invoices.expected_yield_pct) where status = 'funded'</span>
+  default_rate:          <span class="ct">number</span>,  <span class="cc">// count(disputed) / count(funded)</span>
+  invoices_funded_count: <span class="ct">number</span>,
+  avg_advance_rate:      <span class="ct">number</span>,
+  computed_at:           <span class="ct">string</span>   <span class="cc">// ISO timestamp</span>
+}</div>
+
+<!-- 6. ONCHAIN SYNC -->
+<h2>6. Onchain ↔ Off-chain Sync Pattern</h2>
+
+<div class="code-block"><span class="cc">// Arc event listener (server-side, bun runtime)</span>
+<span class="cc">// Polls logs every 12 seconds (Arc block time ~1s; 12s gives safe backlog)</span>
+
+<span class="ck">const</span> rpcUrl = process.env.RPC_PROXY_BASE_URL
+  + <span class="cs">'/api/rpc/Arc_Testnet?_rpc_token='</span> + process.env.RPC_PROXY_TOKEN;
+
+<span class="ck">const</span> client = createPublicClient({ transport: http(rpcUrl) });
+
+client.watchContractEvent({
+  address: VESTO_ESCROW_ADDRESS,
+  abi: vestoEscrowAbi,
+  onLogs: <span class="ck">async</span> (logs) => {
+    <span class="ck">for</span> (<span class="ck">const</span> log of logs) {
+      <span class="ck">await</span> fetch(<span class="cs">`${SUPABASE_URL}/functions/v1/sync-onchain-event`</span>, {
+        method: <span class="cs">'POST'</span>,
+        headers: { Authorization: <span class="cs">`Bearer ${SUPABASE_SERVICE_KEY}`</span> },
+        body: JSON.stringify({ event: log.eventName, args: log.args, txHash: log.transactionHash })
+      });
+    }
+  }
+});</div>
+
+<!-- 7. V2/V3 EVOLUTION -->
+<h2>7. Schema Evolution — V2 &amp; V3</h2>
+
+<h3>V2 Additions (3–9 months)</h3>
+<div class="code-block"><span class="cc">-- V2: lender pools (pooled capital allocation)</span>
+<span class="ck">CREATE TABLE</span> lender_pools (
+  id                  <span class="ct">UUID</span>         <span class="ck">PRIMARY KEY</span>,
+  name                <span class="ct">TEXT</span>         <span class="ck">NOT NULL</span>,
+  total_capital       <span class="ct">NUMERIC(18,6)</span>,
+  available_capital   <span class="ct">NUMERIC(18,6)</span>,
+  risk_strategy       <span class="ct">TEXT</span>,         <span class="cc">-- conservative | balanced | aggressive</span>
+  min_risk_score      <span class="ct">SMALLINT</span>,
+  max_term_days       <span class="ct">SMALLINT</span>,
+  created_at          <span class="ct">TIMESTAMPTZ</span>  <span class="ck">DEFAULT NOW()</span>
+);
+
+<span class="cc">-- V2: yield accrual ledger</span>
+<span class="ck">CREATE TABLE</span> yield_accrual_ledger (
+  id            <span class="ct">UUID</span>         <span class="ck">PRIMARY KEY</span>,
+  lender_id     <span class="ct">UUID</span>         <span class="ck">REFERENCES</span> lender_profiles(id),
+  invoice_id    <span class="ct">UUID</span>         <span class="ck">REFERENCES</span> invoices(id),
+  gross_pct     <span class="ct">NUMERIC(5,2)</span>,
+  fee_pct       <span class="ct">NUMERIC(5,2)</span>,
+  net_pct       <span class="ct">NUMERIC(5,2)</span>,
+  usdc_earned   <span class="ct">NUMERIC(12,6)</span>,
+  accrued_at    <span class="ct">TIMESTAMPTZ</span>  <span class="ck">DEFAULT NOW()</span>
+);
+
+<span class="cc">-- V2: multi-chain invoice mapping (CCTP)</span>
+<span class="ck">CREATE TABLE</span> multi_chain_invoice_map (
+  invoice_id       <span class="ct">UUID</span>         <span class="ck">REFERENCES</span> invoices(id),
+  chain_id         <span class="ct">BIGINT</span>       <span class="ck">NOT NULL</span>,
+  contract_address <span class="ct">TEXT</span>         <span class="ck">NOT NULL</span>,
+  bridge_tx_hash   <span class="ct">TEXT</span>,
+  status           <span class="ct">TEXT</span>         <span class="ck">DEFAULT</span> <span class="cs">'pending'</span>,
+  <span class="ck">PRIMARY KEY</span> (invoice_id, chain_id)
+);</div>
+
+<h3>V3 Additions (9–18 months)</h3>
+<div class="code-block"><span class="cc">-- V3: tokenised invoices (ERC-1155 NFT registry)</span>
+<span class="ck">CREATE TABLE</span> tokenised_invoices (
+  id              <span class="ct">UUID</span>         <span class="ck">PRIMARY KEY</span>,
+  invoice_id      <span class="ct">UUID</span>         <span class="ck">REFERENCES</span> invoices(id),
+  token_id        <span class="ct">BIGINT</span>       <span class="ck">NOT NULL</span>,
+  token_contract  <span class="ct">TEXT</span>         <span class="ck">NOT NULL</span>,
+  total_supply    <span class="ct">BIGINT</span>       <span class="ck">NOT NULL</span>,  <span class="cc">-- fractional shares</span>
+  minted_at       <span class="ct">TIMESTAMPTZ</span>,
+  redeemed_at     <span class="ct">TIMESTAMPTZ</span>
+);
+
+<span class="cc">-- V3: secondary market order book</span>
+<span class="ck">CREATE TABLE</span> secondary_market_orders (
+  id                <span class="ct">UUID</span>         <span class="ck">PRIMARY KEY</span>,
+  tokenised_inv_id  <span class="ct">UUID</span>         <span class="ck">REFERENCES</span> tokenised_invoices(id),
+  seller_wallet     <span class="ct">TEXT</span>         <span class="ck">NOT NULL</span>,
+  token_amount      <span class="ct">BIGINT</span>       <span class="ck">NOT NULL</span>,
+  ask_price_usdc    <span class="ct">NUMERIC(12,6)</span> <span class="ck">NOT NULL</span>,
+  status            <span class="ct">TEXT</span>         <span class="ck">DEFAULT</span> <span class="cs">'open'</span>,  <span class="cc">-- open|filled|cancelled</span>
+  created_at        <span class="ct">TIMESTAMPTZ</span>  <span class="ck">DEFAULT NOW()</span>
+);</div>
+
+<div class="divider"></div>
+<div class="footnote">Vesto Backend Schema &amp; Data Architecture · Version 1.0 · September 2026 · Confidential</div>
+
+</body>
+</html>

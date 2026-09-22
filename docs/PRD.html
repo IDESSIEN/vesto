@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Vesto — Product Requirements Document</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --canvas: #F8F6F1; --ink: #0D1824; --ink-subtle: #3A4A5C; --ink-muted: #5E6E82;
+    --gold: #B8821E; --gold-bg: rgba(184,130,30,0.08); --gold-border: rgba(184,130,30,0.22);
+    --cream: #FFFFFF; --border: rgba(13,24,36,0.10); --navy: #0D1824;
+    --green: #1A6645; --red: #8C1A1A;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { background: var(--canvas); color: var(--ink); font-family: 'Space Grotesk', sans-serif; font-size: 14px; line-height: 1.6; }
+  body { max-width: 860px; margin: 0 auto; padding: 60px 48px 100px; }
+  @media print {
+    body { padding: 20px 32px; max-width: 100%; }
+    .no-print { display: none; }
+    h2 { page-break-before: always; }
+    h2:first-of-type { page-break-before: avoid; }
+    tr, .row { page-break-inside: avoid; }
+  }
+
+  /* Cover */
+  .cover { padding: 72px 0 60px; border-bottom: 2px solid var(--gold); margin-bottom: 56px; }
+  .cover-label { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 600; color: var(--gold); margin-bottom: 20px; }
+  .cover-title { font-size: 48px; font-weight: 700; letter-spacing: -0.04em; line-height: 1.0; color: var(--ink); margin-bottom: 16px; }
+  .cover-sub { font-size: 17px; color: var(--ink-subtle); max-width: 480px; line-height: 1.5; margin-bottom: 32px; }
+  .cover-meta { display: flex; gap: 40px; flex-wrap: wrap; }
+  .cover-meta-item label { display: block; font-size: 9px; text-transform: uppercase; letter-spacing: 0.10em; font-weight: 600; color: var(--ink-muted); margin-bottom: 4px; }
+  .cover-meta-item span { font-size: 13px; font-weight: 600; color: var(--ink); }
+
+  /* Typography */
+  h2 { font-size: 26px; font-weight: 700; letter-spacing: -0.03em; color: var(--ink); margin: 48px 0 20px; padding-top: 8px; border-top: 2px solid var(--ink); }
+  h3 { font-size: 16px; font-weight: 600; letter-spacing: -0.015em; color: var(--ink); margin: 28px 0 10px; }
+  h4 { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-muted); margin: 20px 0 8px; }
+  p { color: var(--ink-subtle); margin-bottom: 12px; font-size: 13.5px; line-height: 1.65; }
+  strong { color: var(--ink); font-weight: 600; }
+  ul, ol { color: var(--ink-subtle); font-size: 13.5px; padding-left: 20px; margin-bottom: 12px; }
+  li { margin-bottom: 5px; line-height: 1.55; }
+
+  /* Pull quote — cinema ticket style */
+  .pull-quote {
+    position: relative; background: var(--navy); color: rgba(255,255,255,0.88);
+    border-radius: 13px; padding: 28px 32px; margin: 32px 0; overflow: hidden;
+  }
+  .pull-quote::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, #B8821E 30%, #E9BE68 60%, #B8821E 85%, transparent);
+  }
+  .pull-quote p { color: rgba(255,255,255,0.80); font-size: 15px; font-weight: 500; line-height: 1.55; margin: 0; }
+  .pull-quote .quote-attr { font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em; color: rgba(255,255,255,0.35); margin-top: 12px; font-weight: 600; }
+
+  /* Stat row */
+  .stat-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin: 24px 0; }
+  .stat-card { background: white; border: 1px solid var(--border); border-radius: 11px; padding: 20px 20px 16px; position: relative; overflow: hidden; }
+  .stat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--gold); }
+  .stat-card .num { font-family: 'JetBrains Mono', monospace; font-size: 28px; font-weight: 700; letter-spacing: -0.04em; color: var(--ink); }
+  .stat-card .lbl { font-size: 10px; text-transform: uppercase; letter-spacing: 0.09em; font-weight: 600; color: var(--ink-muted); margin-top: 6px; }
+
+  /* Table */
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 12.5px; }
+  th { background: var(--ink); color: white; padding: 10px 14px; text-align: left; font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; }
+  td { padding: 10px 14px; border-bottom: 1px solid var(--border); color: var(--ink-subtle); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:nth-child(even) td { background: rgba(13,24,36,0.025); }
+  td strong { color: var(--ink); }
+
+  /* Badge */
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
+  .badge-p0 { background: rgba(140,26,26,0.10); color: #8C1A1A; border: 1px solid rgba(140,26,26,0.18); }
+  .badge-p1 { background: rgba(184,130,30,0.10); color: #B8821E; border: 1px solid rgba(184,130,30,0.18); }
+  .badge-p2 { background: rgba(13,24,36,0.06); color: var(--ink-muted); border: 1px solid var(--border); }
+  .badge-v1 { background: rgba(26,102,69,0.10); color: #1A6645; border: 1px solid rgba(26,102,69,0.18); }
+  .badge-v2 { background: rgba(67,56,202,0.10); color: #4338CA; border: 1px solid rgba(67,56,202,0.18); }
+  .badge-v3 { background: rgba(184,130,30,0.10); color: #B8821E; border: 1px solid rgba(184,130,30,0.18); }
+
+  /* Persona card */
+  .persona-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin: 24px 0; }
+  .persona-card { background: white; border: 1px solid var(--border); border-radius: 13px; padding: 22px 20px; }
+  .persona-title { font-size: 15px; font-weight: 700; letter-spacing: -0.015em; color: var(--ink); margin-bottom: 4px; }
+  .persona-sub { font-size: 11px; color: var(--gold); font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 14px; }
+  .persona-label { font-size: 9px; text-transform: uppercase; letter-spacing: 0.09em; font-weight: 600; color: var(--ink-muted); margin: 10px 0 4px; }
+  .persona-card p { font-size: 12px; color: var(--ink-subtle); margin: 0; line-height: 1.5; }
+
+  /* KPI table */
+  .kpi-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 12px; margin: 20px 0; }
+  .kpi-item { background: white; border: 1px solid var(--border); border-radius: 9px; padding: 14px 16px; }
+  .kpi-item .kpi-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.09em; font-weight: 600; color: var(--ink-muted); margin-bottom: 4px; }
+  .kpi-item .kpi-value { font-size: 13px; font-weight: 600; color: var(--ink); }
+  .kpi-item .kpi-target { font-size: 11px; color: var(--green); font-weight: 500; margin-top: 2px; }
+
+  /* Section divider */
+  .divider { height: 1px; background: var(--border); margin: 40px 0; }
+
+  /* Footnote */
+  .footnote { font-size: 11px; color: var(--ink-muted); border-top: 1px solid var(--border); padding-top: 16px; margin-top: 60px; }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-label">Vesto · Product Requirements Document · V1.0</div>
+  <div class="cover-title">Product<br/>Requirements<br/>Document</div>
+  <div class="cover-sub">Onchain invoice financing for frontier-market exporters. USDC-settled on Arc, built for the $1.5 trillion SME trade finance gap.</div>
+  <div class="cover-meta">
+    <div class="cover-meta-item"><label>Version</label><span>1.0 — September 2026</span></div>
+    <div class="cover-meta-item"><label>Status</label><span>Draft for Review</span></div>
+    <div class="cover-meta-item"><label>Scope</label><span>V1 Production + V2/V3 Roadmap</span></div>
+    <div class="cover-meta-item"><label>Network</label><span>Arc Testnet → Arc Mainnet</span></div>
+  </div>
+</div>
+
+<!-- 1. EXECUTIVE SUMMARY -->
+<h2>1. Executive Summary</h2>
+
+<div class="pull-quote">
+  <p>Seventy percent of SME exporters in sub-Saharan Africa and South-East Asia are rejected for trade finance by traditional banks. The gap is not credit risk — it is infrastructure. Vesto replaces the correspondent-bank stack with a three-party onchain protocol: verified seller, lender deploying capital, Arc settling USDC in under one second.</p>
+  <div class="quote-attr">Vesto Thesis</div>
+</div>
+
+<p>Vesto is a non-custodial invoice financing marketplace that connects verified SME exporters (Sellers) with yield-seeking capital providers (Lenders) through a USDC-denominated escrow contract on Arc. Sellers receive immediate cash advances against unpaid invoices. Lenders earn 12–18% net APY on short-duration, asset-backed trade receivables. Platform operations are governed by an Admin role that manages KYC verification and dispute resolution.</p>
+
+<div class="stat-row">
+  <div class="stat-card"><div class="num">$1.5T</div><div class="lbl">Global SME trade finance gap</div></div>
+  <div class="stat-card"><div class="num">85–90%</div><div class="lbl">Advance rate for verified sellers</div></div>
+  <div class="stat-card"><div class="num">&lt;1s</div><div class="lbl">Arc onchain settlement finality</div></div>
+</div>
+
+<h3>1.1 Problem</h3>
+<p>SME exporters in frontier markets issue invoices with 30–90 day payment terms. During that window, working capital is locked — unable to fund new production, pay suppliers, or scale. Traditional invoice factoring requires weeks of bank paperwork, charges 5–8% fees, and excludes exporters without formal banking relationships.</p>
+
+<h3>1.2 Solution</h3>
+<p>Vesto digitises the trade receivable, verifies the seller via a tiered KYC process, lists the invoice on an onchain marketplace, and settles the advance in USDC within 24 hours of admin approval. Repayment happens when the buyer pays the seller, who then marks the invoice settled, triggering lender payout from escrow.</p>
+
+<h3>1.3 North-Star Metric</h3>
+<p><strong>Total USDC advanced per month</strong> — the single number that captures whether Vesto is actually putting capital in the hands of exporters. Supporting metrics: lender deployment rate (%), average time-to-advance (hours), and platform fee revenue.</p>
+
+<!-- 2. PERSONAS -->
+<h2>2. User Personas</h2>
+
+<div class="persona-grid">
+  <div class="persona-card">
+    <div class="persona-title">Amara Osei</div>
+    <div class="persona-sub">The Seller</div>
+    <div class="persona-label">Profile</div>
+    <p>Agri-exporter, Ghana. Supplies fresh produce to EU supermarket chains. Issues €40k–€200k invoices on 60-day terms. Has a smartphone, M-Pesa, and a USDC wallet.</p>
+    <div class="persona-label">Job to be Done</div>
+    <p>Convert unpaid invoices into USDC within 24 hours to fund the next harvest cycle without selling equity or pledging land.</p>
+    <div class="persona-label">Frustrations</div>
+    <p>Banks demand 3 years of audited accounts. Factoring firms charge 8%. Wire transfers take 5 days. No bank account in buyer's country.</p>
+  </div>
+  <div class="persona-card">
+    <div class="persona-title">Priya Nambiar</div>
+    <div class="persona-sub">The Lender</div>
+    <div class="persona-label">Profile</div>
+    <p>Singapore-based DeFi investor. Holds USDC across Base and Arc. Earns 5% in traditional yield vaults. Seeks higher yield on short-duration, real-world assets.</p>
+    <div class="persona-label">Job to be Done</div>
+    <p>Deploy idle USDC at 12–18% net APY on 30–90 day terms with transparent risk scoring and onchain settlement proof.</p>
+    <div class="persona-label">Frustrations</div>
+    <p>DeFi yields have compressed. TradFi RWA products require KYC to the protocol level. No transparency on underlying asset quality.</p>
+  </div>
+  <div class="persona-card">
+    <div class="persona-title">Kwame Asante</div>
+    <div class="persona-sub">The Admin</div>
+    <div class="persona-label">Profile</div>
+    <p>Vesto operations team. Reviews KYC submissions, approves invoices, manages disputes, monitors platform health. Works from a desktop admin dashboard.</p>
+    <div class="persona-label">Job to be Done</div>
+    <p>Review and approve sellers and invoices within 2 hours. Maintain audit trail. Resolve disputes fairly and quickly. Monitor platform risk in real time.</p>
+    <div class="persona-label">Frustrations</div>
+    <p>Manual review queues pile up. No audit trail on decisions. Disputes have no structured resolution workflow. Analytics are scattered across spreadsheets.</p>
+  </div>
+</div>
+
+<!-- 3. FEATURE MATRIX -->
+<h2>3. Feature Matrix</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Feature</th>
+      <th>Priority</th>
+      <th>V1</th>
+      <th>V2</th>
+      <th>V3</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>Seller sign-up + profile</strong></td><td><span class="badge badge-p0">P0</span></td><td><span class="badge badge-v1">✓</span></td><td></td><td></td></tr>
+    <tr><td><strong>Tier 1 KYC (selfie + ID)</strong></td><td><span class="badge badge-p0">P0</span></td><td><span class="badge badge-v1">✓</span></td><td></td><td></td></tr>
+    <tr><td><strong>Tier 2 KYC (tax PIN + bank statement)</strong></td><td><span class="badge badge-p0">P0</span></td><td><span class="badge badge-v1">✓</span></td><td></td><td></td></tr>
+    <tr><td><strong>Invoice submission + document upload</strong></td><td><span class="badge badge-p0">P0</span></td><td><span class="badge badge-v1">✓</span></td><td></td><td></td></tr>
+    <tr><td><strong>Admin KYC review queue</strong></td><td><span class="badge badge-p0">P0</span></td><td><span class="badge badge-v1">✓</span></td><td></td><td></td></tr>
+    <tr><td><strong>Marketplace listing + risk scoring</strong></td><td><span class="badge badge-p0">P0</span></td><td><span class="badge badge-v1">✓</span></td><td></td><td></td></tr>
+    <tr><td><strong>Lender sign-up + risk disclosure</strong></td><td><span class="badge badge-p0">P0</span></td><td><span class="badge badge-v1">✓</span></td><td></td><td></td></tr>
+    <tr><td><strong>USDC funding via VestoEscrow contract</strong></td><td><span class="badge badge-p0">P0</span></td><td><span class="badge badge-v1">✓</span></td><td></td><td></td></tr>
+    <tr><td><strong>Pull-claim payout for sellers</strong></td><td><span class="badge badge-p0">P0</span></td><td><span class="badge badge-v1">✓</span></td><td></td><td></td></tr>
+    <tr><td><strong>Admin dispute resolution</strong></td><td><span class="badge badge-p0">P0</span></td><td><span class="badge badge-v1">✓</span></td><td></td><td></td></tr>
+    <tr><td><strong>Analytics dashboard (Admin)</strong></td><td><span class="badge badge-p1">P1</span></td><td><span class="badge badge-v1">✓</span></td><td></td><td></td></tr>
+    <tr><td><strong>Batch invoice funding</strong></td><td><span class="badge badge-p1">P1</span></td><td><span class="badge badge-v1">✓</span></td><td></td><td></td></tr>
+    <tr><td><strong>Seller verification status screen</strong></td><td><span class="badge badge-p1">P1</span></td><td><span class="badge badge-v1">✓</span></td><td></td><td></td></tr>
+    <tr><td>Supabase off-chain persistence</td><td><span class="badge badge-p0">P0</span></td><td></td><td><span class="badge badge-v2">V2</span></td><td></td></tr>
+    <tr><td>KYC API integration (Smile Identity / Onfido)</td><td><span class="badge badge-p0">P0</span></td><td></td><td><span class="badge badge-v2">V2</span></td><td></td></tr>
+    <tr><td>Multi-chain USDC via CCTP (Base, Arbitrum)</td><td><span class="badge badge-p1">P1</span></td><td></td><td><span class="badge badge-v2">V2</span></td><td></td></tr>
+    <tr><td>Institutional lender onboarding (whitelisted pools)</td><td><span class="badge badge-p1">P1</span></td><td></td><td><span class="badge badge-v2">V2</span></td><td></td></tr>
+    <tr><td>Yield accrual ledger + auto-reinvest</td><td><span class="badge badge-p1">P1</span></td><td></td><td><span class="badge badge-v2">V2</span></td><td></td></tr>
+    <tr><td>Lender pool contracts (pooled capital allocation)</td><td><span class="badge badge-p2">P2</span></td><td></td><td><span class="badge badge-v2">V2</span></td><td></td></tr>
+    <tr><td>Tokenised invoices as ERC-1155 NFTs</td><td><span class="badge badge-p2">P2</span></td><td></td><td></td><td><span class="badge badge-v3">V3</span></td></tr>
+    <tr><td>Secondary market for invoice tokens</td><td><span class="badge badge-p2">P2</span></td><td></td><td></td><td><span class="badge badge-v3">V3</span></td></tr>
+    <tr><td>Governance token + protocol fee sharing</td><td><span class="badge badge-p2">P2</span></td><td></td><td></td><td><span class="badge badge-v3">V3</span></td></tr>
+    <tr><td>Cross-chain seller identity attestation</td><td><span class="badge badge-p2">P2</span></td><td></td><td></td><td><span class="badge badge-v3">V3</span></td></tr>
+  </tbody>
+</table>
+
+<!-- 4. NON-FUNCTIONAL REQUIREMENTS -->
+<h2>4. Non-Functional Requirements</h2>
+
+<table>
+  <thead><tr><th>Requirement</th><th>Target</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Settlement finality</strong></td><td>&lt;1 second</td><td>Arc Testnet / Mainnet sub-second finality by design</td></tr>
+    <tr><td><strong>Admin review SLA</strong></td><td>&lt;2 hours</td><td>KYC and invoice review; monitored via analytics dashboard</td></tr>
+    <tr><td><strong>Time-to-advance for seller</strong></td><td>&lt;24 hours</td><td>From invoice submission to USDC in wallet</td></tr>
+    <tr><td><strong>Frontend availability</strong></td><td>99.9% uptime</td><td>Netlify CDN; degraded-mode read-only if RPC is unavailable</td></tr>
+    <tr><td><strong>USDC approval UX</strong></td><td>2-step max</td><td>Approve + Fund — no additional confirm dialogs</td></tr>
+    <tr><td><strong>Mobile responsiveness</strong></td><td>All screens</td><td>min-width 320px; tested on iPhone SE and Galaxy S22</td></tr>
+    <tr><td><strong>KYC data retention</strong></td><td>GDPR Article 17</td><td>Right to erasure; documents purged on request within 30 days</td></tr>
+    <tr><td><strong>Contract audit</strong></td><td>Pre-mainnet</td><td>Independent third-party audit required before mainnet deploy</td></tr>
+    <tr><td><strong>Smart contract upgradability</strong></td><td>Non-upgradeable V1</td><td>No proxy pattern in V1; new deploy + migration for V2</td></tr>
+    <tr><td><strong>Bundle size</strong></td><td>&lt;500KB gzipped</td><td>Current: ~1.6MB unminified; code splitting required for V1 production</td></tr>
+    <tr><td><strong>Accessibility</strong></td><td>WCAG 2.1 AA</td><td>Focus-visible rings, ARIA labels, colour contrast ≥4.5:1</td></tr>
+  </tbody>
+</table>
+
+<!-- 5. SUCCESS METRICS -->
+<h2>5. Success Metrics &amp; KPIs</h2>
+
+<h3>5.1 Platform-Level</h3>
+<div class="kpi-grid">
+  <div class="kpi-item"><div class="kpi-label">Total USDC Advanced / Month</div><div class="kpi-value">North-star metric</div><div class="kpi-target">V1 target: $50,000 USDC/month by month 3</div></div>
+  <div class="kpi-item"><div class="kpi-label">Platform Fee Revenue</div><div class="kpi-value">2.0–2.8% of advance amount</div><div class="kpi-target">V1 target: $1,400/month at $50k volume</div></div>
+  <div class="kpi-item"><div class="kpi-label">Invoice Default Rate</div><div class="kpi-value">Target &lt;2%</div><div class="kpi-target">Monitored via dispute/flagged invoice count</div></div>
+  <div class="kpi-item"><div class="kpi-label">Average Time-to-Advance</div><div class="kpi-value">Target &lt;24 hours</div><div class="kpi-target">Measured: invoice submitted → USDC claimed</div></div>
+</div>
+
+<h3>5.2 Seller Metrics</h3>
+<ul>
+  <li><strong>Tier 1 KYC completion rate:</strong> target ≥70% of sign-ups completing Tier 1 within 7 days</li>
+  <li><strong>Invoice approval rate:</strong> target ≥85% of submitted invoices approved by admin</li>
+  <li><strong>Repeat submission rate:</strong> target ≥60% of sellers submit a second invoice within 45 days of first payout</li>
+  <li><strong>Payout claim latency:</strong> target &lt;4 hours from funding to claim transaction</li>
+</ul>
+
+<h3>5.3 Lender Metrics</h3>
+<ul>
+  <li><strong>Capital deployment rate:</strong> target ≥80% of marketplace invoices funded within 48 hours of listing</li>
+  <li><strong>Net APY delivered:</strong> target 12–18% net of 2.8% platform fee</li>
+  <li><strong>Lender retention (90-day):</strong> target ≥70% of lenders reinvest within 90 days</li>
+  <li><strong>Average portfolio duration:</strong> target 45–60 days weighted average</li>
+</ul>
+
+<h3>5.4 Admin Metrics</h3>
+<ul>
+  <li><strong>KYC review time:</strong> target &lt;2 hours median from submission to decision</li>
+  <li><strong>Dispute resolution time:</strong> target &lt;48 hours median from flag to resolution</li>
+  <li><strong>False positive KYC rejection rate:</strong> target &lt;5% (rejections appealed and overturned)</li>
+</ul>
+
+<!-- 6. OUT OF SCOPE V1 -->
+<h2>6. Out of Scope — V1</h2>
+<ul>
+  <li>Fiat on/off ramp integration (users must arrive with USDC)</li>
+  <li>Mobile native app (iOS / Android)</li>
+  <li>Multi-signature admin actions</li>
+  <li>Automated KYC via third-party API (manual review in V1)</li>
+  <li>Pooled lender capital (each invoice funded by a single lender in V1)</li>
+  <li>Cross-chain invoice funding (Arc only in V1)</li>
+  <li>Secondary market for funded positions</li>
+  <li>Governance / protocol token</li>
+  <li>Borrower credit scoring API (risk score is admin-set in V1)</li>
+</ul>
+
+<!-- 7. RISKS -->
+<h2>7. Risk &amp; Mitigation</h2>
+
+<table>
+  <thead><tr><th>Risk</th><th>Probability</th><th>Impact</th><th>Mitigation</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Seller default / buyer non-payment</strong></td><td>Medium</td><td>High</td><td>Tiered KYC, invoice verification, admin flag workflow, dispute resolution. Lenders accept this risk explicitly in risk disclosure.</td></tr>
+    <tr><td><strong>USDC blocklist affecting lender</strong></td><td>Low</td><td>High</td><td>Pull-claim architecture — lender initiates withdrawal; contract does not push. No lender can brick the contract.</td></tr>
+    <tr><td><strong>Smart contract exploit</strong></td><td>Low</td><td>Critical</td><td>ReentrancyGuard, SafeERC20, pull-claim, admin pre-registration, third-party audit before mainnet.</td></tr>
+    <tr><td><strong>KYC document fraud</strong></td><td>Medium</td><td>High</td><td>Cleanverse AI document analysis, manual admin review, two-tier verification with escalating limits.</td></tr>
+    <tr><td><strong>Regulatory classification (securities)</strong></td><td>Medium</td><td>High</td><td>Legal opinion required before mainnet launch in regulated jurisdictions. V1 testnet only.</td></tr>
+    <tr><td><strong>Arc network downtime</strong></td><td>Low</td><td>Medium</td><td>Frontend degrades gracefully; off-chain metadata preserved in Supabase; invoices re-listable after recovery.</td></tr>
+    <tr><td><strong>Admin key compromise</strong></td><td>Low</td><td>Critical</td><td>Multi-sig admin wallet for V2. V1 uses single admin key with hardware wallet requirement.</td></tr>
+    <tr><td><strong>Low lender liquidity at launch</strong></td><td>High</td><td>Medium</td><td>Bootstrapped lender program: team deploys initial capital pool. Invoice listing delayed until minimum pool reached.</td></tr>
+  </tbody>
+</table>
+
+<div class="divider"></div>
+<div class="footnote">Vesto Product Requirements Document · Version 1.0 · September 2026 · Confidential — for authorised recipients only. This document reflects the state of the V1 testnet build and roadmap as of the date above. All figures are targets, not guarantees. This is not a financial prospectus.</div>
+
+</body>
+</html>

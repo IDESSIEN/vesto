@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Vesto — UI/UX Design Brief</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet"/>
+<style>
+  :root{--canvas:#F8F6F1;--ink:#0D1824;--ink-subtle:#3A4A5C;--ink-muted:#5E6E82;--gold:#B8821E;--gold-bg:rgba(184,130,30,0.08);--gold-border:rgba(184,130,30,0.22);--cream:#FFFFFF;--border:rgba(13,24,36,0.10);--navy:#0D1824;--green:#1A6645;--red:#8C1A1A;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{background:var(--canvas);color:var(--ink);font-family:'Space Grotesk',sans-serif;font-size:14px;line-height:1.6;}
+  body{max-width:880px;margin:0 auto;padding:60px 48px 100px;}
+  @media print{body{padding:20px 32px;max-width:100%;} h2{page-break-before:always;} h2:first-of-type{page-break-before:avoid;} .token-grid{page-break-inside:avoid;}}
+  .cover{padding:72px 0 60px;border-bottom:2px solid var(--gold);margin-bottom:56px;}
+  .cover-label{font-size:10px;letter-spacing:0.14em;text-transform:uppercase;font-weight:600;color:var(--gold);margin-bottom:20px;}
+  .cover-title{font-size:48px;font-weight:700;letter-spacing:-0.04em;line-height:1.0;color:var(--ink);margin-bottom:16px;}
+  .cover-sub{font-size:17px;color:var(--ink-subtle);max-width:520px;line-height:1.5;margin-bottom:32px;}
+  .cover-meta{display:flex;gap:40px;flex-wrap:wrap;}
+  .cover-meta-item label{display:block;font-size:9px;text-transform:uppercase;letter-spacing:0.10em;font-weight:600;color:var(--ink-muted);margin-bottom:4px;}
+  .cover-meta-item span{font-size:13px;font-weight:600;color:var(--ink);}
+  h2{font-size:26px;font-weight:700;letter-spacing:-0.03em;color:var(--ink);margin:48px 0 20px;padding-top:8px;border-top:2px solid var(--ink);}
+  h3{font-size:16px;font-weight:600;letter-spacing:-0.015em;color:var(--ink);margin:28px 0 10px;}
+  h4{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.07em;color:var(--ink-muted);margin:20px 0 8px;}
+  p{color:var(--ink-subtle);margin-bottom:12px;font-size:13.5px;line-height:1.65;}
+  strong{color:var(--ink);font-weight:600;}
+  ul,ol{color:var(--ink-subtle);font-size:13.5px;padding-left:20px;margin-bottom:12px;}
+  li{margin-bottom:6px;line-height:1.55;}
+
+  /* Colour tokens */
+  .token-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:20px 0;}
+  .color-token{border-radius:9px;overflow:hidden;border:1px solid var(--border);}
+  .color-swatch{height:56px;}
+  .color-label{padding:8px 10px;background:white;}
+  .color-name{font-size:10px;font-weight:700;color:var(--ink);margin-bottom:2px;}
+  .color-hex{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--ink-muted);}
+  .color-use{font-size:9px;color:var(--ink-muted);margin-top:2px;}
+
+  /* Typography scale */
+  .type-scale{background:white;border:1px solid var(--border);border-radius:13px;padding:24px;margin:20px 0;}
+  .type-row{display:flex;align-items:baseline;gap:20px;padding:10px 0;border-bottom:1px solid var(--border);}
+  .type-row:last-child{border-bottom:none;}
+  .type-spec{font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--ink-muted);min-width:200px;}
+  .type-sample{flex:1;}
+
+  /* Spacing scale */
+  .spacing-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin:16px 0;}
+  .spacing-item{display:flex;flex-direction:column;align-items:flex-start;gap:6px;}
+  .spacing-bar{background:var(--gold);border-radius:2px;height:6px;}
+  .spacing-label{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--ink-muted);}
+
+  /* Component spec box */
+  .component-spec{background:white;border:1px solid var(--border);border-radius:13px;padding:24px;margin:20px 0;}
+  .component-spec h4{margin-top:0;}
+  .spec-row{display:flex;gap:12px;padding:6px 0;border-bottom:1px solid var(--border);align-items:flex-start;}
+  .spec-row:last-child{border-bottom:none;}
+  .spec-prop{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;color:var(--ink);min-width:160px;}
+  .spec-value{font-size:12px;color:var(--ink-subtle);}
+
+  /* Anti-pattern list */
+  .no-list{background:rgba(140,26,26,0.04);border:1.5px solid rgba(140,26,26,0.15);border-radius:11px;padding:20px 22px;margin:20px 0;}
+  .no-list li{color:var(--red);opacity:0.85;}
+  .no-list li strong{color:var(--red);}
+  .yes-list{background:rgba(26,102,69,0.04);border:1.5px solid rgba(26,102,69,0.15);border-radius:11px;padding:20px 22px;margin:20px 0;}
+  .yes-list li{color:var(--green);opacity:0.9;}
+
+  /* Screen spec cards */
+  .screen-spec{background:white;border:1px solid var(--border);border-radius:13px;margin:16px 0;overflow:hidden;}
+  .screen-spec-header{background:var(--ink);color:white;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;}
+  .screen-spec-title{font-size:14px;font-weight:600;letter-spacing:-0.012em;}
+  .screen-spec-role{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.10em;opacity:0.5;}
+  .screen-spec-body{padding:20px;}
+  .screen-spec-body p{font-size:12.5px;margin-bottom:8px;}
+  .screen-spec-body ul{font-size:12px;}
+
+  /* Pull quote */
+  .pull-quote{position:relative;background:var(--navy);color:rgba(255,255,255,0.88);border-radius:13px;padding:28px 32px;margin:32px 0;overflow:hidden;}
+  .pull-quote::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#B8821E 30%,#E9BE68 60%,#B8821E 85%,transparent);}
+  .pull-quote p{color:rgba(255,255,255,0.80);font-size:15px;font-weight:500;line-height:1.55;margin:0;}
+  .pull-quote .quote-attr{font-size:10px;text-transform:uppercase;letter-spacing:0.12em;color:rgba(255,255,255,0.35);margin-top:12px;font-weight:600;}
+
+  table{width:100%;border-collapse:collapse;margin:20px 0;font-size:12.5px;}
+  th{background:var(--ink);color:white;padding:10px 14px;text-align:left;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:0.06em;}
+  td{padding:10px 14px;border-bottom:1px solid var(--border);color:var(--ink-subtle);vertical-align:top;}
+  tr:last-child td{border-bottom:none;}
+  tr:nth-child(even) td{background:rgba(13,24,36,0.025);}
+  td strong{color:var(--ink);}
+  td code{font-family:'JetBrains Mono',monospace;font-size:11px;background:rgba(13,24,36,0.07);padding:1px 6px;border-radius:4px;color:var(--ink);}
+  .divider{height:1px;background:var(--border);margin:40px 0;}
+  .footnote{font-size:11px;color:var(--ink-muted);border-top:1px solid var(--border);padding-top:16px;margin-top:60px;}
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="cover-label">Vesto · UI/UX Design Brief · V1.0</div>
+  <div class="cover-title">UI/UX<br/>Design Brief</div>
+  <div class="cover-sub">Optical design token system, signature component specifications, screen-by-screen direction for all 7 critical flows, and the complete anti-AI-fingerprint ruleset.</div>
+  <div class="cover-meta">
+    <div class="cover-meta-item"><label>Design Philosophy</label><span>Morpho-level intentionality · Vesto identity</span></div>
+    <div class="cover-meta-item"><label>Type Stack</label><span>Space Grotesk · JetBrains Mono</span></div>
+    <div class="cover-meta-item"><label>Base Spacing</label><span>6px grid · optical adjustment</span></div>
+    <div class="cover-meta-item"><label>Version</label><span>1.0 — September 2026</span></div>
+  </div>
+</div>
+
+<!-- 1. DESIGN PHILOSOPHY -->
+<h2>1. Design Philosophy</h2>
+
+<div class="pull-quote">
+  <p>Top-tier UI is the ruthless removal of everything default. Not the addition of clever effects — the removal of every decision that was not made consciously. Vesto should feel expensive, trustworthy, and specifically itself. Never generic DeFi. Never AI-generated. Never safe.</p>
+  <div class="quote-attr">Design principle</div>
+</div>
+
+<p>Vesto's visual identity is grounded in three tensions held in balance:</p>
+<ul>
+  <li><strong>Warmth vs. precision:</strong> Parchment canvas and cream surfaces create warmth. JetBrains Mono tabular numerals and tight letter-spacing create precision. Neither overwhelms the other.</li>
+  <li><strong>Restraint vs. character:</strong> Most of the app is clean, receded, and systematic. Then the cinema-ticket card breaks the system. The dark editorial panel breaks the system. These deliberate breaks create character.</li>
+  <li><strong>Trust vs. momentum:</strong> Financial interfaces must earn trust through density, accuracy, and transparency. But they must also create momentum — the feeling that progress is happening. Progress steps, live status dots, and spring-eased transitions carry this.</li>
+</ul>
+
+<!-- 2. COLOUR TOKENS -->
+<h2>2. Colour Token System</h2>
+
+<div class="token-grid">
+  <div class="color-token"><div class="color-swatch" style="background:#F8F6F1;"></div><div class="color-label"><div class="color-name">Canvas</div><div class="color-hex">#F8F6F1</div><div class="color-use">App background</div></div></div>
+  <div class="color-token"><div class="color-swatch" style="background:#FFFFFF;"></div><div class="color-label"><div class="color-name">Cream</div><div class="color-hex">#FFFFFF</div><div class="color-use">Card surfaces</div></div></div>
+  <div class="color-token"><div class="color-swatch" style="background:#0D1824;"></div><div class="color-label"><div class="color-name">Ink</div><div class="color-hex">#0D1824</div><div class="color-use">Primary text, dark panels</div></div></div>
+  <div class="color-token"><div class="color-swatch" style="background:#3A4A5C;"></div><div class="color-label"><div class="color-name">Ink Subtle</div><div class="color-hex">#3A4A5C</div><div class="color-use">Body text, descriptions</div></div></div>
+  <div class="color-token"><div class="color-swatch" style="background:#5E6E82;"></div><div class="color-label"><div class="color-name">Ink Muted</div><div class="color-hex">#5E6E82</div><div class="color-use">Labels, placeholders</div></div></div>
+  <div class="color-token"><div class="color-swatch" style="background:#8C9BAA;"></div><div class="color-label"><div class="color-name">Ink Faint</div><div class="color-hex">#8C9BAA</div><div class="color-use">Secondary meta text</div></div></div>
+  <div class="color-token"><div class="color-swatch" style="background:#B8821E;"></div><div class="color-label"><div class="color-name">Gold</div><div class="color-hex">#B8821E</div><div class="color-use">Primary CTA, accents</div></div></div>
+  <div class="color-token"><div class="color-swatch" style="background:#E9BE68;"></div><div class="color-label"><div class="color-name">Gold Light</div><div class="color-hex">#E9BE68</div><div class="color-use">Highlights on dark panels</div></div></div>
+  <div class="color-token"><div class="color-swatch" style="background:#1A6645;"></div><div class="color-label"><div class="color-name">Green</div><div class="color-hex">#1A6645</div><div class="color-use">Success, funded, settled</div></div></div>
+  <div class="color-token"><div class="color-swatch" style="background:#8C1A1A;"></div><div class="color-label"><div class="color-name">Red</div><div class="color-hex">#8C1A1A</div><div class="color-use">Error, danger, flagged</div></div></div>
+  <div class="color-token"><div class="color-swatch" style="background:#4338CA;"></div><div class="color-label"><div class="color-name">Purple</div><div class="color-hex">#4338CA</div><div class="color-use">Repaid/settled state</div></div></div>
+  <div class="color-token"><div class="color-swatch" style="background:rgba(13,24,36,0.10);border:1px solid #e0ddd8;"></div><div class="color-label"><div class="color-name">Border</div><div class="color-hex">rgba(13,24,36,0.10)</div><div class="color-use">Default borders</div></div></div>
+</div>
+
+<p><strong>Gold scarcity rule:</strong> Gold appears on: primary CTA buttons, the top strip of dark panels, tier badges, active yield values, and the cinema-ticket card strip. Nowhere else. Every additional gold element dilutes it.</p>
+<p><strong>No pure black, no pure white, no neon:</strong> <code>#000000</code> and <code>#FFFFFF</code> never appear in the UI. Pure black feels cheap; pure white looks clinical. The warmth of <code>#F8F6F1</code> is the emotional foundation.</p>
+
+<!-- 3. TYPOGRAPHY -->
+<h2>3. Typography Scale</h2>
+
+<div class="type-scale">
+  <div class="type-row">
+    <div class="type-spec">Space Grotesk 700<br/>48px / -0.04em / 1.0</div>
+    <div class="type-sample"><span style="font-size:36px;font-weight:700;letter-spacing:-0.04em;color:#0D1824;">Cover heading</span></div>
+  </div>
+  <div class="type-row">
+    <div class="type-spec">Space Grotesk 700<br/>26px / -0.032em / 1.06</div>
+    <div class="type-sample"><span style="font-size:26px;font-weight:700;letter-spacing:-0.032em;color:#0D1824;">Turn unpaid invoices into cash.</span></div>
+  </div>
+  <div class="type-row">
+    <div class="type-spec">Space Grotesk 600<br/>18px / -0.025em / 1.2</div>
+    <div class="type-sample"><span style="font-size:18px;font-weight:600;letter-spacing:-0.025em;color:#0D1824;">Invoice ledger</span></div>
+  </div>
+  <div class="type-row">
+    <div class="type-spec">Space Grotesk 600<br/>15px / -0.018em / 1.35</div>
+    <div class="type-sample"><span style="font-size:15px;font-weight:600;letter-spacing:-0.018em;color:#0D1824;">AgriCo Export Ltd</span></div>
+  </div>
+  <div class="type-row">
+    <div class="type-spec">Space Grotesk 400<br/>13.5px / 0 / 1.65</div>
+    <div class="type-sample"><span style="font-size:13.5px;color:#3A4A5C;">Receive 90% of the invoice face value. Net payout lands within 24 hours of admin approval.</span></div>
+  </div>
+  <div class="type-row">
+    <div class="type-spec">JetBrains Mono 700<br/>30px / -0.04em / 1.0<br/>font-feature-settings: "tnum" 1</div>
+    <div class="type-sample"><span style="font-family:'JetBrains Mono',monospace;font-size:30px;font-weight:700;letter-spacing:-0.04em;color:#0D1824;">$24,750</span></div>
+  </div>
+  <div class="type-row">
+    <div class="type-spec">JetBrains Mono 400<br/>11px / 0 / 1.7<br/>Label / Field label</div>
+    <div class="type-sample"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#5E6E82;text-transform:uppercase;letter-spacing:0.09em;font-weight:600;">ADVANCE AMOUNT</span></div>
+  </div>
+</div>
+
+<p><strong>Tabular numeral rule:</strong> Every money value — balance, yield, advance amount, fee, limit — must have <code>font-variant-numeric: tabular-nums</code> and <code>font-feature-settings: "tnum" 1</code> applied. Numbers that shift width as they update are a trust signal destroyed.</p>
+
+<!-- 4. SPACING -->
+<h2>4. Spacing &amp; Elevation</h2>
+
+<h4>Spacing Grid (6px base)</h4>
+<div class="spacing-grid">
+  <div class="spacing-item"><div class="spacing-bar" style="width:6px;"></div><div class="spacing-label">6px</div></div>
+  <div class="spacing-item"><div class="spacing-bar" style="width:12px;"></div><div class="spacing-label">12px</div></div>
+  <div class="spacing-item"><div class="spacing-bar" style="width:18px;"></div><div class="spacing-label">18px</div></div>
+  <div class="spacing-item"><div class="spacing-bar" style="width:24px;"></div><div class="spacing-label">24px</div></div>
+  <div class="spacing-item"><div class="spacing-bar" style="width:36px;"></div><div class="spacing-label">36px</div></div>
+  <div class="spacing-item"><div class="spacing-bar" style="width:48px;"></div><div class="spacing-label">48px</div></div>
+</div>
+<p><strong>Optical adjustment:</strong> Mathematical grids produce spacious but dead layouts. Tighten spacing between related elements (label → value: 4px). Open spacing between unrelated groups (card → card: 12px; section → section: 28–40px).</p>
+
+<h4>Border Radius Scale</h4>
+<table>
+  <thead><tr><th>Token</th><th>Value</th><th>Used on</th></tr></thead>
+  <tbody>
+    <tr><td><code>--radius-xs</code></td><td>4px</td><td>Badge pills, filter chips inner state</td></tr>
+    <tr><td><code>--radius-sm</code></td><td>7px</td><td>Buttons (small), filter chips, step dots</td></tr>
+    <tr><td><code>--radius-md</code></td><td>9–11px</td><td>Input fields, small cards, metric tiles</td></tr>
+    <tr><td><code>--radius-lg</code></td><td>13–15px</td><td>Form sections, invoice cards, modals</td></tr>
+    <tr><td><code>--radius-xl</code></td><td>20px</td><td>Hero panels, balance card</td></tr>
+    <tr><td><code>--radius-full</code></td><td>9999px</td><td>Avatar chips, live status dots only</td></tr>
+  </tbody>
+</table>
+<p><strong>Never <code>rounded-2xl</code> (16px) by default.</strong> The Tailwind default radius set (rounded, rounded-lg, rounded-2xl, rounded-full) is an AI fingerprint. Every radius in Vesto is chosen for a reason — 9px feels tighter and more deliberate than 12px; 13px feels editorial rather than digital.</p>
+
+<h4>Elevation System (5 levels)</h4>
+<table>
+  <thead><tr><th>Level</th><th>Token</th><th>CSS</th><th>Used on</th></tr></thead>
+  <tbody>
+    <tr><td>E0</td><td><code>--shadow-e0</code></td><td>none</td><td>Flat elements, active press state</td></tr>
+    <tr><td>E1</td><td><code>--shadow-e1</code></td><td>0 1px 3px rgba(13,24,36,0.07), 0 1px 2px rgba(13,24,36,0.04)</td><td>Default cards, form sections</td></tr>
+    <tr><td>E2</td><td><code>--shadow-e2</code></td><td>0 4px 12px rgba(13,24,36,0.10), 0 2px 4px rgba(13,24,36,0.05)</td><td>Hovered cards</td></tr>
+    <tr><td>E3</td><td><code>--shadow-e3</code></td><td>0 8px 24px rgba(13,24,36,0.12), 0 3px 8px rgba(13,24,36,0.06)</td><td>Focused inputs, modals</td></tr>
+    <tr><td>E4</td><td><code>--shadow-e4</code></td><td>0 24px 56px rgba(13,24,36,0.18), 0 8px 20px rgba(13,24,36,0.08)</td><td>Overlays, popovers</td></tr>
+  </tbody>
+</table>
+
+<!-- 5. SIGNATURE COMPONENTS -->
+<h2>5. Signature Components</h2>
+
+<h3>5.1 Cinema-Ticket Balance Card</h3>
+<div class="component-spec">
+  <div class="spec-row"><div class="spec-prop">Background</div><div class="spec-value">linear-gradient(160deg, #0D1824 0%, #1A2A3E 100%)</div></div>
+  <div class="spec-row"><div class="spec-prop">Top strip</div><div class="spec-value">2px linear-gradient(90deg, transparent, #B8821E 30%, #E9BE68 60%, #B8821E 85%, transparent)</div></div>
+  <div class="spec-row"><div class="spec-prop">Grain overlay</div><div class="spec-value">SVG noise texture at 3.5% opacity — .grain-overlay class</div></div>
+  <div class="spec-row"><div class="spec-prop">Dot matrix</div><div class="spec-value">radial-gradient circle dots at rgba(255,255,255,0.035), 22px × 22px grid</div></div>
+  <div class="spec-row"><div class="spec-prop">Perforation</div><div class="spec-value">1px dashed border, rgba(255,255,255,0.15). Notch circles: 20px diameter, canvas colour, left and right edge bleed.</div></div>
+  <div class="spec-row"><div class="spec-prop">Balance number</div><div class="spec-value">JetBrains Mono 700, clamp(44px, 9vw, 66px), letter-spacing -0.045em, tabular numerals</div></div>
+  <div class="spec-row"><div class="spec-prop">Secondary stats</div><div class="spec-value">8px uppercase tracking, rgba(255,255,255,0.30) labels; 13px semibold white values</div></div>
+  <div class="spec-row"><div class="spec-prop">Border radius</div><div class="spec-value">20px — the largest radius in the system. This card is the one exception.</div></div>
+  <div class="spec-row"><div class="spec-prop">DO NOT</div><div class="spec-value">Add a border. Add a hover effect. Make it clickable. Change the gradient. It is a statement, not an interactive element.</div></div>
+</div>
+
+<h3>5.2 Lifted Tab Selector (Morpho pattern)</h3>
+<div class="component-spec">
+  <div class="spec-row"><div class="spec-prop">Container</div><div class="spec-value">background: var(--bg-2) = rgba(13,24,36,0.06); border-radius: 9px; padding: 3px</div></div>
+  <div class="spec-row"><div class="spec-prop">Active tab</div><div class="spec-value">background: white; box-shadow: 0 1px 3px rgba(13,24,36,0.10), 0 1px 2px rgba(13,24,36,0.06); border-radius: 6px</div></div>
+  <div class="spec-row"><div class="spec-prop">Inactive tab</div><div class="spec-value">background: transparent; color: var(--ink-muted); no border</div></div>
+  <div class="spec-row"><div class="spec-prop">DO NOT</div><div class="spec-value">Use a colour change for active state. Use an underline. Use a gold accent. The lift is the signal — clean and physically real.</div></div>
+</div>
+
+<h3>5.3 Split Yield Badge</h3>
+<div class="component-spec">
+  <div class="spec-row"><div class="spec-prop">Net APY (hero)</div><div class="spec-value">JetBrains Mono 700, 20px, #B8821E, letter-spacing -0.025em</div></div>
+  <div class="spec-row"><div class="spec-prop">Label</div><div class="spec-value">"net" — 8px uppercase, rgba(184,130,30,0.50)</div></div>
+  <div class="spec-row"><div class="spec-prop">Secondary line</div><div class="spec-value">"X% gross · 2.8% fee" — 9px medium, rgba(184,130,30,0.50)</div></div>
+  <div class="spec-row"><div class="spec-prop">Container</div><div class="spec-value">linear-gradient gold bg, 1px gold border, border-radius 11px, min-width 68px</div></div>
+  <div class="spec-row"><div class="spec-prop">DO NOT</div><div class="spec-value">Show a blended single APY. Show "APY" not "net". The fee must always be visible — it is a trust signal, not a detractor.</div></div>
+</div>
+
+<h3>5.4 Inline Position Strip</h3>
+<div class="component-spec">
+  <div class="spec-row"><div class="spec-prop">Background</div><div class="spec-value">rgba(26,102,69,0.07)</div></div>
+  <div class="spec-row"><div class="spec-prop">Border</div><div class="spec-value">1px solid rgba(26,102,69,0.18)</div></div>
+  <div class="spec-row"><div class="spec-prop">Border radius</div><div class="spec-value">7px</div></div>
+  <div class="spec-row"><div class="spec-prop">Label</div><div class="spec-value">"Your position" — 9px uppercase green, tracking 0.08em</div></div>
+  <div class="spec-row"><div class="spec-prop">Value</div><div class="spec-value">JetBrains Mono 600, 12px, #1A6645, tabular numerals</div></div>
+  <div class="spec-row"><div class="spec-prop">Visibility rule</div><div class="spec-value">Only shown when lender.id === invoice.fundedByLenderId AND amount > 0</div></div>
+</div>
+
+<h3>5.5 RiskMeter</h3>
+<div class="component-spec">
+  <div class="spec-row"><div class="spec-prop">Bar</div><div class="spec-value">3px height, rounded, rgba(13,24,36,0.08) track, coloured fill at score%</div></div>
+  <div class="spec-row"><div class="spec-prop">Colours</div><div class="spec-value">≥75: #1A6645 (Low risk); ≥50: #B8821E (Medium risk); &lt;50: #8C1A1A (High risk)</div></div>
+  <div class="spec-row"><div class="spec-prop">Score label</div><div class="spec-value">JetBrains Mono 600, 10px, same colour as bar, tabular numerals</div></div>
+  <div class="spec-row"><div class="spec-prop">Tooltip</div><div class="spec-value">Dark panel, 52px width, shows label + score/100 + brief explanation. Appears on hover via onMouseEnter.</div></div>
+  <div class="spec-row"><div class="spec-prop">Transition</div><div class="spec-value">width 0.6s cubic-bezier(0.22,1,0.36,1) — spring-eased fill on mount</div></div>
+</div>
+
+<!-- 6. SCREEN-BY-SCREEN -->
+<h2>6. Screen-by-Screen Direction</h2>
+
+<div class="screen-spec">
+  <div class="screen-spec-header"><span class="screen-spec-title">Seller Dashboard</span><span class="screen-spec-role">Seller</span></div>
+  <div class="screen-spec-body">
+    <p><strong>First 2 seconds:</strong> The balance number. Everything else is secondary. The cinema-ticket hero must dominate the viewport before the fold.</p>
+    <ul>
+      <li>Balance hero: full width, dark gradient, perforation dots, balance number at clamp(44px, 9vw, 66px)</li>
+      <li>Stat tiles (3-col): top accent strip colour-codes the stat (green = escrow, gold = on market, purple = settled)</li>
+      <li>Progress checklist: compact, numbered, single action per step — never crowded</li>
+      <li>Invoice ledger: lifted tab selector. Rows: accent strip left border encodes status colour</li>
+      <li>Empty state: contextual. "Submit your first invoice to get a cash advance." with inline CTA. Not a generic empty-box icon.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="screen-spec">
+  <div class="screen-spec-header"><span class="screen-spec-title">Submit Invoice</span><span class="screen-spec-role">Seller</span></div>
+  <div class="screen-spec-body">
+    <p><strong>First 2 seconds:</strong> The headline. "Turn unpaid invoices into immediate cash." Then the payout breakdown ribbon at the bottom before submit.</p>
+    <ul>
+      <li>Form sections are cream cards with E1 shadow — clearly distinct from canvas</li>
+      <li>Money input: leading $ prefix fixed, JetBrains Mono bold, larger than surrounding fields</li>
+      <li>Upload zone: dashed border turns gold on upload; file icon becomes check</li>
+      <li>Payout breakdown: dark cinema panel, horizontal bar visualisation per row, perforation before net payout hero number</li>
+      <li>Credit limit error: red input field + inline copy explaining upgrade path — never a modal alert</li>
+    </ul>
+  </div>
+</div>
+
+<div class="screen-spec">
+  <div class="screen-spec-header"><span class="screen-spec-title">Marketplace Browse</span><span class="screen-spec-role">Lender</span></div>
+  <div class="screen-spec-body">
+    <p><strong>First 2 seconds:</strong> Total pool volume. Then the invoice cards. The risk meter and yield badge must be scannable at a glance per card.</p>
+    <ul>
+      <li>Pool hero: same cinema-ticket treatment as seller balance card — dark, textured, gold strip</li>
+      <li>Filter chips: pill shape, ink background on active (not gold), scrollable horizontally</li>
+      <li>Invoice cards: left border 3px encodes risk colour. One-liner thesis below seller name. Metrics strip: spacing-separated, no interior borders.</li>
+      <li>Yield badge: top-right of card. Net APY dominant, gross + fee as sub-line.</li>
+      <li>Empty state: "Pool is empty right now. Verified sellers submit invoices every day. Advances typically clear admin review in under 2 hours."</li>
+    </ul>
+  </div>
+</div>
+
+<div class="screen-spec">
+  <div class="screen-spec-header"><span class="screen-spec-title">Funding Modal</span><span class="screen-spec-role">Lender</span></div>
+  <div class="screen-spec-body">
+    <p><strong>First 2 seconds:</strong> Seller name + capital required amount. The 2-step progress indicator must be immediately visible.</p>
+    <ul>
+      <li>Deal facts table: alternating cream rows, green gold on Net APY, fee shown as separate row — never hidden</li>
+      <li>Capital card: dark cinema treatment with mini 2-step progress inside</li>
+      <li>Step indicators: numbered circles, gold = active, green = done, muted = pending</li>
+      <li>Success state: green card with checkmark — no modal close needed, user sees confirmation then modal auto-closes after 3s</li>
+      <li>Insufficient balance: red inset block, not a floating toast. Inline, attached to the modal context.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="screen-spec">
+  <div class="screen-spec-header"><span class="screen-spec-title">Lender Portfolio</span><span class="screen-spec-role">Lender</span></div>
+  <div class="screen-spec-body">
+    <p><strong>First 2 seconds:</strong> Total deployed capital. Then yield tile (split: gross / net / fee). Then position list.</p>
+    <ul>
+      <li>Hero KPI tile: dark gradient with gradient accent bar, large monospaced capital number</li>
+      <li>Yield tile: three-row split. Each row: label left, value right, net APY in gold</li>
+      <li>Position rows: one-liner thesis as subtitle. Per-row yield split. Left border encodes status.</li>
+      <li>Empty state: "Your first advance lands onchain within 24 hours." with browse CTA. Not a generic placeholder.</li>
+      <li>Auto-reinvest toggle: custom pill toggle with spring transition</li>
+      <li>Withdraw modal: amount input pre-filled with full balance. Confirm button gold.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- 7. INTERACTION PRINCIPLES -->
+<h2>7. Interaction Principles</h2>
+
+<h3>Press Affordance</h3>
+<p>Every interactive element must have <code>active:scale-[0.97]</code> on press. This is the single most important interaction tell that separates premium from generic. Duration: 150ms. Never bounce or overshoot (cubic-bezier(0.22,1,0.36,1) spring, not elastic).</p>
+
+<h3>Motion Tokens</h3>
+<table>
+  <thead><tr><th>Token</th><th>Value</th><th>Used on</th></tr></thead>
+  <tbody>
+    <tr><td><code>--ease-spring</code></td><td>cubic-bezier(0.22,1,0.36,1)</td><td>Card hover lift, tab transition, modal entry</td></tr>
+    <tr><td><code>--ease-out</code></td><td>cubic-bezier(0.0,0,0.2,1)</td><td>Bar fills, progress indicators</td></tr>
+    <tr><td><code>--ease-in-out</code></td><td>cubic-bezier(0.4,0,0.6,1)</td><td>Loading spinners, skeleton pulses</td></tr>
+  </tbody>
+</table>
+
+<h3>Empty States</h3>
+<p>Every empty state must be: (1) contextual — explain WHY it's empty and what action will fill it; (2) specific — mention real numbers or timeframes when available; (3) actionable — include a single CTA when there is an obvious next step.</p>
+
+<h3>Loading States</h3>
+<p>Balances and onchain values loading: skeleton block (<code>.skeleton-dark</code> on dark panels, <code>.skeleton</code> on light). Width matches the expected content width. Never show "Loading..." text. The skeleton shape sets expectations about what will appear.</p>
+
+<!-- 8. ANTI-PATTERNS -->
+<h2>8. What NOT to Do</h2>
+
+<h4>Remove immediately if found</h4>
+<div class="no-list"><ul>
+  <li><strong>Material Symbols / Google Icons</strong> — any <code>&lt;span class="material-symbols-outlined"&gt;</code> is a fingerprint. Use inline SVG only.</li>
+  <li><strong>rounded-2xl by default</strong> — Tailwind default. Every element using it looks like every other AI-generated app.</li>
+  <li><strong>Blended APY</strong> — showing "14% APY" without splitting out the platform fee hides information and destroys trust.</li>
+  <li><strong>Generic empty states</strong> — "Nothing here yet" with a grey box icon. Contextual copy only.</li>
+  <li><strong>focus:ring-2 focus:ring-primary</strong> — the default wagmi/ConnectKit focus ring is a blue outline. Use Vesto-token focus rings.</li>
+  <li><strong>h-12 input height</strong> — the Tailwind default. Use custom heights that fit the typographic context.</li>
+  <li><strong>shadow-md / shadow-lg</strong> — use the E1–E4 token system. Generic Tailwind shadows look flat and equal.</li>
+  <li><strong>bg-gray-100 / text-gray-500</strong> — warm neutrals only. Cold grays break the parchment identity.</li>
+  <li><strong>Gradient text</strong> — webkit-background-clip gradients on headings are an AI staple. Plain ink on canvas.</li>
+  <li><strong>Emoji in UI</strong> — no emoji anywhere in the product. SVG icons only.</li>
+</ul></div>
+
+<h4>Always present</h4>
+<div class="yes-list"><ul>
+  <li>Tabular numerals on every money value</li>
+  <li>Letter-spacing -0.025em or tighter on all headings over 15px</li>
+  <li>Left border accent on every status card (3px, colour = status)</li>
+  <li>Gold strip as the first child of every dark editorial panel</li>
+  <li>Grain overlay on every dark panel (not on light surfaces)</li>
+  <li>active:scale-[0.97] on every interactive element</li>
+  <li>Contextual copy on every empty state</li>
+  <li>Split yield display (gross / fee / net) wherever yield is shown</li>
+</ul></div>
+
+<div class="divider"></div>
+<div class="footnote">Vesto UI/UX Design Brief · Version 1.0 · September 2026 · Confidential</div>
+
+</body>
+</html>

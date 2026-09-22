@@ -552,8 +552,97 @@
   .stat-num {
     font-family: 'JetBrains Mono', Menlo, monospace;
     font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum" 1, "kern" 1;
     letter-spacing: -0.03em;
     line-height: 1.00;
+  }
+
+  /* ── Morpho-style tab selector ─────────────────────────────────────
+     Container: .tab-selector
+     Active tab: .tab-selector-item[data-active="true"] or .tab-active
+     Creates the physically-real lifted white pill on a grey container.
+  ──────────────────────────────────────────────────────────────── */
+  .tab-selector {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    padding: 3px;
+    border-radius: 10px;
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+  }
+  .tab-selector-item {
+    padding: 5px 14px;
+    border-radius: 7px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11.5px;
+    font-weight: 500;
+    color: var(--ink-subtle);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: color var(--dur-fast) var(--ease-out);
+    white-space: nowrap;
+    user-select: none;
+  }
+  .tab-selector-item:hover {
+    color: var(--ink-muted);
+  }
+  .tab-selector-item.tab-active {
+    background: var(--cream);
+    color: var(--ink);
+    font-weight: 600;
+    box-shadow: 0 1px 3px rgba(13,24,36,0.09), 0 1px 1px rgba(13,24,36,0.05);
+  }
+
+  /* ── Yield breakdown row (Morpho-style split) ─────────────────── */
+  .yield-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding: 8px 0;
+  }
+  .yield-row + .yield-row {
+    border-top: 1px solid var(--border);
+  }
+  .yield-row-label {
+    font-size: 11px;
+    color: var(--ink-subtle);
+    font-weight: 500;
+  }
+  .yield-row-value {
+    font-family: 'JetBrains Mono', Menlo, monospace;
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum" 1;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  /* ── Position strip (inline lender position on marketplace card) ── */
+  .position-strip {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 7px 12px;
+    border-radius: 7px;
+    background: rgba(26,102,69,0.07);
+    border: 1px solid rgba(26,102,69,0.16);
+    margin-top: 8px;
+  }
+  .position-strip-label {
+    font-size: 10.5px;
+    font-weight: 600;
+    color: var(--success);
+  }
+  .position-strip-value {
+    font-family: 'JetBrains Mono', Menlo, monospace;
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum" 1;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--success);
   }
   .stat-label {
     font-family: 'DM Sans', sans-serif;
@@ -707,6 +796,25 @@
 @keyframes pulse-live {
   0%, 100% { opacity: 1; transform: scale(1); }
   50%       { opacity: 0.5; transform: scale(0.75); }
+}
+
+/* ── ConnectKit mobile: icon only, no text ────────────────────────
+   On small screens, hide the text inside ConnectKit's button so it
+   fits in the navbar. The button itself shrinks to its icon width.
+──────────────────────────────────────────────────────────────── */
+@media (max-width: 639px) {
+  .ck-connectbutton {
+    min-width: 0 !important;
+    padding: 0 !important;
+    border-radius: 999px !important;
+    width: 36px !important;
+    height: 36px !important;
+    overflow: hidden !important;
+  }
+  /* Hide the label text, keep the avatar/icon */
+  .ck-connectbutton span:not([data-testid="avatar"]):not([class*="avatar"]):not([class*="icon"]) {
+    display: none !important;
+  }
 }
 
 /* Legacy animation name kept for backward compat */

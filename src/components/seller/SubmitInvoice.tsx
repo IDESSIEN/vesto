@@ -1,26 +1,57 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
 
+const ArrowLeft = () => (
+  <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M9.5 3L4.5 7.5l5 4.5"/>
+  </svg>
+);
+const ArrowRight = () => (
+  <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M3 6.5h7M7 3l3.5 3.5L7 10"/>
+  </svg>
+);
+const UploadIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M12 16V9"/><path d="M9 12l3-3 3 3"/>
+    <path d="M20 17a4 4 0 0 0-4-4H5.5A3.5 3.5 0 0 0 5 17"/>
+  </svg>
+);
+const FileCheckIcon = () => (
+  <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M13 2H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V9l-5-7z"/>
+    <path d="M13 2v7h7"/><path d="M8 13l2.5 2.5 4-4"/>
+  </svg>
+);
+const LockIcon = () => (
+  <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="5" y="12" width="18" height="13" rx="2.5"/>
+    <path d="M9 12V9a5 5 0 0 1 10 0v3"/>
+    <circle cx="14" cy="18.5" r="1.8" fill="currentColor" stroke="none"/>
+  </svg>
+);
+
 export const SubmitInvoice: React.FC = () => {
   const { setSellerView, submitInvoice, seller, showToast } = useApp();
 
-  const [buyerName, setBuyerName] = useState('Metro Supermarkets East Africa');
-  const [buyerTaxId, setBuyerTaxId] = useState('P051294819X');
+  const [buyerName, setBuyerName]       = useState('Metro Supermarkets East Africa');
+  const [buyerTaxId, setBuyerTaxId]     = useState('P051294819X');
   const [buyerCountry, setBuyerCountry] = useState('Kenya');
-  const [amount, setAmount] = useState<number>(1200);
-  const [dueDate, setDueDate] = useState('2026-10-15');
-  const [docName, setDocName] = useState('bill_of_lading_metro_produce.pdf');
-  const [docUploaded, setDocUploaded] = useState(true);
+  const [amount, setAmount]             = useState<number>(1200);
+  const [dueDate, setDueDate]           = useState('2026-10-15');
+  const [docName, setDocName]           = useState('bill_of_lading_metro_produce.pdf');
+  const [docUploaded, setDocUploaded]   = useState(true);
 
-  const advanceRatePct = seller.verificationTier === 2 ? 90 : 85;
-  const advanceAmount = Math.round(amount * (advanceRatePct / 100));
-  const feeAmount = Math.round(amount * 0.02);
-  const netPayout = advanceAmount - feeAmount;
+  const advanceRatePct  = seller.verificationTier === 2 ? 90 : 85;
+  const advanceAmount   = Math.round(amount * (advanceRatePct / 100));
+  const platformFeePct  = 2.0;
+  const feeAmount       = Math.round(amount * (platformFeePct / 100));
+  const netPayout       = advanceAmount - feeAmount;
   const availableCredit = seller.creditLimit - seller.usedLimit;
-  const exceedsLimit = seller.creditLimit > 0 && advanceAmount > availableCredit;
+  const exceedsLimit    = seller.creditLimit > 0 && advanceAmount > availableCredit;
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
+    if (e.target.files?.[0]) {
       setDocName(e.target.files[0].name);
       setDocUploaded(true);
       showToast(`Uploaded ${e.target.files[0].name}`, 'success');
@@ -30,7 +61,7 @@ export const SubmitInvoice: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (seller.verificationTier === 0) {
-      showToast('Verify your identity first to submit invoices.', 'warning');
+      showToast('Verify your identity before submitting invoices.', 'warning');
       setSellerView('tier1');
       return;
     }
@@ -39,230 +70,266 @@ export const SubmitInvoice: React.FC = () => {
       return;
     }
     if (exceedsLimit) {
-      showToast(`Advance amount exceeds your available credit of $${availableCredit.toLocaleString()}.`, 'warning');
+      showToast(`Advance of $${advanceAmount.toLocaleString()} exceeds your $${availableCredit.toLocaleString()} available credit.`, 'warning');
       return;
     }
-
-    submitInvoice({
-      buyerName,
-      buyerTaxId,
-      buyerCountry,
-      amount,
-      dueDate,
-      docName,
-      advanceRatePct,
-    });
-
+    submitInvoice({ buyerName, buyerTaxId, buyerCountry, amount, dueDate, docName, advanceRatePct });
     setSellerView('dashboard');
   };
 
+  /* ── Locked gate ─────────────────────────────────────────────── */
   if (seller.verificationTier === 0) {
     return (
-      <div className="max-w-2xl mx-auto py-12 px-4 flex flex-col items-center gap-5 text-center">
-        <div className="w-16 h-16 rounded-2xl flex items-center justify-center" style={{ background: 'rgba(201,146,42,0.10)' }}>
-          <span className="material-symbols-outlined text-3xl" style={{ color: '#C9922A' }}>lock</span>
-        </div>
-        <div>
-          <h2 className="font-headline text-xl font-extrabold text-primary mb-2" style={{ letterSpacing: '-0.02em' }}>Verify Your Identity First</h2>
-          <p className="text-sm text-secondary max-w-xs mx-auto">You need to complete at least Tier 1 verification before you can submit invoices for financing.</p>
-        </div>
-        <button
-          onClick={() => setSellerView('tier1')}
-          className="px-6 py-3 rounded-xl text-sm font-extrabold text-white"
-          style={{ background: 'linear-gradient(135deg,#C9922A,#E8B96A)' }}
+      <div className="max-w-md mx-auto flex flex-col items-center text-center px-6 py-20 view-enter">
+        <div
+          className="w-[72px] h-[72px] rounded-[18px] flex items-center justify-center mb-6"
+          style={{ background: 'var(--gold-bg)', border: '1px solid var(--gold-border)', color: 'var(--gold)' }}
         >
-          Start Tier 1 Verification
+          <LockIcon />
+        </div>
+        <h2
+          className="font-display font-bold text-ink mb-3"
+          style={{ fontSize: '22px', letterSpacing: '-0.028em', lineHeight: 1.1 }}
+        >
+          Verify your identity first
+        </h2>
+        <p className="text-[13.5px] leading-relaxed mb-7 max-w-[280px]" style={{ color: 'var(--ink-subtle)' }}>
+          Tier 1 takes under two minutes and unlocks a $500 advance limit. Your first capital arrives within 24 hours of admin approval.
+        </p>
+        <button onClick={() => setSellerView('tier1')} className="btn-primary px-6 py-3 flex items-center gap-2">
+          Start identity check <ArrowRight />
         </button>
-        <button onClick={() => setSellerView('dashboard')} className="text-xs text-secondary underline">Back to Dashboard</button>
+        <button
+          onClick={() => setSellerView('dashboard')}
+          className="mt-4 text-[11.5px] underline underline-offset-2 bg-transparent border-none cursor-pointer"
+          style={{ color: 'var(--ink-subtle)' }}
+        >
+          Back to dashboard
+        </button>
       </div>
     );
   }
 
   return (
-    <div className="max-w-2xl mx-auto py-6 px-4">
-      {/* Navigation */}
-      <div className="flex items-center justify-between mb-4">
+    <div className="max-w-[600px] mx-auto px-4 py-7 pb-24 flex flex-col gap-5 view-enter">
+
+      {/* Nav row */}
+      <div className="flex items-center justify-between">
         <button
           onClick={() => setSellerView('dashboard')}
-          className="w-10 h-10 rounded-full flex items-center justify-center bg-surface-container text-on-surface hover:bg-surface-variant transition-colors"
+          className="w-9 h-9 rounded-[9px] flex items-center justify-center transition-all duration-150 hover:bg-[rgba(13,24,36,0.06)] active:scale-[0.97]"
+          style={{ background: 'var(--cream)', border: '1px solid var(--border-2)', color: 'var(--ink-muted)' }}
         >
-          <span className="material-symbols-outlined text-[20px]">arrow_back</span>
+          <ArrowLeft />
         </button>
-        <span className="font-label-sm text-xs font-bold text-primary uppercase tracking-wider">
-          Submit Invoice for Advance
+        <span
+          className="text-[9.5px] font-bold uppercase tracking-[0.11em]"
+          style={{ color: 'var(--ink-subtle)' }}
+        >
+          Advance request · Tier {seller.verificationTier}
         </span>
-        <div className="w-10"></div>
+        <div className="w-9" />
       </div>
 
-      {/* Header */}
-      <div className="mb-6">
-        <h1 className="font-headline text-2xl font-bold text-primary-container">
-          Turn Unpaid Invoice into Cash
+      {/* Heading */}
+      <div>
+        <h1
+          className="font-display font-bold text-ink mb-2"
+          style={{ fontSize: '26px', letterSpacing: '-0.032em', lineHeight: 1.06 }}
+        >
+          Turn unpaid invoices<br />into immediate cash.
         </h1>
-        <p className="font-body-md text-sm text-secondary mt-1">
-          Receive ~85% cash advance immediately upon verification.
+        <p className="text-[13.5px] leading-relaxed" style={{ color: 'var(--ink-subtle)' }}>
+          Receive {advanceRatePct}% of the invoice face value. Net payout lands within 24 hours of approval.
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-6">
-        {/* Form Container */}
-        <div className="bg-surface-card rounded-xl p-5 shadow-sm border border-border-subtle flex flex-col gap-4">
-          
-          {/* Buyer Details */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="flex flex-col gap-1">
-              <label className="font-label-md text-xs font-semibold text-on-surface-variant">
-                Buyer / Customer Name
-              </label>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+
+        {/* Buyer details */}
+        <section
+          className="rounded-[13px] p-5 flex flex-col gap-4"
+          style={{ background: 'var(--cream)', border: '1px solid var(--border)', boxShadow: 'var(--shadow-e1)' }}
+        >
+          <p className="field-label">Buyer details</p>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label className="field-label">Buyer name</label>
               <input
-                type="text"
-                required
-                value={buyerName}
-                onChange={(e) => setBuyerName(e.target.value)}
+                type="text" required value={buyerName}
+                onChange={e => setBuyerName(e.target.value)}
                 placeholder="e.g. Metro Supermarkets"
-                className="w-full h-12 px-3 rounded-lg bg-surface-container-lowest font-body-md text-sm text-on-surface border border-border-subtle focus:outline-none focus:ring-2 focus:ring-primary"
+                className="input"
               />
             </div>
-
-            <div className="flex flex-col gap-1">
-              <label className="font-label-md text-xs font-semibold text-on-surface-variant">
-                Buyer Tax PIN / Reg Number
-              </label>
+            <div>
+              <label className="field-label">Tax PIN / Reg number</label>
               <input
-                type="text"
-                required
-                value={buyerTaxId}
-                onChange={(e) => setBuyerTaxId(e.target.value)}
+                type="text" required value={buyerTaxId}
+                onChange={e => setBuyerTaxId(e.target.value)}
                 placeholder="P051294819X"
-                className="w-full h-12 px-3 rounded-lg bg-surface-container-lowest font-body-md text-sm text-on-surface border border-border-subtle focus:outline-none focus:ring-2 focus:ring-primary"
+                className="input font-mono"
+                style={{ fontSize: '13px' }}
               />
             </div>
           </div>
 
-          {/* Amount & Due Date */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="flex flex-col gap-1">
-              <label className="font-label-md text-xs font-semibold text-on-surface-variant">
-                Invoice Total Amount ($ USD)
-              </label>
-              <div className="relative flex items-center">
-                <span className="absolute left-3 text-secondary font-bold text-sm">$</span>
-                <input
-                  type="number"
-                  min="50"
-                  max="50000"
-                  required
-                  value={amount}
-                  onChange={(e) => setAmount(Number(e.target.value))}
-                  className="w-full h-12 pl-8 pr-3 rounded-lg bg-surface-container-lowest font-headline font-bold text-base text-primary border focus:outline-none focus:ring-2 focus:ring-primary"
-                  style={{ borderColor: exceedsLimit ? '#EF4444' : undefined }}
-                />
-              </div>
-              {exceedsLimit && (
-                <p className="text-[11px] mt-0.5 font-medium" style={{ color: '#EF4444' }}>
-                  Advance of ${advanceAmount.toLocaleString()} exceeds your available credit of ${availableCredit.toLocaleString()}. Upgrade to Tier 2 for a higher limit.
-                </p>
-              )}
-            </div>
+          <div>
+            <label className="field-label">Buyer country</label>
+            <input
+              type="text" value={buyerCountry}
+              onChange={e => setBuyerCountry(e.target.value)}
+              placeholder="Kenya"
+              className="input"
+            />
+          </div>
+        </section>
 
-            <div className="flex flex-col gap-1">
-              <label className="font-label-md text-xs font-semibold text-on-surface-variant">
-                Payment Due Date
-              </label>
+        {/* Amount + due date */}
+        <section
+          className="rounded-[13px] p-5 grid grid-cols-1 sm:grid-cols-2 gap-4"
+          style={{ background: 'var(--cream)', border: '1px solid var(--border)', boxShadow: 'var(--shadow-e1)' }}
+        >
+          <div>
+            <label className="field-label">Invoice total (USD)</label>
+            <div className="relative">
+              <span
+                className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[13px] font-bold pointer-events-none"
+                style={{ color: 'var(--ink-muted)' }}
+              >$</span>
               <input
-                type="date"
-                required
-                value={dueDate}
-                onChange={(e) => setDueDate(e.target.value)}
-                className="w-full h-12 px-3 rounded-lg bg-surface-container-lowest font-body-md text-sm text-on-surface border border-border-subtle focus:outline-none focus:ring-2 focus:ring-primary"
+                type="number" min="50" max="50000" required
+                value={amount}
+                onChange={e => setAmount(Number(e.target.value))}
+                className={`input font-mono font-bold pl-7 text-[15px]${exceedsLimit ? ' input-error' : ''}`}
               />
             </div>
+            {exceedsLimit && (
+              <p className="text-[11px] mt-1.5 leading-snug" style={{ color: 'var(--danger)' }}>
+                Advance of ${advanceAmount.toLocaleString()} exceeds your ${availableCredit.toLocaleString()} available credit.
+                {seller.verificationTier < 2 && ' Upgrade to Tier 2 for a $5,000 limit.'}
+              </p>
+            )}
           </div>
-
-          {/* Invoice Document Dropzone */}
-          <div className="flex flex-col gap-1 mt-2">
-            <label className="font-label-md text-xs font-semibold text-on-surface-variant">
-              Upload Official Commercial Invoice (PDF or Scan)
-            </label>
-            <div className="relative border-2 border-dashed border-border-strong rounded-xl p-5 text-center bg-surface-container-lowest hover:bg-surface-container-low transition-colors cursor-pointer flex flex-col items-center justify-center gap-2">
-              <input
-                type="file"
-                accept=".pdf,.jpg,.png"
-                onChange={handleFileChange}
-                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-              />
-              <span className="material-symbols-outlined text-3xl text-primary">upload_file</span>
-              <div className="flex flex-col">
-                <span className="font-label-md text-xs font-bold text-primary">
-                  {docUploaded ? docName : 'Click to Upload Invoice File'}
-                </span>
-                <span className="text-[11px] text-secondary">Accepted formats: PDF, PNG, JPG (Max 15MB)</span>
-              </div>
-            </div>
+          <div>
+            <label className="field-label">Payment due date</label>
+            <input
+              type="date" required value={dueDate}
+              onChange={e => setDueDate(e.target.value)}
+              className="input"
+            />
           </div>
-        </div>
+        </section>
 
-        {/* Live Calculation Ribbon */}
-        <div className="vesto-hero rounded-2xl p-5 text-white relative overflow-hidden shadow-hero">
-          <div className="h-[3px] absolute top-0 left-0 right-0" style={{ background: 'linear-gradient(90deg,#C9922A,#E8B96A)' }} />
+        {/* Document upload */}
+        <section
+          className="rounded-[13px] p-5"
+          style={{ background: 'var(--cream)', border: '1px solid var(--border)', boxShadow: 'var(--shadow-e1)' }}
+        >
+          <label className="field-label mb-3 block">Official commercial invoice</label>
+          <label
+            className="relative flex flex-col items-center gap-2.5 py-6 px-4 rounded-[9px] cursor-pointer transition-all duration-150"
+            style={{
+              border: `1.5px dashed ${docUploaded ? 'var(--gold)' : 'var(--border-2)'}`,
+              background: docUploaded ? 'var(--gold-bg)' : 'transparent',
+            }}
+          >
+            <input
+              type="file" accept=".pdf,.jpg,.png"
+              onChange={handleFileChange}
+              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+            />
+            <span style={{ color: docUploaded ? 'var(--gold)' : 'var(--ink-subtle)' }}>
+              {docUploaded ? <FileCheckIcon /> : <UploadIcon />}
+            </span>
+            <p className="text-[12.5px] font-semibold text-ink text-center">
+              {docUploaded ? docName : 'Click to upload invoice file'}
+            </p>
+            <p className="text-[10.5px]" style={{ color: 'var(--ink-faint)' }}>PDF, PNG, JPG · up to 15 MB</p>
+          </label>
+        </section>
+
+        {/* Payout breakdown — dark cinema ribbon */}
+        <section
+          className="relative rounded-[15px] px-5 pt-5 pb-5 overflow-hidden grain-overlay"
+          style={{
+            background: 'linear-gradient(160deg,#0D1824 0%,#1A2A3E 100%)',
+            border: '1px solid rgba(184,130,30,0.18)',
+            boxShadow: 'var(--shadow-e3)',
+          }}
+        >
+          {/* Gold strip */}
+          <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: 'linear-gradient(90deg,transparent,#B8821E 25%,#E9BE68 60%,#B8821E 85%,transparent)' }} />
+          {/* Dot matrix */}
+          <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle,rgba(255,255,255,0.03) 1px,transparent 1px)', backgroundSize: '20px 20px' }} />
+
           <div className="relative">
-            {/* Title row */}
-            <div className="flex items-center justify-between text-xs mb-4" style={{ color: 'rgba(255,255,255,0.5)' }}>
-              <span className="uppercase tracking-wider font-semibold">Your Payout Breakdown</span>
-              <span className="font-bold text-white">Tier {seller.verificationTier} · {advanceRatePct}% Advance</span>
+            <div className="flex justify-between items-center mb-4">
+              <span className="text-[8.5px] font-bold uppercase tracking-[0.11em]" style={{ color: 'rgba(255,255,255,0.42)' }}>
+                Payout breakdown
+              </span>
+              <span className="text-[9.5px] font-semibold px-2 py-0.5 rounded-[4px]" style={{ background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.55)' }}>
+                Tier {seller.verificationTier} · {advanceRatePct}% advance rate
+              </span>
             </div>
 
-            {/* 3-row breakdown */}
-            <div className="flex flex-col gap-2.5 mb-4">
-              {/* Row 1 - Invoice Total */}
-              <div className="flex items-center gap-3">
-                <div className="w-28 shrink-0 text-[11px] font-semibold" style={{ color: 'rgba(255,255,255,0.55)' }}>Invoice Total</div>
-                <div className="flex-1 h-2 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.12)' }}>
-                  <div className="h-full rounded-full w-full" style={{ background: 'rgba(255,255,255,0.3)' }} />
+            {/* Rows */}
+            {[
+              { label: 'Face value', pct: 100, value: `$${amount.toLocaleString()}`, barColor: 'rgba(255,255,255,0.20)', valColor: 'rgba(255,255,255,0.70)' },
+              { label: `Advance (${advanceRatePct}%)`, pct: advanceRatePct, value: `$${advanceAmount.toLocaleString()}`, barColor: 'linear-gradient(90deg,#B8821E,#E9BE68)', valColor: '#E9BE68' },
+              { label: `Platform fee (${platformFeePct}%)`, pct: platformFeePct, value: `−$${feeAmount.toLocaleString()}`, barColor: 'rgba(220,60,60,0.55)', valColor: 'rgba(255,120,120,0.80)' },
+            ].map(({ label, pct, value, barColor, valColor }) => (
+              <div key={label} className="flex items-center gap-2.5 mb-2.5">
+                <span className="text-[10px] font-medium shrink-0 w-[110px]" style={{ color: 'rgba(255,255,255,0.45)' }}>{label}</span>
+                <div className="flex-1 h-[4px] rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.08)' }}>
+                  <div className="h-full rounded-full" style={{ width: `${pct}%`, background: barColor, transition: 'width 350ms var(--ease-out)' }} />
                 </div>
-                <div className="w-20 text-right font-tnum text-xs font-bold text-white">${amount.toLocaleString()}</div>
+                <span className="font-mono text-[11px] font-bold font-tnum w-[72px] text-right" style={{ color: valColor }}>{value}</span>
               </div>
+            ))}
 
-              {/* Row 2 - Advance (advanceRatePct%) */}
-              <div className="flex items-center gap-3">
-                <div className="w-28 shrink-0 text-[11px] font-semibold" style={{ color: 'rgba(255,255,255,0.55)' }}>Advance ({advanceRatePct}%)</div>
-                <div className="flex-1 h-2 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.12)' }}>
-                  <div className="h-full rounded-full transition-all" style={{ width: `${advanceRatePct}%`, background: 'linear-gradient(90deg,#C9922A,#E8B96A)' }} />
-                </div>
-                <div className="w-20 text-right font-tnum text-xs font-bold" style={{ color: 'var(--gold-light)' }}>${advanceAmount.toLocaleString()}</div>
-              </div>
-
-              {/* Row 3 - Fee deducted */}
-              <div className="flex items-center gap-3">
-                <div className="w-28 shrink-0 text-[11px] font-semibold" style={{ color: 'rgba(255,255,255,0.55)' }}>Platform Fee (2%)</div>
-                <div className="flex-1 h-2 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.12)' }}>
-                  <div className="h-full rounded-full" style={{ width: '2%', background: '#EF4444' }} />
-                </div>
-                <div className="w-20 text-right font-tnum text-xs font-semibold" style={{ color: 'rgba(255,100,100,0.9)' }}>−${feeAmount.toLocaleString()}</div>
-              </div>
+            {/* Perforation */}
+            <div className="relative my-4">
+              <div className="absolute rounded-full" style={{ left: '-21px', top: '-8px', width: '16px', height: '16px', background: 'var(--bg)' }} />
+              <div className="absolute rounded-full" style={{ right: '-21px', top: '-8px', width: '16px', height: '16px', background: 'var(--bg)' }} />
+              <div className="perforation" />
             </div>
 
-            {/* Net payout big number */}
-            <div className="flex items-baseline justify-between border-t pt-3" style={{ borderColor: 'rgba(255,255,255,0.12)' }}>
+            {/* Net payout hero */}
+            <div className="flex items-end justify-between">
               <div>
-                <span className="text-[10px] uppercase tracking-wider font-semibold block mb-1" style={{ color: 'rgba(255,255,255,0.5)' }}>Net Immediate Payout</span>
-                <div className="font-headline text-3xl font-extrabold text-white font-tnum" style={{ letterSpacing: '-0.02em' }}>${netPayout.toLocaleString()}</div>
+                <p className="text-[8.5px] font-bold uppercase tracking-[0.09em] mb-1.5" style={{ color: 'rgba(255,255,255,0.38)' }}>
+                  Net immediate payout
+                </p>
+                <p
+                  className="font-mono font-bold text-white font-tnum leading-none"
+                  style={{ fontSize: '30px', letterSpacing: '-0.04em' }}
+                >
+                  ${netPayout.toLocaleString()}
+                  <span className="text-[12px] font-normal ml-1.5" style={{ color: 'rgba(255,255,255,0.28)' }}>USDC</span>
+                </p>
               </div>
-              <span className="text-[11px] font-bold" style={{ color: 'var(--gold-light)' }}>100% Guaranteed Settlement</span>
+              <div className="text-right">
+                <p className="text-[8.5px] font-bold uppercase tracking-[0.09em] mb-1" style={{ color: 'rgba(255,255,255,0.38)' }}>Settlement</p>
+                <p className="text-[10.5px] font-semibold" style={{ color: '#E9BE68' }}>Onchain · Arc Testnet</p>
+              </div>
             </div>
           </div>
-        </div>
+        </section>
 
-        {/* Submit Button */}
+        {/* CTA */}
         <button
           type="submit"
           disabled={exceedsLimit}
-          className="w-full h-13 font-bold rounded-xl shadow-gold transition-all active:scale-[0.98] flex items-center justify-center gap-2 py-3 text-white disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none"
-          style={{ background: exceedsLimit ? '#9CA3AF' : 'linear-gradient(135deg, #C9922A 0%, #E8B96A 100%)' }}
+          className="btn-primary w-full h-[50px] rounded-[11px] text-[14px] justify-center"
+          style={exceedsLimit ? { background: 'rgba(13,24,36,0.12)', color: 'rgba(13,24,36,0.35)', boxShadow: 'none', cursor: 'not-allowed' } : {}}
         >
-          <span className="material-symbols-outlined text-lg">payments</span>
-          <span>{exceedsLimit ? `Credit limit reached - Upgrade to Tier 2` : 'Submit Invoice to Vesto Marketplace'}</span>
+          {exceedsLimit
+            ? `Credit limit reached — upgrade to Tier 2`
+            : 'Submit to Vesto marketplace'}
         </button>
+
       </form>
     </div>
   );

@@ -673,20 +673,15 @@ export const SellerDashboard: React.FC = () => {
             </p>
           </div>
 
-          {/* Tab filter */}
+          {/* Tab filter — physically real lifted-pill (Morpho pattern) */}
           <div
-            className="flex items-center gap-0.5 p-1 rounded-[9px] self-start sm:self-auto"
-            style={{ background: 'var(--cream)', border: '1px solid var(--border-2)' }}
+            className="tab-selector self-start sm:self-auto"
           >
             {(['all', 'active', 'settled'] as const).map(tab => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className="px-3 py-1 rounded-[7px] text-[11px] font-semibold capitalize transition-all duration-150"
-                style={activeTab === tab
-                  ? { background: 'var(--ink)', color: '#fff' }
-                  : { color: 'var(--ink-subtle)' }
-                }
+                className={`tab-selector-item capitalize${activeTab === tab ? ' tab-active' : ''}`}
               >
                 {tab}
               </button>

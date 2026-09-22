@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Vesto — Technical Requirements Document</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet"/>
+<style>
+  :root { --canvas:#F8F6F1;--ink:#0D1824;--ink-subtle:#3A4A5C;--ink-muted:#5E6E82;--gold:#B8821E;--gold-bg:rgba(184,130,30,0.08);--gold-border:rgba(184,130,30,0.22);--cream:#FFFFFF;--border:rgba(13,24,36,0.10);--navy:#0D1824;--green:#1A6645; }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{background:var(--canvas);color:var(--ink);font-family:'Space Grotesk',sans-serif;font-size:14px;line-height:1.6;}
+  body{max-width:860px;margin:0 auto;padding:60px 48px 100px;}
+  @media print{body{padding:20px 32px;max-width:100%;} h2{page-break-before:always;} h2:first-of-type{page-break-before:avoid;} .code-block{page-break-inside:avoid;}}
+  .cover{padding:72px 0 60px;border-bottom:2px solid var(--gold);margin-bottom:56px;}
+  .cover-label{font-size:10px;letter-spacing:0.14em;text-transform:uppercase;font-weight:600;color:var(--gold);margin-bottom:20px;}
+  .cover-title{font-size:48px;font-weight:700;letter-spacing:-0.04em;line-height:1.0;color:var(--ink);margin-bottom:16px;}
+  .cover-sub{font-size:17px;color:var(--ink-subtle);max-width:520px;line-height:1.5;margin-bottom:32px;}
+  .cover-meta{display:flex;gap:40px;flex-wrap:wrap;}
+  .cover-meta-item label{display:block;font-size:9px;text-transform:uppercase;letter-spacing:0.10em;font-weight:600;color:var(--ink-muted);margin-bottom:4px;}
+  .cover-meta-item span{font-size:13px;font-weight:600;color:var(--ink);}
+  h2{font-size:26px;font-weight:700;letter-spacing:-0.03em;color:var(--ink);margin:48px 0 20px;padding-top:8px;border-top:2px solid var(--ink);}
+  h3{font-size:16px;font-weight:600;letter-spacing:-0.015em;color:var(--ink);margin:28px 0 10px;}
+  h4{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.07em;color:var(--ink-muted);margin:20px 0 8px;}
+  p{color:var(--ink-subtle);margin-bottom:12px;font-size:13.5px;line-height:1.65;}
+  strong{color:var(--ink);font-weight:600;}
+  ul,ol{color:var(--ink-subtle);font-size:13.5px;padding-left:20px;margin-bottom:12px;}
+  li{margin-bottom:5px;line-height:1.55;}
+  .code-block{background:var(--navy);color:rgba(255,255,255,0.85);font-family:'JetBrains Mono',monospace;font-size:11.5px;line-height:1.7;border-radius:11px;padding:22px 24px;margin:18px 0;overflow-x:auto;position:relative;}
+  .code-block::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#B8821E 30%,#E9BE68 60%,#B8821E 85%,transparent);}
+  .code-comment{color:rgba(255,255,255,0.30);}
+  .code-kw{color:#E9BE68;}
+  .code-str{color:#6EE7B7;}
+  .code-type{color:#93C5FD;}
+  table{width:100%;border-collapse:collapse;margin:20px 0;font-size:12.5px;}
+  th{background:var(--ink);color:white;padding:10px 14px;text-align:left;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:0.06em;}
+  td{padding:10px 14px;border-bottom:1px solid var(--border);color:var(--ink-subtle);vertical-align:top;}
+  tr:last-child td{border-bottom:none;}
+  tr:nth-child(even) td{background:rgba(13,24,36,0.025);}
+  td strong{color:var(--ink);}
+  td code{font-family:'JetBrains Mono',monospace;font-size:11px;background:rgba(13,24,36,0.07);padding:1px 6px;border-radius:4px;color:var(--ink);}
+  .arch-box{background:white;border:1px solid var(--border);border-radius:13px;padding:28px;margin:24px 0;font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--ink-subtle);line-height:1.9;}
+  .arch-layer{margin-bottom:12px;}
+  .arch-layer-title{font-family:'Space Grotesk',sans-serif;font-size:10px;text-transform:uppercase;letter-spacing:0.10em;font-weight:700;color:var(--gold);margin-bottom:6px;}
+  .env-row{display:flex;gap:12px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--border);}
+  .env-row:last-child{border-bottom:none;}
+  .env-key{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;color:var(--ink);min-width:280px;}
+  .env-desc{font-size:12px;color:var(--ink-subtle);}
+  .pull-quote{position:relative;background:var(--navy);color:rgba(255,255,255,0.88);border-radius:13px;padding:28px 32px;margin:32px 0;overflow:hidden;}
+  .pull-quote::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#B8821E 30%,#E9BE68 60%,#B8821E 85%,transparent);}
+  .pull-quote p{color:rgba(255,255,255,0.80);font-size:15px;font-weight:500;line-height:1.55;margin:0;}
+  .pull-quote .quote-attr{font-size:10px;text-transform:uppercase;letter-spacing:0.12em;color:rgba(255,255,255,0.35);margin-top:12px;font-weight:600;}
+  .badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;}
+  .badge-green{background:rgba(26,102,69,0.10);color:#1A6645;border:1px solid rgba(26,102,69,0.18);}
+  .badge-gold{background:rgba(184,130,30,0.10);color:#B8821E;border:1px solid rgba(184,130,30,0.18);}
+  .badge-red{background:rgba(140,26,26,0.10);color:#8C1A1A;border:1px solid rgba(140,26,26,0.18);}
+  .divider{height:1px;background:var(--border);margin:40px 0;}
+  .footnote{font-size:11px;color:var(--ink-muted);border-top:1px solid var(--border);padding-top:16px;margin-top:60px;}
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="cover-label">Vesto · Technical Requirements Document · V1.0</div>
+  <div class="cover-title">Technical<br/>Requirements<br/>Document</div>
+  <div class="cover-sub">Full stack specification: smart contract architecture, frontend stack, USDC integration, off-chain backend, security model, and V2/V3 evolution path.</div>
+  <div class="cover-meta">
+    <div class="cover-meta-item"><label>Version</label><span>1.0 — September 2026</span></div>
+    <div class="cover-meta-item"><label>Contract Address</label><span>0x6b3a34d3dbf8986560ccf67bae7aff0cfbe82e6b</span></div>
+    <div class="cover-meta-item"><label>Network</label><span>Arc Testnet (Chain ID: 2482601279)</span></div>
+    <div class="cover-meta-item"><label>Solidity</label><span>0.8.28 + OpenZeppelin 5.x</span></div>
+  </div>
+</div>
+
+<!-- 1. SYSTEM ARCHITECTURE -->
+<h2>1. System Architecture</h2>
+
+<div class="arch-box">
+  <div class="arch-layer">
+    <div class="arch-layer-title">Layer 4 — Onchain Settlement (Arc Testnet)</div>
+    ┌─────────────────────────────────────────────────────────────┐<br/>
+    │  VestoEscrow.sol  ·  0x6b3a34d3dbf8986560ccf67bae7aff0cfbe82e6b  │<br/>
+    │  USDC ERC-20  ·  Arc Testnet native/ERC-20 unified asset          │<br/>
+    └─────────────────────────────────────────────────────────────┘
+  </div>
+  <div class="arch-layer">
+    <div class="arch-layer-title">Layer 3 — Frontend Application (React + wagmi)</div>
+    ┌─────────────────────────────────────────────────────────────┐<br/>
+    │  React 18 · TypeScript 5 · Vite 5 · Tailwind CSS 3          │<br/>
+    │  wagmi v2 · ConnectKit · viem · @tanstack/react-query        │<br/>
+    │  Sonner toasts · framer-motion · lucide-react (SVG)          │<br/>
+    └─────────────────────────────────────────────────────────────┘
+  </div>
+  <div class="arch-layer">
+    <div class="arch-layer-title">Layer 2 — Off-Chain Backend (Supabase — V2)</div>
+    ┌─────────────────────────────────────────────────────────────┐<br/>
+    │  Supabase Postgres  ·  Row-Level Security policies           │<br/>
+    │  Supabase Storage (kyc-documents, invoice-documents buckets) │<br/>
+    │  Supabase Edge Functions (verification, analytics)           │<br/>
+    └─────────────────────────────────────────────────────────────┘
+  </div>
+  <div class="arch-layer">
+    <div class="arch-layer-title">Layer 1 — App State (V1 — in-memory React context)</div>
+    ┌─────────────────────────────────────────────────────────────┐<br/>
+    │  AppContext.tsx  ·  seller, lender, admin, invoices state    │<br/>
+    │  Mock sellers registry  ·  tour, notification, batch state  │<br/>
+    └─────────────────────────────────────────────────────────────┘
+  </div>
+</div>
+
+<p><strong>V1 note:</strong> Application state lives in React context (in-memory). No database persistence in V1 — state resets on page refresh. Supabase integration is the first V2 sprint.</p>
+
+<!-- 2. SMART CONTRACT -->
+<h2>2. Smart Contract: VestoEscrow.sol</h2>
+
+<div class="pull-quote">
+  <p>The contract is intentionally minimal. It does one thing: hold USDC in escrow against a registered invoice ID and release it to the correct party on instruction. No upgradability, no admin withdrawal path, no oracle dependency.</p>
+  <div class="quote-attr">Design principle</div>
+</div>
+
+<h3>2.1 Deployment</h3>
+<table>
+  <tbody>
+    <tr><td><strong>Address (Arc Testnet)</strong></td><td><code>0x6b3a34d3dbf8986560ccf67bae7aff0cfbe82e6b</code></td></tr>
+    <tr><td><strong>Compiler</strong></td><td>Solidity 0.8.28</td></tr>
+    <tr><td><strong>Dependencies</strong></td><td>OpenZeppelin 5.x: <code>ReentrancyGuard</code>, <code>SafeERC20</code>, <code>IERC20</code></td></tr>
+    <tr><td><strong>Constructor args</strong></td><td><code>address _usdc</code> (USDC token on Arc Testnet), <code>address _admin</code></td></tr>
+    <tr><td><strong>Verification status</strong></td><td>Not yet verified on Arc explorer — required before mainnet</td></tr>
+  </tbody>
+</table>
+
+<h3>2.2 State Variables</h3>
+<div class="code-block">
+<span class="code-kw">mapping</span>(<span class="code-type">bytes32</span> =&gt; <span class="code-type">Invoice</span>) <span class="code-kw">public</span> invoices;<br/>
+<span class="code-kw">mapping</span>(<span class="code-type">address</span> =&gt; <span class="code-type">uint256</span>) <span class="code-kw">public</span> pendingClaims;<br/>
+<span class="code-type">IERC20</span> <span class="code-kw">public immutable</span> usdc;<br/>
+<span class="code-type">address</span> <span class="code-kw">public immutable</span> admin;<br/><br/>
+<span class="code-kw">struct</span> <span class="code-type">Invoice</span> {<br/>
+&nbsp;&nbsp;<span class="code-type">address</span> seller;<br/>
+&nbsp;&nbsp;<span class="code-type">address</span> lender;<br/>
+&nbsp;&nbsp;<span class="code-type">uint256</span> amount;     <span class="code-comment">// advance amount in USDC (6 decimals)</span><br/>
+&nbsp;&nbsp;<span class="code-type">uint8</span>   state;      <span class="code-comment">// 0=registered 1=funded 2=repaid 3=disputed</span><br/>
+}
+</div>
+
+<h3>2.3 Key Functions</h3>
+<table>
+  <thead><tr><th>Function</th><th>Caller</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr><td><code>registerInvoice(bytes32 id, address seller, uint256 amount)</code></td><td>Admin only</td><td>Pre-registers invoice before marketplace listing. Prevents ID squatting.</td></tr>
+    <tr><td><code>fundInvoice(bytes32 id)</code></td><td>Lender (any)</td><td>Lender approves USDC then calls. Transfers advance amount from lender to escrow. Sets invoice state to funded.</td></tr>
+    <tr><td><code>markRepaid(bytes32 id)</code></td><td>Admin only</td><td>Called after admin confirms buyer payment. Moves funds from escrow to seller's pendingClaims.</td></tr>
+    <tr><td><code>claimPayout()</code></td><td>Seller (any)</td><td>Pull-pattern: seller claims their accumulated pendingClaims. Uses ReentrancyGuard.</td></tr>
+    <tr><td><code>resolveDispute(bytes32 id, bool refundLender)</code></td><td>Admin only</td><td>On dispute: either refunds lender or pays seller from escrow.</td></tr>
+    <tr><td><code>pendingClaims(address)</code></td><td>View</td><td>Returns outstanding claimable USDC for an address.</td></tr>
+  </tbody>
+</table>
+
+<h3>2.4 Events</h3>
+<div class="code-block">
+<span class="code-kw">event</span> <span class="code-type">InvoiceRegistered</span>(<span class="code-type">bytes32 indexed</span> id, <span class="code-type">address</span> seller, <span class="code-type">uint256</span> amount);<br/>
+<span class="code-kw">event</span> <span class="code-type">InvoiceFunded</span>(<span class="code-type">bytes32 indexed</span> id, <span class="code-type">address</span> lender);<br/>
+<span class="code-kw">event</span> <span class="code-type">InvoiceRepaid</span>(<span class="code-type">bytes32 indexed</span> id);<br/>
+<span class="code-kw">event</span> <span class="code-type">PayoutClaimed</span>(<span class="code-type">address indexed</span> seller, <span class="code-type">uint256</span> amount);<br/>
+<span class="code-kw">event</span> <span class="code-type">DisputeResolved</span>(<span class="code-type">bytes32 indexed</span> id, <span class="code-type">bool</span> refundedLender);
+</div>
+
+<h3>2.5 Security Model</h3>
+<table>
+  <thead><tr><th>Threat</th><th>Mitigation</th></tr></thead>
+  <tbody>
+    <tr><td>Re-entrancy on <code>claimPayout</code></td><td><code>ReentrancyGuard</code> nonReentrant modifier. Balance zeroed before transfer (checks-effects-interactions).</td></tr>
+    <tr><td>USDC blocklist bricking lender</td><td>Pull-claim pattern. Lender initiates withdrawal. Admin cannot force-push to a blocked address.</td></tr>
+    <tr><td>Admin confiscation</td><td><code>adminReroute</code> function removed in audit. Admin can only: register, mark repaid, resolve dispute.</td></tr>
+    <tr><td>Invoice ID squatting</td><td>Admin pre-registration required before any lender can fund. Invoice ID is a <code>bytes32</code> hash.</td></tr>
+    <tr><td>Integer overflow</td><td>Solidity 0.8+ built-in overflow protection. SafeERC20 for all token transfers.</td></tr>
+    <tr><td>Double-fund</td><td>State machine check: invoice must be in state 0 (registered) to accept funding.</td></tr>
+  </tbody>
+</table>
+
+<!-- 3. FRONTEND STACK -->
+<h2>3. Frontend Stack</h2>
+
+<h3>3.1 Core Dependencies</h3>
+<table>
+  <thead><tr><th>Package</th><th>Version</th><th>Purpose</th></tr></thead>
+  <tbody>
+    <tr><td><code>react</code></td><td>18.x</td><td>UI framework</td></tr>
+    <tr><td><code>typescript</code></td><td>5.x</td><td>Type safety</td></tr>
+    <tr><td><code>vite</code></td><td>5.x</td><td>Build tool + HMR</td></tr>
+    <tr><td><code>tailwindcss</code></td><td>3.x</td><td>Utility-first CSS</td></tr>
+    <tr><td><code>wagmi</code></td><td>2.x</td><td>React hooks for Ethereum</td></tr>
+    <tr><td><code>viem</code></td><td>2.x</td><td>Low-level EVM primitives</td></tr>
+    <tr><td><code>connectkit</code></td><td>latest</td><td>Wallet connection UI</td></tr>
+    <tr><td><code>@tanstack/react-query</code></td><td>5.x</td><td>Server state, caching, refetch</td></tr>
+    <tr><td><code>sonner</code></td><td>latest</td><td>Toast notifications</td></tr>
+    <tr><td><code>@openzeppelin/contracts</code></td><td>5.x</td><td>Solidity contract base classes</td></tr>
+    <tr><td><code>vite-plugin-node-polyfills</code></td><td>latest</td><td>Browser EventEmitter polyfill</td></tr>
+  </tbody>
+</table>
+
+<h3>3.2 Chain Configuration</h3>
+<div class="code-block">
+<span class="code-comment">// src/config/wagmi.tsx</span><br/>
+<span class="code-kw">const</span> arcTestnet = {<br/>
+&nbsp;&nbsp;id: <span class="code-str">2482601279</span>,<br/>
+&nbsp;&nbsp;name: <span class="code-str">'Arc Testnet'</span>,<br/>
+&nbsp;&nbsp;nativeCurrency: { name: <span class="code-str">'USDC'</span>, symbol: <span class="code-str">'USDC'</span>, decimals: <span class="code-str">18</span> },<br/>
+&nbsp;&nbsp;rpcUrls: { default: { http: [<span class="code-str">'https://rpc.arc-testnet.io'</span>] } },<br/>
+&nbsp;&nbsp;blockExplorers: { default: { name: <span class="code-str">'ArcScan'</span>, url: <span class="code-str">'https://explorer.arc.io'</span> } },<br/>
+};
+</div>
+
+<h3>3.3 USDC Integration Pattern</h3>
+<div class="code-block">
+<span class="code-comment">// 1. Read balance (ERC-20 view — 6 decimals)</span><br/>
+<span class="code-kw">const</span> { data: raw } = useReadContract({<br/>
+&nbsp;&nbsp;address: USDC_ADDRESS,  <span class="code-comment">// Arc Testnet USDC ERC-20</span><br/>
+&nbsp;&nbsp;abi: erc20Abi,<br/>
+&nbsp;&nbsp;functionName: <span class="code-str">'balanceOf'</span>,<br/>
+&nbsp;&nbsp;args: [address],<br/>
+});<br/><br/>
+<span class="code-comment">// 2. Approve + Fund (2-step pattern)</span><br/>
+<span class="code-comment">// Step 1: approve USDC spend to VestoEscrow</span><br/>
+<span class="code-kw">await</span> writeContractAsync({ address: USDC_ADDRESS, abi: erc20Abi,<br/>
+&nbsp;&nbsp;functionName: <span class="code-str">'approve'</span>, args: [VESTO_ESCROW_ADDRESS, amountInMicroUSDC] });<br/><br/>
+<span class="code-comment">// Step 2: call fundInvoice</span><br/>
+<span class="code-kw">await</span> writeContractAsync({ address: VESTO_ESCROW_ADDRESS, abi: vestoEscrowAbi,<br/>
+&nbsp;&nbsp;functionName: <span class="code-str">'fundInvoice'</span>, args: [invoiceIdBytes32] });
+</div>
+
+<h3>3.4 Custom Hooks (src/hooks/useVestoEscrow.ts)</h3>
+<table>
+  <thead><tr><th>Hook</th><th>Returns</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr><td><code>useFundInvoice()</code></td><td><code>{ execute, step, txHash, isConfirming, isSuccess, errorMsg, reset }</code></td><td>Orchestrates USDC approve → fundInvoice 2-step flow with status tracking</td></tr>
+    <tr><td><code>useClaimPayout()</code></td><td><code>{ claim, isPending, isConfirming, isSuccess }</code></td><td>Calls <code>claimPayout()</code> on escrow contract</td></tr>
+    <tr><td><code>usePendingClaim(address)</code></td><td><code>{ raw, refetch }</code></td><td>Reads <code>pendingClaims[address]</code> — polled every 12s</td></tr>
+    <tr><td><code>useUSDCBalance()</code></td><td><code>{ raw, formatted, refetch }</code></td><td>Reads USDC ERC-20 balance for connected wallet</td></tr>
+  </tbody>
+</table>
+
+<!-- 4. APPLICATION STATE -->
+<h2>4. Application State (V1)</h2>
+<p>All application state lives in <code>src/context/AppContext.tsx</code>. This is a deliberate V1 simplification — no database calls, instant UX, zero infrastructure dependency. Every piece of state is replaced by a Supabase query in V2.</p>
+
+<h4>State shape</h4>
+<div class="code-block">
+<span class="code-type">seller</span>: SellerProfile          <span class="code-comment">// current seller session</span><br/>
+<span class="code-type">lender</span>: LenderProfile          <span class="code-comment">// current lender session</span><br/>
+<span class="code-type">admin</span>: AdminProfile            <span class="code-comment">// current admin session</span><br/>
+<span class="code-type">invoices</span>: Invoice[]            <span class="code-comment">// all invoices (shared across roles)</span><br/>
+<span class="code-type">verificationQueue</span>: VerificationRequest[]<br/>
+<span class="code-type">sellers</span>: Record&lt;string, SellerProfile&gt;  <span class="code-comment">// admin KYC approval affects this map</span><br/>
+<span class="code-type">sellerView</span>: string             <span class="code-comment">// current seller screen</span><br/>
+<span class="code-type">lenderView</span>: string             <span class="code-comment">// current lender screen</span><br/>
+<span class="code-type">adminView</span>: string              <span class="code-comment">// current admin screen</span><br/>
+<span class="code-type">role</span>: UserRole | null           <span class="code-comment">// 'seller' | 'lender' | 'admin' | null</span><br/>
+<span class="code-type">selectedBatchIds</span>: string[]     <span class="code-comment">// batch funding selection</span>
+</div>
+
+<!-- 5. ENVIRONMENT VARIABLES -->
+<h2>5. Environment Variables</h2>
+<div style="background:white;border:1px solid var(--border);border-radius:11px;padding:20px 24px;margin:20px 0;">
+  <div class="env-row"><div class="env-key">VITE_SUPABASE_URL</div><div class="env-desc">Supabase project URL. Not yet set in V1 — app runs on mock data without it.</div></div>
+  <div class="env-row"><div class="env-key">VITE_SUPABASE_ANON_KEY</div><div class="env-desc">Supabase anon public key for frontend queries. Required for V2 persistence.</div></div>
+  <div class="env-row"><div class="env-key">VITE_VESTO_ESCROW_ADDRESS</div><div class="env-desc">Deployed VestoEscrow contract address. Currently hardcoded in src/config/contracts.ts.</div></div>
+  <div class="env-row"><div class="env-key">VITE_USDC_ADDRESS</div><div class="env-desc">USDC ERC-20 token address on the target network. Passed to VestoEscrow constructor at deploy time.</div></div>
+  <div class="env-row"><div class="env-key">RPC_PROXY_BASE_URL</div><div class="env-desc">Arc Studio RPC proxy base URL (server-side only). Not exposed to browser.</div></div>
+  <div class="env-row"><div class="env-key">RPC_PROXY_TOKEN</div><div class="env-desc">Arc Studio RPC proxy authentication token (server-side only).</div></div>
+  <div class="env-row"><div class="env-key">RPC_PROXY_CHAINS</div><div class="env-desc">Comma-separated Compass chain keys for which the proxy is active (e.g. Arc_Testnet).</div></div>
+</div>
+
+<!-- 6. SUPABASE SCHEMA OVERVIEW -->
+<h2>6. Off-Chain Backend (Supabase — V2)</h2>
+<p>The full schema is in the Backend Schema document. This section covers the integration architecture.</p>
+
+<h3>6.1 Data Boundary</h3>
+<table>
+  <thead><tr><th>What lives onchain</th><th>What lives in Supabase</th></tr></thead>
+  <tbody>
+    <tr><td>USDC balances and escrow funds</td><td>Seller and lender profiles</td></tr>
+    <tr><td>Invoice funding state (registered/funded/repaid)</td><td>Invoice metadata, buyer details, document URLs</td></tr>
+    <tr><td>Pending claim amounts per address</td><td>KYC documents and verification status</td></tr>
+    <tr><td>All transaction hashes and events</td><td>Admin notes, dispute records, analytics aggregates</td></tr>
+  </tbody>
+</table>
+
+<h3>6.2 Sync Pattern</h3>
+<p>Arc events (<code>InvoiceFunded</code>, <code>PayoutClaimed</code>, <code>DisputeResolved</code>) are listened to by a Supabase Edge Function webhook. The function writes the event to the corresponding Supabase table, keeping off-chain state consistent with onchain reality without requiring the frontend to poll.</p>
+
+<!-- 7. V2/V3 EVOLUTION -->
+<h2>7. Technical Evolution Path</h2>
+
+<h3>V2 (3–9 months)</h3>
+<ul>
+  <li><strong>Supabase wiring:</strong> Replace React context mock state with real Supabase queries. Auth via Supabase Auth (email OTP for sellers, wallet-sign for lenders).</li>
+  <li><strong>KYC API:</strong> Integrate Smile Identity (Africa) or Onfido (global) for automated document verification. Webhook confirms to Supabase, which triggers admin queue entry.</li>
+  <li><strong>CCTP bridging:</strong> Allow lenders to fund invoices from Base, Arbitrum, or Polygon USDC via Circle CCTP. Frontend: use <code>@circle-fin/bridge-kit</code>.</li>
+  <li><strong>Lender pool contracts:</strong> Deploy <code>VestoPool.sol</code> — ERC-4626-style vault accepting USDC deposits from multiple lenders, allocating to invoices on a risk-weighted basis.</li>
+  <li><strong>Contract verification:</strong> Verify <code>VestoEscrow.sol</code> source on Arc explorer via Foundry <code>forge verify-contract</code>.</li>
+</ul>
+
+<h3>V3 (9–18 months)</h3>
+<ul>
+  <li><strong>Tokenised invoices:</strong> Each funded invoice mints an ERC-1155 token representing the lender's position. Enables secondary-market trading.</li>
+  <li><strong>On-chain credit scoring:</strong> Attest seller repayment history as a Soul-Bound Token (ERC-5192). Score improves advance rate and credit limit automatically.</li>
+  <li><strong>Governance:</strong> <code>VESTO</code> governance token for protocol parameter voting (advance rates, fee tiers, pool allocation weights).</li>
+  <li><strong>Cross-chain identity:</strong> ERC-8004 agent identity registry for automated lender agents that fund invoices programmatically.</li>
+</ul>
+
+<div class="divider"></div>
+<div class="footnote">Vesto Technical Requirements Document · Version 1.0 · September 2026 · Confidential</div>
+
+</body>
+</html>

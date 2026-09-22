@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Vesto — App Flow &amp; User Journey Maps</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet"/>
+<style>
+  :root{--canvas:#F8F6F1;--ink:#0D1824;--ink-subtle:#3A4A5C;--ink-muted:#5E6E82;--gold:#B8821E;--gold-bg:rgba(184,130,30,0.08);--gold-border:rgba(184,130,30,0.22);--cream:#FFFFFF;--border:rgba(13,24,36,0.10);--navy:#0D1824;--green:#1A6645;--red:#8C1A1A;--purple:#4338CA;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{background:var(--canvas);color:var(--ink);font-family:'Space Grotesk',sans-serif;font-size:14px;line-height:1.6;}
+  body{max-width:900px;margin:0 auto;padding:60px 48px 100px;}
+  @media print{body{padding:20px 32px;max-width:100%;} h2{page-break-before:always;} h2:first-of-type{page-break-before:avoid;} .flow-col{page-break-inside:avoid;}}
+  .cover{padding:72px 0 60px;border-bottom:2px solid var(--gold);margin-bottom:56px;}
+  .cover-label{font-size:10px;letter-spacing:0.14em;text-transform:uppercase;font-weight:600;color:var(--gold);margin-bottom:20px;}
+  .cover-title{font-size:48px;font-weight:700;letter-spacing:-0.04em;line-height:1.0;color:var(--ink);margin-bottom:16px;}
+  .cover-sub{font-size:17px;color:var(--ink-subtle);max-width:520px;line-height:1.5;margin-bottom:32px;}
+  .cover-meta{display:flex;gap:40px;flex-wrap:wrap;}
+  .cover-meta-item label{display:block;font-size:9px;text-transform:uppercase;letter-spacing:0.10em;font-weight:600;color:var(--ink-muted);margin-bottom:4px;}
+  .cover-meta-item span{font-size:13px;font-weight:600;color:var(--ink);}
+  h2{font-size:26px;font-weight:700;letter-spacing:-0.03em;color:var(--ink);margin:48px 0 20px;padding-top:8px;border-top:2px solid var(--ink);}
+  h3{font-size:16px;font-weight:600;letter-spacing:-0.015em;color:var(--ink);margin:28px 0 10px;}
+  h4{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.07em;color:var(--ink-muted);margin:20px 0 8px;}
+  p{color:var(--ink-subtle);margin-bottom:12px;font-size:13.5px;line-height:1.65;}
+  strong{color:var(--ink);font-weight:600;}
+  ul{color:var(--ink-subtle);font-size:13.5px;padding-left:20px;margin-bottom:12px;}
+  li{margin-bottom:5px;line-height:1.55;}
+
+  /* Journey flow */
+  .journey{background:white;border:1px solid var(--border);border-radius:15px;overflow:hidden;margin:24px 0;}
+  .journey-header{padding:16px 22px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border);}
+  .journey-role{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.10em;padding:3px 10px;border-radius:4px;}
+  .role-seller{background:rgba(184,130,30,0.10);color:#B8821E;border:1px solid rgba(184,130,30,0.18);}
+  .role-lender{background:rgba(67,56,202,0.10);color:#4338CA;border:1px solid rgba(67,56,202,0.18);}
+  .role-admin{background:rgba(13,24,36,0.08);color:#3A4A5C;border:1px solid rgba(13,24,36,0.14);}
+  .journey-title{font-size:15px;font-weight:600;color:var(--ink);letter-spacing:-0.012em;}
+  .flow-steps{padding:22px;}
+  .flow-step{display:flex;gap:16px;margin-bottom:0;}
+  .flow-step-left{display:flex;flex-direction:column;align-items:center;}
+  .flow-step-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;shrink:0;flex-shrink:0;}
+  .step-normal{background:rgba(13,24,36,0.07);color:var(--ink-muted);}
+  .step-onchain{background:rgba(184,130,30,0.12);color:#B8821E;border:1.5px solid rgba(184,130,30,0.25);}
+  .step-success{background:rgba(26,102,69,0.12);color:#1A6645;border:1.5px solid rgba(26,102,69,0.25);}
+  .step-warning{background:rgba(140,26,26,0.10);color:#8C1A1A;border:1.5px solid rgba(140,26,26,0.20);}
+  .step-connector{width:1px;flex:1;min-height:20px;margin:4px 0;background:var(--border);}
+  .flow-step-content{flex:1;padding-bottom:20px;}
+  .flow-step-content:last-child{padding-bottom:0;}
+  .step-title{font-size:13.5px;font-weight:600;color:var(--ink);margin-bottom:3px;}
+  .step-sub{font-size:12px;color:var(--ink-muted);line-height:1.5;}
+  .step-screen{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--gold);margin-top:4px;}
+  .step-error{display:inline-block;font-size:10.5px;color:var(--red);background:rgba(140,26,26,0.07);border:1px solid rgba(140,26,26,0.15);border-radius:5px;padding:2px 8px;margin-top:4px;}
+
+  /* State machine */
+  .state-machine{background:white;border:1px solid var(--border);border-radius:13px;padding:28px;margin:24px 0;}
+  .states-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px;}
+  .state-box{border-radius:9px;padding:14px 16px;border:1.5px solid;}
+  .state-registered{border-color:rgba(13,24,36,0.15);background:rgba(13,24,36,0.04);}
+  .state-published{border-color:rgba(184,130,30,0.25);background:rgba(184,130,30,0.07);}
+  .state-funded{border-color:rgba(26,102,69,0.25);background:rgba(26,102,69,0.07);}
+  .state-repaid{border-color:rgba(67,56,202,0.25);background:rgba(67,56,202,0.07);}
+  .state-disputed{border-color:rgba(140,26,26,0.25);background:rgba(140,26,26,0.07);}
+  .state-flagged{border-color:rgba(220,120,20,0.25);background:rgba(220,120,20,0.07);}
+  .state-name{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;}
+  .state-registered .state-name{color:#3A4A5C;}
+  .state-published .state-name{color:#B8821E;}
+  .state-funded .state-name{color:#1A6645;}
+  .state-repaid .state-name{color:#4338CA;}
+  .state-disputed .state-name{color:#8C1A1A;}
+  .state-flagged .state-name{color:#B45309;}
+  .state-desc{font-size:11px;color:var(--ink-muted);line-height:1.45;}
+  .transitions{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-subtle);line-height:2.0;}
+  .trans-arrow{color:var(--gold);}
+
+  /* Screen map */
+  .screen-group{background:white;border:1px solid var(--border);border-radius:13px;padding:22px;margin:16px 0;}
+  .screen-group-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.10em;color:var(--ink-muted);margin-bottom:12px;}
+  .screen-list{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;}
+  .screen-item{display:flex;align-items:flex-start;gap:8px;padding:8px 10px;border-radius:7px;background:rgba(13,24,36,0.03);}
+  .screen-dot{width:6px;height:6px;border-radius:50%;margin-top:5px;flex-shrink:0;}
+  .dot-seller{background:#B8821E;}
+  .dot-lender{background:#4338CA;}
+  .dot-admin{background:#3A4A5C;}
+  .dot-shared{background:#1A6645;}
+  .screen-name{font-size:12px;font-weight:600;color:var(--ink);}
+  .screen-route{font-size:10px;color:var(--ink-muted);font-family:'JetBrains Mono',monospace;}
+
+  table{width:100%;border-collapse:collapse;margin:20px 0;font-size:12.5px;}
+  th{background:var(--ink);color:white;padding:10px 14px;text-align:left;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:0.06em;}
+  td{padding:10px 14px;border-bottom:1px solid var(--border);color:var(--ink-subtle);vertical-align:top;}
+  tr:last-child td{border-bottom:none;}
+  tr:nth-child(even) td{background:rgba(13,24,36,0.025);}
+  td strong{color:var(--ink);}
+  td code{font-family:'JetBrains Mono',monospace;font-size:11px;background:rgba(13,24,36,0.07);padding:1px 6px;border-radius:4px;color:var(--ink);}
+
+  .divider{height:1px;background:var(--border);margin:40px 0;}
+  .footnote{font-size:11px;color:var(--ink-muted);border-top:1px solid var(--border);padding-top:16px;margin-top:60px;}
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="cover-label">Vesto · App Flow &amp; User Journey Maps · V1.0</div>
+  <div class="cover-title">App Flow &amp;<br/>User Journey<br/>Maps</div>
+  <div class="cover-sub">Complete journey maps for all three roles, the invoice lifecycle state machine, screen navigation map, and onchain settlement sequence.</div>
+  <div class="cover-meta">
+    <div class="cover-meta-item"><label>Roles Covered</label><span>Seller · Lender · Admin</span></div>
+    <div class="cover-meta-item"><label>Screens Mapped</label><span>23 screens across 3 roles</span></div>
+    <div class="cover-meta-item"><label>Invoice States</label><span>6 states · 8 transitions</span></div>
+    <div class="cover-meta-item"><label>Version</label><span>1.0 — September 2026</span></div>
+  </div>
+</div>
+
+<!-- 1. SELLER JOURNEY -->
+<h2>1. Seller Journey</h2>
+<p>The seller journey has two phases: onboarding (sign-up → KYC → credit limit unlocked) and operational (invoice submission → admin review → marketplace → funded → claim payout). These phases are separate and sequential — a seller cannot submit invoices until Tier 1 KYC is approved.</p>
+
+<div class="journey">
+  <div class="journey-header">
+    <span class="journey-role role-seller">Seller</span>
+    <span class="journey-title">Onboarding Phase — Sign-up to credit unlock</span>
+  </div>
+  <div class="flow-steps">
+    <div class="flow-step">
+      <div class="flow-step-left"><div class="flow-step-num step-normal">1</div><div class="step-connector"></div></div>
+      <div class="flow-step-content"><div class="step-title">Land on Seller Sign Up</div><div class="step-sub">Chooses "Seller" on role picker. Completes 4-step form: full name, phone, business name, operating country, category.</div><div class="step-screen">Screen: SellerSignUp</div></div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-step-left"><div class="flow-step-num step-normal">2</div><div class="step-connector"></div></div>
+      <div class="flow-step-content"><div class="step-title">Arrive at Seller Dashboard (unverified)</div><div class="step-sub">Balance hero shows 0 USDC. Progress checklist: Tier 1 = active, credit limit = $0. Invoice submission blocked by lock gate.</div><div class="step-screen">Screen: SellerDashboard</div></div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-step-left"><div class="flow-step-num step-normal">3</div><div class="step-connector"></div></div>
+      <div class="flow-step-content"><div class="step-title">Start Tier 1 KYC</div><div class="step-sub">Cleanverse AI document analysis. Uploads national ID or passport photo. Selects country. Sees animated AI analysis badge.</div><div class="step-screen">Screen: Tier1Verification</div></div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-step-left"><div class="flow-step-num step-normal">4</div><div class="step-connector"></div></div>
+      <div class="flow-step-content"><div class="step-title">Enter Tier 2 KYC (optional, for $5,000 limit)</div><div class="step-sub">Video selfie with live viewfinder. Upload tax PIN + 3-month bank statement. Both documents verified server-side.</div><div class="step-screen">Screen: Tier2Verification</div><span class="step-error">Skip path: stay at Tier 1 ($500 limit)</span></div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-step-left"><div class="flow-step-num step-normal">5</div><div class="step-connector"></div></div>
+      <div class="flow-step-content"><div class="step-title">Verification submitted — awaiting admin review</div><div class="step-sub">VerificationInProgress screen shows step timeline. Seller can check status at any time. Typical review: &lt;2 hours.</div><div class="step-screen">Screen: VerificationInProgress → SellerStatus</div></div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-step-left"><div class="flow-step-num step-success">6</div></div>
+      <div class="flow-step-content"><div class="step-title">Admin approves → Credit limit unlocked</div><div class="step-sub">Dashboard updates: Tier 1 badge appears, credit limit = $500. Invoice submission now available. Progress step 1 ticked.</div><div class="step-screen">Screen: SellerDashboard (updated)</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="journey">
+  <div class="journey-header">
+    <span class="journey-role role-seller">Seller</span>
+    <span class="journey-title">Operational Phase — Invoice to payout</span>
+  </div>
+  <div class="flow-steps">
+    <div class="flow-step">
+      <div class="flow-step-left"><div class="flow-step-num step-normal">1</div><div class="step-connector"></div></div>
+      <div class="flow-step-content"><div class="step-title">Submit invoice</div><div class="step-sub">Enters buyer name, tax ID, country, invoice amount, due date. Uploads PDF. Payout breakdown ribbon shows: face value, advance (85–90%), platform fee (2%), net payout.</div><div class="step-screen">Screen: SubmitInvoice</div><span class="step-error">Block: exceeds credit limit → upgrade to Tier 2 prompt</span></div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-step-left"><div class="flow-step-num step-normal">2</div><div class="step-connector"></div></div>
+      <div class="flow-step-content"><div class="step-title">Invoice enters admin review queue</div><div class="step-sub">Status = pending_admin_approval. Visible on dashboard in "Invoice ledger" tab. Dashboard stat tiles update.</div><div class="step-screen">Screen: SellerDashboard</div></div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-step-left"><div class="flow-step-num step-normal">3</div><div class="step-connector"></div></div>
+      <div class="flow-step-content"><div class="step-title">Admin approves → Invoice listed on marketplace</div><div class="step-sub">Status = published_marketplace. Invoice now visible to lenders. Seller dashboard shows "On market" counter.</div><div class="step-screen">Screen: SellerDashboard (status updated)</div></div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-step-left"><div class="flow-step-num step-onchain">4</div><div class="step-connector"></div></div>
+      <div class="flow-step-content"><div class="step-title">Lender funds invoice onchain</div><div class="step-sub">VestoEscrow.fundInvoice() called. Status = funded. USDC moves from lender to escrow. Seller sees "In escrow" capital on dashboard. Arc settlement: &lt;1 second.</div><div class="step-screen">Onchain: VestoEscrow · SellerDashboard updated</div></div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-step-left"><div class="flow-step-num step-normal">5</div><div class="step-connector"></div></div>
+      <div class="flow-step-content"><div class="step-title">Buyer pays seller off-platform</div><div class="step-sub">Buyer settles invoice via wire/SWIFT/local payment. Seller marks invoice settled in dashboard ("Mark settled" button).</div><div class="step-screen">Screen: SellerDashboard → InvoiceRow button</div></div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-step-left"><div class="flow-step-num step-normal">6</div><div class="step-connector"></div></div>
+      <div class="flow-step-content"><div class="step-title">Admin confirms repayment → markRepaid</div><div class="step-sub">Admin reviews settlement confirmation. Calls markRepaid on contract. USDC moves from escrow to seller's pendingClaims. Lender payout also added.</div><div class="step-screen">Screen: InvoiceOversightTable (Admin)</div></div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-step-left"><div class="flow-step-num step-success">7</div></div>
+      <div class="flow-step-content"><div class="step-title">Seller claims payout onchain</div><div class="step-sub">Green "Payout ready" banner appears on dashboard. Seller clicks "Claim USDC" → claimPayout() called → USDC arrives in wallet. Status = repaid.</div><div class="step-screen">Screen: SellerDashboard · Onchain: VestoEscrow.claimPayout()</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- 2. LENDER JOURNEY -->
+<h2>2. Lender Journey</h2>
+
+<div class="journey">
+  <div class="journey-header">
+    <span class="journey-role role-lender">Lender</span>
+    <span class="journey-title">Full journey — Sign-up to capital deployed</span>
+  </div>
+  <div class="flow-steps">
+    <div class="flow-step">
+      <div class="flow-step-left"><div class="flow-step-num step-normal">1</div><div class="step-connector"></div></div>
+      <div class="flow-step-content"><div class="step-title">Lender sign-up</div><div class="step-sub">Chooses "Lender". Completes profile: full name, email, account type (individual/institutional), target allocation, auto-invest preference.</div><div class="step-screen">Screen: LenderSignUp</div></div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-step-left"><div class="flow-step-num step-normal">2</div><div class="step-connector"></div></div>
+      <div class="flow-step-content"><div class="step-title">Risk disclosure gate</div><div class="step-sub">Must read and accept risk disclosure before accessing marketplace. Cannot skip. Checkbox confirmation required.</div><div class="step-screen">Screen: RiskDisclosure</div></div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-step-left"><div class="flow-step-num step-normal">3</div><div class="step-connector"></div></div>
+      <div class="flow-step-content"><div class="step-title">Guided tour (optional)</div><div class="step-sub">3-minute walkthrough of marketplace mechanics, risk scoring, and yield split. Skippable.</div><div class="step-screen">Screen: MarketplaceGuidedTour</div></div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-step-left"><div class="flow-step-num step-normal">4</div><div class="step-connector"></div></div>
+      <div class="flow-step-content"><div class="step-title">Browse marketplace</div><div class="step-sub">Sees live invoice cards. Each card shows: seller name, buyer, one-liner thesis, risk meter, gross/net yield split, term, advance amount. Filter by category, yield, or term length.</div><div class="step-screen">Screen: MarketplaceBrowse</div></div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-step-left"><div class="flow-step-num step-onchain">5</div><div class="step-connector"></div></div>
+      <div class="flow-step-content"><div class="step-title">Fund invoice onchain</div><div class="step-sub">Click "Fund $X,XXX" → Funding modal opens. Reviews deal facts (gross APY / fee / net APY). Clicks "Deploy $X,XXX USDC". Step 1: approve USDC. Step 2: fundInvoice(). Arc confirms in &lt;1 second.</div><div class="step-screen">Screen: FundingModal · Onchain: VestoEscrow</div><span class="step-error">Block: insufficient USDC balance → "Get test USDC" prompt</span></div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-step-left"><div class="flow-step-num step-normal">6</div><div class="step-connector"></div></div>
+      <div class="flow-step-content"><div class="step-title">Monitor portfolio</div><div class="step-sub">Lender Portfolio shows: deployed capital, gross yield, net APY tile (split display), active positions list with per-invoice yield breakdown. Each position row shows one-liner thesis.</div><div class="step-screen">Screen: LenderPortfolio</div></div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-step-left"><div class="flow-step-num step-success">7</div></div>
+      <div class="flow-step-content"><div class="step-title">Invoice repaid → lender payout claimable</div><div class="step-sub">pendingClaims updated onchain. Lender sees green "Claim" banner. Withdraws USDC to wallet. Optional: auto-reinvest toggle re-deploys into next available invoice.</div><div class="step-screen">Screen: LenderPortfolio · Onchain: claimPayout()</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- 3. ADMIN JOURNEY -->
+<h2>3. Admin Journey</h2>
+
+<div class="journey">
+  <div class="journey-header">
+    <span class="journey-role role-admin">Admin</span>
+    <span class="journey-title">Daily operations — Login to oversight</span>
+  </div>
+  <div class="flow-steps">
+    <div class="flow-step">
+      <div class="flow-step-left"><div class="flow-step-num step-normal">1</div><div class="step-connector"></div></div>
+      <div class="flow-step-content"><div class="step-title">Admin login with 2FA</div><div class="step-sub">Email must be @vesto.finance domain. Enter 6-digit passcode (demo: 123456). Invalid domain or wrong length blocked immediately.</div><div class="step-screen">Screen: AdminLogin2FA</div></div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-step-left"><div class="flow-step-num step-normal">2</div><div class="step-connector"></div></div>
+      <div class="flow-step-content"><div class="step-title">Analytics overview (landing)</div><div class="step-sub">KPI tiles: total volume, active liquidity, default rate, avg APY. Sparkline charts. Sector breakdown. Arc protocol health card.</div><div class="step-screen">Screen: AnalyticsOverview</div></div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-step-left"><div class="flow-step-num step-normal">3</div><div class="step-connector"></div></div>
+      <div class="flow-step-content"><div class="step-title">Review KYC verification queue</div><div class="step-sub">T1/T2 avatar tiles. Review document, add admin note, approve or reject with undo toast. Approved seller → sellers registry updated → credit limit unlocked in seller's dashboard.</div><div class="step-screen">Screen: VerificationQueue</div></div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-step-left"><div class="flow-step-num step-normal">4</div><div class="step-connector"></div></div>
+      <div class="flow-step-content"><div class="step-title">Review invoice oversight table</div><div class="step-sub">All submitted invoices. Status filter. Flag icon triggers reason modal. Flag reason badges on table rows. Approve: publishes to marketplace. Reject: returns to seller with reason.</div><div class="step-screen">Screen: InvoiceOversightTable</div></div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-step-left"><div class="flow-step-num step-warning">5</div><div class="step-connector"></div></div>
+      <div class="flow-step-content"><div class="step-title">Resolve disputes</div><div class="step-sub">Flagged invoices escalate here. Admin sees both parties' claims. Two actions: "Refund Lender" (returns USDC from escrow to lender) or "Pay Seller" (releases USDC to seller pendingClaims).</div><div class="step-screen">Screen: DisputeResolution</div></div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-step-left"><div class="flow-step-num step-success">6</div></div>
+      <div class="flow-step-content"><div class="step-title">Mark invoice repaid</div><div class="step-sub">Seller has notified buyer paid. Admin verifies offline confirmation (bank receipt, SWIFT advice). Calls markRepaid. USDC moves to pendingClaims for both seller and lender.</div><div class="step-screen">Screen: InvoiceOversightTable · Onchain: markRepaid()</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- 4. INVOICE STATE MACHINE -->
+<h2>4. Invoice Lifecycle State Machine</h2>
+
+<div class="state-machine">
+  <h4 style="margin-top:0">Six states</h4>
+  <div class="states-grid">
+    <div class="state-box state-registered"><div class="state-name">Registered</div><div class="state-desc">Admin pre-registered on contract. Not yet visible to lenders. Awaiting admin invoice review.</div></div>
+    <div class="state-box state-published"><div class="state-name">Published</div><div class="state-desc">Admin approved. Live on marketplace. Visible to all lenders. Accepting funding.</div></div>
+    <div class="state-box state-funded"><div class="state-name">Funded</div><div class="state-desc">Lender called fundInvoice(). USDC in escrow. Seller notified. Awaiting buyer payment.</div></div>
+    <div class="state-box state-repaid"><div class="state-name">Repaid</div><div class="state-desc">Admin confirmed buyer paid. markRepaid() called. Both pendingClaims updated. Terminal state.</div></div>
+    <div class="state-box state-disputed"><div class="state-name">Disputed</div><div class="state-desc">Seller or lender raised dispute. Escrow frozen. Admin resolving. Leads to repaid or refunded.</div></div>
+    <div class="state-box state-flagged"><div class="state-name">Flagged</div><div class="state-desc">Admin flagged during review. Reason recorded. Returned to seller for correction or rejected.</div></div>
+  </div>
+
+  <h4>Eight transitions</h4>
+  <div class="transitions">
+    pending_admin_approval <span class="trans-arrow">→ registered</span> &nbsp;| Admin approves invoice + calls registerInvoice()<br/>
+    pending_admin_approval <span class="trans-arrow">→ flagged</span> &nbsp;&nbsp;&nbsp;&nbsp;| Admin flags invoice with reason<br/>
+    registered &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="trans-arrow">→ published_marketplace</span> | Admin publishes to marketplace<br/>
+    published_marketplace &nbsp;<span class="trans-arrow">→ funded</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| Lender calls fundInvoice()<br/>
+    published_marketplace &nbsp;<span class="trans-arrow">→ flagged</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| Admin flags post-listing<br/>
+    funded &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="trans-arrow">→ repaid</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| Admin calls markRepaid() after buyer confirms<br/>
+    funded &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="trans-arrow">→ disputed</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| Seller or lender raises dispute<br/>
+    disputed &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="trans-arrow">→ repaid</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| Admin resolves (pay seller or refund lender)
+  </div>
+</div>
+
+<!-- 5. SCREEN NAVIGATION MAP -->
+<h2>5. Screen Navigation Map</h2>
+
+<div class="screen-group">
+  <div class="screen-group-title">Seller Screens (9)</div>
+  <div class="screen-list">
+    <div class="screen-item"><div class="screen-dot dot-seller"></div><div><div class="screen-name">SellerSignUp</div><div class="screen-route">sellerView: 'signup'</div></div></div>
+    <div class="screen-item"><div class="screen-dot dot-seller"></div><div><div class="screen-name">SellerDashboard</div><div class="screen-route">sellerView: 'dashboard'</div></div></div>
+    <div class="screen-item"><div class="screen-dot dot-seller"></div><div><div class="screen-name">SubmitInvoice</div><div class="screen-route">sellerView: 'submit_invoice'</div></div></div>
+    <div class="screen-item"><div class="screen-dot dot-seller"></div><div><div class="screen-name">Tier1Verification</div><div class="screen-route">sellerView: 'tier1'</div></div></div>
+    <div class="screen-item"><div class="screen-dot dot-seller"></div><div><div class="screen-name">Tier2Verification</div><div class="screen-route">sellerView: 'tier2'</div></div></div>
+    <div class="screen-item"><div class="screen-dot dot-seller"></div><div><div class="screen-name">VerificationInProgress</div><div class="screen-route">sellerView: 'in_progress'</div></div></div>
+    <div class="screen-item"><div class="screen-dot dot-seller"></div><div><div class="screen-name">SellerStatus</div><div class="screen-route">sellerView: 'status'</div></div></div>
+    <div class="screen-item"><div class="screen-dot dot-seller"></div><div><div class="screen-name">SellerOnboardingTutorial</div><div class="screen-route">sellerView: 'tutorial'</div></div></div>
+    <div class="screen-item"><div class="screen-dot dot-seller"></div><div><div class="screen-name">LenderWelcome</div><div class="screen-route">sellerView: 'welcome'</div></div></div>
+  </div>
+</div>
+
+<div class="screen-group">
+  <div class="screen-group-title">Lender Screens (7)</div>
+  <div class="screen-list">
+    <div class="screen-item"><div class="screen-dot dot-lender"></div><div><div class="screen-name">LenderSignUp</div><div class="screen-route">lenderView: 'signup'</div></div></div>
+    <div class="screen-item"><div class="screen-dot dot-lender"></div><div><div class="screen-name">RiskDisclosure</div><div class="screen-route">lenderView: 'risk_disclosure'</div></div></div>
+    <div class="screen-item"><div class="screen-dot dot-lender"></div><div><div class="screen-name">MarketplaceGuidedTour</div><div class="screen-route">lenderView: 'tour'</div></div></div>
+    <div class="screen-item"><div class="screen-dot dot-lender"></div><div><div class="screen-name">MarketplaceBrowse</div><div class="screen-route">lenderView: 'marketplace'</div></div></div>
+    <div class="screen-item"><div class="screen-dot dot-lender"></div><div><div class="screen-name">FundInvoiceBatch</div><div class="screen-route">lenderView: 'batch'</div></div></div>
+    <div class="screen-item"><div class="screen-dot dot-lender"></div><div><div class="screen-name">LenderPortfolio</div><div class="screen-route">lenderView: 'portfolio'</div></div></div>
+    <div class="screen-item"><div class="screen-dot dot-lender"></div><div><div class="screen-name">LenderWelcome</div><div class="screen-route">lenderView: 'welcome'</div></div></div>
+  </div>
+</div>
+
+<div class="screen-group">
+  <div class="screen-group-title">Admin Screens (5) + Shared (2)</div>
+  <div class="screen-list">
+    <div class="screen-item"><div class="screen-dot dot-admin"></div><div><div class="screen-name">AdminLogin2FA</div><div class="screen-route">adminView: 'login'</div></div></div>
+    <div class="screen-item"><div class="screen-dot dot-admin"></div><div><div class="screen-name">AnalyticsOverview</div><div class="screen-route">adminView: 'analytics'</div></div></div>
+    <div class="screen-item"><div class="screen-dot dot-admin"></div><div><div class="screen-name">VerificationQueue</div><div class="screen-route">adminView: 'verification'</div></div></div>
+    <div class="screen-item"><div class="screen-dot dot-admin"></div><div><div class="screen-name">InvoiceOversightTable</div><div class="screen-route">adminView: 'invoices'</div></div></div>
+    <div class="screen-item"><div class="screen-dot dot-admin"></div><div><div class="screen-name">DisputeResolution</div><div class="screen-route">adminView: 'disputes'</div></div></div>
+    <div class="screen-item"><div class="screen-dot dot-shared"></div><div><div class="screen-name">Navbar</div><div class="screen-route">Shared — all roles</div></div></div>
+    <div class="screen-item"><div class="screen-dot dot-shared"></div><div><div class="screen-name">WalletAuthModal</div><div class="screen-route">Shared — wallet connection</div></div></div>
+  </div>
+</div>
+
+<!-- 6. ERROR FLOWS -->
+<h2>6. Error &amp; Edge-Case Flows</h2>
+
+<table>
+  <thead><tr><th>Scenario</th><th>Where</th><th>Handling</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Lender: insufficient USDC balance</strong></td><td>FundingModal</td><td>Red banner: "You need $X,XXX USDC. Get test USDC from Arc Studio sidebar." CTA disabled.</td></tr>
+    <tr><td><strong>Seller: credit limit exceeded</strong></td><td>SubmitInvoice</td><td>Input field turns error-red. "Advance of $X exceeds your $Y available credit. Upgrade to Tier 2 for $5,000 limit." Submit button disabled.</td></tr>
+    <tr><td><strong>KYC: verification rejected</strong></td><td>SellerStatus</td><td>Red state on Tier step. Reason shown. "Re-submit" CTA routes to Tier1 or Tier2.</td></tr>
+    <tr><td><strong>Transaction: wallet rejected</strong></td><td>FundingModal / ClaimPayout</td><td>Error state in modal: "Transaction cancelled in wallet." Reset + retry CTA.</td></tr>
+    <tr><td><strong>Transaction: contract revert</strong></td><td>FundingModal</td><td>Error state: decoded revert reason shown if available. "Try again" resets to idle.</td></tr>
+    <tr><td><strong>Admin 2FA: wrong email domain</strong></td><td>AdminLogin2FA</td><td>Inline error: "Admin access requires a @vesto.finance email address." Field highlighted red.</td></tr>
+    <tr><td><strong>Admin 2FA: wrong passcode length</strong></td><td>AdminLogin2FA</td><td>Button disabled until exactly 6 digits entered. "Enter exactly 6 digits" hint shown.</td></tr>
+    <tr><td><strong>Dispute raised on funded invoice</strong></td><td>InvoiceOversightTable</td><td>Invoice status → disputed. Escrow frozen. Admin routed to DisputeResolution screen. Timer starts.</td></tr>
+    <tr><td><strong>Wallet disconnected mid-flow</strong></td><td>Any onchain screen</td><td>ConnectKitButton appears in place of disabled action button. State preserved — user reconnects and continues.</td></tr>
+  </tbody>
+</table>
+
+<div class="divider"></div>
+<div class="footnote">Vesto App Flow &amp; User Journey Maps · Version 1.0 · September 2026 · Confidential</div>
+
+</body>
+</html>
