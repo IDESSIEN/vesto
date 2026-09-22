@@ -104,22 +104,29 @@ export const Navbar: React.FC = () => {
             <div
               className="flex items-center justify-center shrink-0"
               style={{
-                width: '34px', height: '34px',
+                width: '36px', height: '36px',
                 background: 'linear-gradient(135deg,#C9922A,#E8B96A)',
                 borderRadius: '9px',
                 boxShadow: '0 2px 8px rgba(201,146,42,0.35)',
               }}
             >
-              <span style={{ fontFamily: 'Space Grotesk, sans-serif', fontWeight: 800, color: '#fff', fontSize: '17px', letterSpacing: '-0.04em', lineHeight: 1 }}>V</span>
+              <span style={{ fontFamily: 'Space Grotesk, sans-serif', fontWeight: 800, color: '#fff', fontSize: '18px', letterSpacing: '-0.04em', lineHeight: 1 }}>V</span>
             </div>
             <div style={{ lineHeight: 1 }}>
-              <div style={{ fontFamily: 'Space Grotesk, sans-serif', fontWeight: 800, color: '#fff', fontSize: '18px', letterSpacing: '-0.04em' }}>VESTO</div>
-              <div style={{ fontSize: '8px', letterSpacing: '0.13em', fontWeight: 600, color: 'var(--gold-light)', textTransform: 'uppercase', marginTop: '2px' }}>Invoice Capital, Onchain</div>
+              <div style={{
+                fontFamily: 'Space Grotesk, sans-serif',
+                fontWeight: 800,
+                color: '#FFFFFF',
+                fontSize: '20px',
+                letterSpacing: '-0.03em',
+                textShadow: '0 1px 4px rgba(0,0,0,0.25)',
+              }}>Vesto</div>
+              <div className="hidden sm:block" style={{ fontSize: '9px', letterSpacing: '0.12em', fontWeight: 600, color: 'rgba(233,190,104,0.85)', textTransform: 'uppercase', marginTop: '2px' }}>Invoice Capital, Onchain</div>
             </div>
           </div>
 
           {/* Right section */}
-          <div className="flex items-center gap-2 ml-auto">
+          <div className="flex items-center gap-1.5 sm:gap-2 ml-auto">
 
             {/* Role switcher — desktop (always visible) */}
             <nav
