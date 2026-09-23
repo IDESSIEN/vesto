@@ -498,6 +498,57 @@ export const SellerDashboard: React.FC = () => {
         </p>
       )}
 
+      {/* ── Repayment instructions — shown when invoice is funded ── */}
+      {myInvoices.some(i => i.status === 'funded') && (
+        <div
+          className="rounded-[15px] overflow-hidden animate-fade-in"
+          style={{ border: '1.5px solid rgba(30,77,184,0.18)', background: 'rgba(30,77,184,0.03)' }}
+        >
+          <div
+            className="flex items-center gap-2.5 px-5 py-3"
+            style={{ borderBottom: '1px solid rgba(30,77,184,0.12)' }}
+          >
+            <span
+              className="w-2 h-2 rounded-full shrink-0 animate-[pulse-live_2s_ease-in-out_infinite]"
+              style={{ background: '#1E4DB8' }}
+            />
+            <p className="text-[11px] font-bold uppercase tracking-[0.09em]" style={{ color: '#1E4DB8' }}>
+              Invoice funded · buyer repayment instructions
+            </p>
+          </div>
+          <div className="px-5 py-4 flex flex-col gap-3">
+            <p className="text-[13px] font-medium text-ink leading-snug">
+              Your buyer must pay the invoice value to the virtual account below. Once payment is confirmed, your USDC advance is released automatically.
+            </p>
+            {/* Virtual account details */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              {[
+                { label: 'Account name',   value: 'Vesto Platform Ltd' },
+                { label: 'Account number', value: 'VT-' + myInvoices.find(i => i.status === 'funded')?.id.slice(0,8).toUpperCase() },
+                { label: 'Payment reference', value: 'VESTO-' + myInvoices.find(i => i.status === 'funded')?.id.slice(0,6).toUpperCase() },
+                { label: 'Amount due',     value: '$' + (myInvoices.find(i => i.status === 'funded')?.amount ?? 0).toLocaleString() + ' USD' },
+              ].map(({ label, value }) => (
+                <div
+                  key={label}
+                  className="flex flex-col gap-0.5 px-3.5 py-2.5 rounded-[9px]"
+                  style={{ background: 'var(--cream)', border: '1px solid var(--border)' }}
+                >
+                  <span className="text-[9.5px] font-semibold uppercase tracking-[0.09em]" style={{ color: 'var(--ink-faint)' }}>
+                    {label}
+                  </span>
+                  <span className="font-mono text-[13px] font-bold text-ink" style={{ letterSpacing: '-0.01em' }}>
+                    {value}
+                  </span>
+                </div>
+              ))}
+            </div>
+            <p className="text-[11px] leading-relaxed" style={{ color: 'var(--ink-subtle)' }}>
+              Payment is automatically verified within 24 hours of bank settlement. Your USDC advance will be released to claim once confirmed — no manual step required.
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* ── Stat tiles or first-invoice prompt ─────────────────── */}
       {hasNoInvoices && seller.verificationTier > 0 ? (
         <div

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useApp } from '../../context/AppContext';
 import { useAccount } from 'wagmi';
 import { ConnectKitButton } from 'connectkit';
@@ -32,6 +32,51 @@ const WalletIcon = () => (
 );
 
 const FEE_PCT = 2.8;
+
+// Settlement countdown — shows days to due date, or detected/settled status
+const SettlementCountdown: React.FC<{ status: string; dueDate: string }> = ({ status, dueDate }) => {
+  const [daysLeft, setDaysLeft] = useState<number | null>(null);
+
+  useEffect(() => {
+    const due = new Date(dueDate);
+    const diff = Math.ceil((due.getTime() - Date.now()) / (1000 * 60 * 60 * 24));
+    setDaysLeft(diff);
+  }, [dueDate]);
+
+  if (status === 'payment_detected') {
+    return (
+      <span
+        className="inline-flex items-center gap-1 text-[9px] font-semibold mt-0.5"
+        style={{ color: '#B8821E' }}
+      >
+        <span className="w-1.5 h-1.5 rounded-full animate-[pulse-live_1.5s_ease-in-out_infinite]" style={{ background: '#B8821E', display: 'inline-block' }} />
+        Payment detected · settling
+      </span>
+    );
+  }
+  if (status === 'repaid') {
+    return (
+      <span className="inline-flex items-center gap-1 text-[9px] font-semibold mt-0.5" style={{ color: '#1A6645' }}>
+        <svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2.5L7 1.5" stroke="#1A6645" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/></svg>
+        Settled
+      </span>
+    );
+  }
+  if (status === 'defaulted') {
+    return (
+      <span className="inline-flex items-center gap-1 text-[9px] font-semibold mt-0.5" style={{ color: '#8C1A1A' }}>
+        Defaulted · claim refund
+      </span>
+    );
+  }
+  if (daysLeft === null) return null;
+  const color = daysLeft <= 7 ? '#8C1A1A' : daysLeft <= 14 ? '#92570D' : 'var(--ink-muted)';
+  return (
+    <span className="text-[9px] font-semibold mt-0.5" style={{ color }}>
+      {daysLeft > 0 ? `Due in ${daysLeft}d` : 'Past due'}
+    </span>
+  );
+};
 
 export const LenderPortfolio: React.FC = () => {
   const { lender, invoices, setLenderView, showToast, withdrawFunds } = useApp();

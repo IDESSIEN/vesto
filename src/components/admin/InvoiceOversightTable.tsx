@@ -14,31 +14,93 @@ const statusMeta: Record<string, { label: string; dot: string; text: string; bg:
 const riskColor = (tier: string) =>
   tier === 'Low' ? '#1A7A46' : tier === 'Medium' ? '#B8821E' : '#8C1A1A';
 
-const FILTERS = ['all','pending','published','funded','flagged'] as const;
+const FILTERS = ['all','pending','published','funded','settlement','flagged'] as const;
 type Filter = typeof FILTERS[number];
+
+// Pending settlement banner component
+const PendingSettlementBanner: React.FC<{
+  inv: Invoice;
+  onBlock: (inv: Invoice) => void;
+}> = ({ inv, onBlock }) => {
+  const [secondsLeft, setSecondsLeft] = React.useState<number | null>(null);
+
+  React.useEffect(() => {
+    // In production this would come from pending_settlements.execute_after
+    // For demo: show a 24h countdown from when status changed
+    const deadline = new Date(Date.now() + 23.5 * 60 * 60 * 1000);
+    const tick = () => {
+      const diff = Math.max(0, Math.floor((deadline.getTime() - Date.now()) / 1000));
+      setSecondsLeft(diff);
+    };
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  const hours   = secondsLeft !== null ? Math.floor(secondsLeft / 3600) : '--' as string | number;
+  const minutes = secondsLeft !== null ? Math.floor((secondsLeft % 3600) / 60) : '--';
+
+  return (
+    <div
+      className="flex items-center gap-3 px-4 py-3 rounded-[11px] animate-fade-in"
+      style={{
+        background: 'rgba(184,130,30,0.06)',
+        border: '1.5px solid rgba(184,130,30,0.22)',
+      }}
+    >
+      {/* Pulse dot */}
+      <span
+        className="w-2 h-2 rounded-full shrink-0 animate-[pulse-live_1.5s_ease-in-out_infinite]"
+        style={{ background: '#B8821E' }}
+      />
+      <div className="flex-1 min-w-0">
+        <p className="text-[12px] font-semibold text-ink">
+          Payment detected · {inv.sellerBusinessName}
+        </p>
+        <p className="text-[11px]" style={{ color: 'var(--ink-subtle)' }}>
+          Auto-settles in <span className="font-mono font-bold">{hours}h {minutes}m</span> unless blocked · {inv.buyerName}
+        </p>
+      </div>
+      <button
+        onClick={() => onBlock(inv)}
+        className="shrink-0 px-3 py-1.5 text-[11px] font-semibold rounded-[7px] transition-all active:scale-[0.97]"
+        style={{ background: 'rgba(140,26,26,0.08)', color: '#8C1A1A', border: '1px solid rgba(140,26,26,0.18)' }}
+      >
+        Block settlement
+      </button>
+    </div>
+  );
+};
 
 export const InvoiceOversightTable: React.FC = () => {
   const { invoices, approveInvoiceAdmin, flagInvoiceAdmin, setAdminView } = useApp();
   const [filter, setFilter] = useState<Filter>('all');
   const [flagModal, setFlagModal] = useState<Invoice | null>(null);
+  const [blockModal, setBlockModal] = useState<Invoice | null>(null);
   const [flagReason, setFlagReason] = useState('');
+  const [blockReason, setBlockReason] = useState('');
   const [reasonFocused, setReasonFocused] = useState(false);
+  const [blockFocused, setBlockFocused] = useState(false);
+
+  const pendingSettlements = invoices.filter(i => i.status === 'payment_detected' || i.status === 'partial_shortfall');
 
   const filtered = invoices.filter(inv => {
-    if (filter === 'all') return true;
-    if (filter === 'pending')   return inv.status === 'pending_admin_approval';
-    if (filter === 'published') return inv.status === 'published_marketplace';
-    if (filter === 'funded')    return inv.status === 'funded';
-    if (filter === 'flagged')   return inv.status === 'flagged';
+    if (filter === 'all')        return true;
+    if (filter === 'pending')    return inv.status === 'pending_admin_approval';
+    if (filter === 'published')  return inv.status === 'published_marketplace';
+    if (filter === 'funded')     return inv.status === 'funded';
+    if (filter === 'settlement') return inv.status === 'payment_detected' || inv.status === 'partial_shortfall';
+    if (filter === 'flagged')    return inv.status === 'flagged' || inv.status === 'disputed' || inv.status === 'defaulted';
     return true;
   });
 
   const counts: Record<Filter, number> = {
-    all:       invoices.length,
-    pending:   invoices.filter(i => i.status === 'pending_admin_approval').length,
-    published: invoices.filter(i => i.status === 'published_marketplace').length,
-    funded:    invoices.filter(i => i.status === 'funded').length,
-    flagged:   invoices.filter(i => i.status === 'flagged').length,
+    all:        invoices.length,
+    pending:    invoices.filter(i => i.status === 'pending_admin_approval').length,
+    published:  invoices.filter(i => i.status === 'published_marketplace').length,
+    funded:     invoices.filter(i => i.status === 'funded').length,
+    settlement: pendingSettlements.length,
+    flagged:    invoices.filter(i => ['flagged','disputed','defaulted'].includes(i.status)).length,
   };
 
   return (
@@ -80,6 +142,18 @@ export const InvoiceOversightTable: React.FC = () => {
         </div>
       </div>
 
+      {/* Pending settlement banners — shown above filter bar when present */}
+      {pendingSettlements.length > 0 && (
+        <div className="flex flex-col gap-2">
+          <p className="text-[9px] font-bold uppercase tracking-[0.10em]" style={{ color: 'var(--ink-faint)' }}>
+            Pending auto-settlement · {pendingSettlements.length} invoice{pendingSettlements.length !== 1 ? 's' : ''}
+          </p>
+          {pendingSettlements.map(inv => (
+            <PendingSettlementBanner key={inv.id} inv={inv} onBlock={inv => { setBlockModal(inv); setBlockReason(''); }} />
+          ))}
+        </div>
+      )}
+
       {/* Filter bar */}
       <div className="flex items-center gap-2 overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
         {FILTERS.map(tab => (
@@ -93,13 +167,15 @@ export const InvoiceOversightTable: React.FC = () => {
                 : { background: 'transparent', color: 'var(--ink-faint)', border: '1px solid var(--border-2)' }
             }
           >
-            <span className="capitalize">{tab}</span>
+            <span className="capitalize">
+              {tab === 'settlement' ? 'Settlement' : tab}
+            </span>
             {counts[tab] > 0 && (
               <span
                 className="inline-flex items-center justify-center w-4 h-4 rounded-full text-[9px] font-bold"
                 style={{
-                  background: filter === tab ? 'rgba(255,255,255,0.18)' : 'var(--border)',
-                  color: filter === tab ? '#fff' : 'var(--ink-subtle)',
+                  background: filter === tab ? 'rgba(255,255,255,0.18)' : tab === 'settlement' && counts[tab] > 0 ? 'rgba(184,130,30,0.18)' : 'var(--border)',
+                  color: filter === tab ? '#fff' : tab === 'settlement' ? '#B8821E' : 'var(--ink-subtle)',
                 }}
               >
                 {counts[tab]}
@@ -244,6 +320,93 @@ export const InvoiceOversightTable: React.FC = () => {
           </table>
         </div>
       </div>
+
+      {/* Block settlement modal */}
+      {blockModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          style={{ background: 'rgba(13,24,36,0.55)', backdropFilter: 'blur(8px)' }}
+        >
+          <div
+            className="w-full max-w-[380px] rounded-[15px] overflow-hidden animate-fade-up"
+            style={{ background: 'var(--surface-1)', border: '1px solid var(--border-2)', boxShadow: 'var(--shadow-e4)' }}
+          >
+            <div className="h-[2px]" style={{ background: 'linear-gradient(90deg,#B8821E,#E8B96A)' }} />
+            <div className="p-5 flex flex-col gap-4">
+              <div className="flex items-start justify-between">
+                <div>
+                  <h3 className="font-display font-semibold text-ink" style={{ fontSize: '15px', letterSpacing: '-0.018em' }}>
+                    Block auto-settlement
+                  </h3>
+                  <p className="text-[11px] mt-0.5" style={{ color: 'var(--ink-faint)' }}>
+                    {blockModal.id} · {blockModal.sellerBusinessName}
+                  </p>
+                </div>
+                <button
+                  onClick={() => setBlockModal(null)}
+                  className="w-7 h-7 rounded-full flex items-center justify-center transition-colors"
+                  style={{ background: 'var(--cream)', color: 'var(--ink-subtle)' }}
+                >
+                  <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                    <path d="M1 1l8 8M9 1l-8 8" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
+                  </svg>
+                </button>
+              </div>
+              <div
+                className="flex items-center gap-3 px-3.5 py-3 rounded-[9px]"
+                style={{ background: 'rgba(184,130,30,0.06)', border: '1px solid rgba(184,130,30,0.18)' }}
+              >
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                  <path d="M7 1.5L12.5 11H1.5L7 1.5Z" stroke="#B8821E" strokeWidth="1.3" strokeLinejoin="round"/>
+                  <path d="M7 5.5v3M7 10h.01" stroke="#B8821E" strokeWidth="1.3" strokeLinecap="round"/>
+                </svg>
+                <p className="text-[11.5px]" style={{ color: '#7A5510' }}>
+                  Blocking will move this invoice to dispute review. The lender will be notified.
+                </p>
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[11px] font-semibold" style={{ color: 'var(--ink-subtle)' }}>
+                  Reason for blocking
+                </label>
+                <textarea
+                  value={blockReason}
+                  onChange={e => setBlockReason(e.target.value)}
+                  onFocus={() => setBlockFocused(true)}
+                  onBlur={() => setBlockFocused(false)}
+                  placeholder="e.g. Suspected bank reversal, payment reference mismatch..."
+                  rows={3}
+                  className="w-full px-3.5 py-2.5 text-[13px] text-ink resize-none focus:outline-none rounded-[9px] transition-all"
+                  style={{
+                    background: 'var(--cream)',
+                    border: blockFocused ? '1.5px solid rgba(184,130,30,0.55)' : '1px solid var(--border-2)',
+                    boxShadow: blockFocused ? '0 0 0 3px rgba(184,130,30,0.08)' : 'none',
+                  }}
+                />
+              </div>
+              <div className="flex gap-2.5">
+                <button
+                  onClick={() => setBlockModal(null)}
+                  className="flex-1 h-10 rounded-[9px] text-[12px] font-semibold transition-all"
+                  style={{ background: 'var(--cream)', border: '1px solid var(--border-2)', color: 'var(--ink-subtle)' }}
+                >
+                  Cancel
+                </button>
+                <button
+                  disabled={!blockReason.trim()}
+                  onClick={() => {
+                    flagInvoiceAdmin(blockModal.id, `[SETTLEMENT BLOCKED] ${blockReason}`);
+                    setBlockModal(null);
+                  }}
+                  className="flex-1 h-10 rounded-[9px] text-[12px] font-semibold text-white transition-all disabled:opacity-35 disabled:cursor-not-allowed active:scale-[0.98]"
+                  style={{ background: '#8C1A1A' }}
+                >
+                  Block settlement
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Flag modal */}
       {flagModal && (

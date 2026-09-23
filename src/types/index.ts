@@ -44,8 +44,11 @@ export type InvoiceStatus =
   | 'pending_admin_approval'
   | 'published_marketplace'
   | 'funded'
+  | 'payment_detected'
+  | 'partial_shortfall'
   | 'repaid'
   | 'disputed'
+  | 'defaulted'
   | 'flagged';
 
 export interface Invoice {
