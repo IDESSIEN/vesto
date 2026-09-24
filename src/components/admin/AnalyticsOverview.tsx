@@ -33,7 +33,19 @@ const sectors = [
 ];
 
 export const AnalyticsOverview: React.FC = () => {
-  const { analytics, setAdminView } = useApp();
+  const { analytics, setAdminView, buyers, invoices } = useApp();
+
+  // Step 5: Concentration risk — flag any buyer with >25% of total outstanding
+  const totalOutstanding = invoices
+    .filter(i => i.status === 'funded' || i.status === 'payment_detected')
+    .reduce((s, i) => s + i.advanceAmount, 0);
+
+  const concentrationAlerts = buyers.map(b => {
+    const buyerOutstanding = invoices
+      .filter(i => (i.status === 'funded' || i.status === 'payment_detected') && i.buyerName === b.companyName)
+      .reduce((s, i) => s + i.advanceAmount, 0);
+    return { buyer: b, outstanding: buyerOutstanding, pct: totalOutstanding > 0 ? (buyerOutstanding / totalOutstanding) * 100 : 0 };
+  }).filter(c => c.pct >= 25);
 
   return (
     <div

@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useAccount } from 'wagmi';
 import { ConnectKitButton } from 'connectkit';
 import { useApp } from '../../context/AppContext';
-import { Invoice } from '../../types';
+import { Invoice, Buyer } from '../../types';
 import { useFundInvoice, useUSDCBalance } from '../../hooks/useVestoEscrow';
 import { formatUSDC, explorerTxUrl } from '../../config/contracts';
 
@@ -97,11 +97,12 @@ const InvoiceCard: React.FC<{
   selected: boolean;
   onToggle: () => void;
   onFund: () => void;
-  lenderPosition?: number; // USDC already deployed by this lender into this invoice
-}> = ({ inv, selected, onToggle, onFund, lenderPosition }) => {
+  lenderPosition?: number;
+  buyer?: Buyer;
+}> = ({ inv, selected, onToggle, onFund, lenderPosition, buyer }) => {
   const [hovered, setHovered] = useState(false);
-  // One-liner thesis — the single most important trust signal on the card
-  const thesis = `${inv.termDays}d trade receivable · ${inv.buyerName} · ${inv.riskTier} risk`;
+  const onTimeLabel = buyer ? ` · ${buyer.onTimeRate.toFixed(0)}% on-time` : '';
+  const thesis = `${inv.termDays}d trade receivable · ${inv.buyerName}${onTimeLabel} · ${inv.riskTier} grade`;
 
   return (
     <div
@@ -526,7 +527,7 @@ const FundingModal: React.FC<{
    MAIN COMPONENT
 ───────────────────────────────────────────────────────────────── */
 export const MarketplaceBrowse: React.FC = () => {
-  const { invoices, fundInvoiceLender, setLenderView, lender, setSelectedBatchIds } = useApp();
+  const { invoices, fundInvoiceLender, setLenderView, lender, setSelectedBatchIds, buyers } = useApp();
   const { isConnected } = useAccount();
   const { raw: usdcBalance } = useUSDCBalance();
   const { execute, step, txHash, isConfirming, isSuccess, errorMsg, reset } = useFundInvoice();
@@ -826,6 +827,7 @@ export const MarketplaceBrowse: React.FC = () => {
               onToggle={() => toggleSelect(inv.id)}
               onFund={() => { reset(); setModal(inv); }}
               lenderPosition={inv.fundedByLenderId === lender.id ? inv.advanceAmount : undefined}
+              buyer={buyers.find(b => b.companyName === inv.buyerName)}
             />
           ))
         )}

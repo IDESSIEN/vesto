@@ -172,6 +172,34 @@ CREATE POLICY "lenders_funded_shortfalls" ON invoice_shortfalls
     )
   );
 
+-- ─── Layer 6: Reminder escalation audit trail ────────────────────────────────
+
+CREATE TABLE IF NOT EXISTS invoice_reminders (
+  id              uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  invoice_id      text NOT NULL,
+  reminder_type   text NOT NULL CHECK (reminder_type IN ('14d','7d','3d','overdue')),
+  seller_id       text NOT NULL,
+  buyer_name      text NOT NULL,
+  amount_usdc     numeric(18,6) NOT NULL,
+  days_until      integer NOT NULL,
+  email_sent_to   text,
+  sent_at         timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE INDEX idx_reminders_invoice ON invoice_reminders(invoice_id);
+CREATE INDEX idx_reminders_sent_at ON invoice_reminders(sent_at);
+
+-- Admins can read all reminders; sellers can see reminders for their own invoices
+ALTER TABLE invoice_reminders ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "admins_all_reminders" ON invoice_reminders
+  FOR ALL USING (
+    auth.uid() IN (SELECT id FROM profiles WHERE role = 'admin')
+  );
+
+CREATE POLICY "sellers_own_reminders" ON invoice_reminders
+  FOR SELECT USING (seller_id = auth.uid()::text);
+
 -- ─── Helper function: get full settlement status for an invoice ───────────────
 
 CREATE OR REPLACE FUNCTION get_invoice_settlement_status(p_invoice_id uuid)

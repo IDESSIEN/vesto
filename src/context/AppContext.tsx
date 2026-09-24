@@ -6,6 +6,7 @@ import {
   Invoice,
   VerificationRequest,
   PlatformAnalytics,
+  Buyer,
 } from '../types';
 import { supabaseService } from '../services/supabaseService';
 
@@ -65,6 +66,11 @@ interface AppContextType {
 
   // Analytics
   analytics: PlatformAnalytics;
+
+  // Buyer registry
+  buyers: Buyer[];
+  freezeBuyer: (id: string, reason: string) => void;
+  unfreezeBuyer: (id: string) => void;
 }
 
 const initialSeller: SellerProfile = {
@@ -220,6 +226,37 @@ const initialVerifications: VerificationRequest[] = [
   },
 ];
 
+const initialBuyers: Buyer[] = [
+  {
+    id: 'buy_001', companyName: 'Metro Supermarkets East Africa', taxId: 'P051294819X',
+    country: 'Kenya', paymentTerms: 'Net-40', creditTier: 'A+', creditScore: 94,
+    totalAdvanced: 48200, totalRepaid: 46900, onTimeCount: 12, lateCount: 1, defaultCount: 0,
+    onTimeRate: 92.3, virtualAccounts: ['VA-KE-001-METRO'], frozen: false,
+    lastPaidAt: '2026-08-28', createdAt: '2025-01-15',
+  },
+  {
+    id: 'buy_002', companyName: 'Global Commodities Direct', taxId: 'GB948102931',
+    country: 'United Kingdom', paymentTerms: 'Net-55', creditTier: 'A', creditScore: 88,
+    totalAdvanced: 31500, totalRepaid: 28700, onTimeCount: 8, lateCount: 2, defaultCount: 0,
+    onTimeRate: 80.0, virtualAccounts: ['VA-GB-002-GCD'], frozen: false,
+    lastPaidAt: '2026-09-01', createdAt: '2025-03-10',
+  },
+  {
+    id: 'buy_003', companyName: 'Kabras Sugar Refineries', taxId: 'P091240182Z',
+    country: 'Kenya', paymentTerms: 'Net-66', creditTier: 'A+', creditScore: 96,
+    totalAdvanced: 91000, totalRepaid: 91000, onTimeCount: 18, lateCount: 0, defaultCount: 0,
+    onTimeRate: 100.0, virtualAccounts: ['VA-KE-003-KABRAS'], frozen: false,
+    lastPaidAt: '2026-09-10', createdAt: '2024-11-05',
+  },
+  {
+    id: 'buy_004', companyName: 'Zanzibar Spice Imports', taxId: 'TZ88194012',
+    country: 'Tanzania', paymentTerms: 'Net-20', creditTier: 'B+', creditScore: 81,
+    totalAdvanced: 12500, totalRepaid: 10200, onTimeCount: 5, lateCount: 3, defaultCount: 0,
+    onTimeRate: 62.5, virtualAccounts: ['VA-TZ-004-ZSI'], frozen: false,
+    lastPaidAt: '2026-08-15', createdAt: '2025-06-20',
+  },
+];
+
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -239,6 +276,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   // C3: seller registry so admin can approve any seller, not just the signed-in one
   const [sellerRegistry, setSellerRegistry] = useState<Record<string, SellerProfile>>({});
   const [invoices, setInvoices] = useState<Invoice[]>(initialInvoices);
+  const [buyers, setBuyers] = useState<Buyer[]>(initialBuyers);
   const [selectedBatchIds, setSelectedBatchIds] = useState<string[]>([]);
   const [verifications, setVerifications] = useState<VerificationRequest[]>(initialVerifications);
   const [notification, setNotification] = useState<{ message: string; type: 'success' | 'info' | 'warning' } | null>(null);
@@ -510,6 +548,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     showToast(`Verification rejected for ${req?.businessName}.`, 'warning');
   };
 
+  const freezeBuyer = (id: string, reason: string) => {
+    setBuyers(prev => prev.map(b => b.id === id ? { ...b, frozen: true, frozenReason: reason } : b));
+    showToast('Buyer account frozen. No new invoices can be listed for this buyer.', 'warning');
+  };
+
+  const unfreezeBuyer = (id: string) => {
+    setBuyers(prev => prev.map(b => b.id === id ? { ...b, frozen: false, frozenReason: undefined } : b));
+    showToast('Buyer account unfrozen.', 'success');
+  };
+
   const totalVol = invoices.reduce((sum, i) => sum + i.amount, 0);
   const activeLiq = invoices.filter((i) => i.status === 'funded').reduce((sum, i) => sum + i.advanceAmount, 0);
   const analytics: PlatformAnalytics = {
@@ -542,6 +590,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         submitVerification, approveVerificationAdmin, rejectVerificationAdmin,
         notification, showToast,
         analytics,
+        buyers, freezeBuyer, unfreezeBuyer,
       }}
     >
       {children}

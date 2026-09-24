@@ -76,7 +76,13 @@ export interface Invoice {
   fundedAt?: string;
   repaidAt?: string;
   flagReason?: string;
-  sellerVerificationTier?: 1 | 2; // populated when invoice is submitted
+  sellerVerificationTier?: 1 | 2;
+  buyerId?: string;
+  repaymentDeadline?: string;
+  buyerAcknowledged?: boolean;
+  virtualAccountNumber?: string;
+  settlementQueuedAt?: string;
+  settlementBlocked?: boolean;
   createdAt: string;
 }
 
@@ -95,6 +101,40 @@ export interface VerificationRequest {
   cleanverseStatus?: 'pass' | 'fail' | 'uncertain';
   cleanverseConfidence?: number;
   cleanverseReason?: string;
+}
+
+export interface Buyer {
+  id: string;
+  companyName: string;
+  taxId: string;
+  country: string;
+  paymentTerms: string;
+  creditTier: 'A+' | 'A' | 'B+' | 'B';
+  creditScore: number;
+  totalAdvanced: number;
+  totalRepaid: number;
+  onTimeCount: number;
+  lateCount: number;
+  defaultCount: number;
+  onTimeRate: number; // computed: 0–100
+  virtualAccounts: string[];
+  frozen: boolean;
+  frozenReason?: string;
+  lastPaidAt?: string;
+  createdAt: string;
+}
+
+export interface BuyerConcentration {
+  id: string;
+  companyName: string;
+  creditTier: 'A+' | 'A' | 'B+' | 'B';
+  onTimeRate: number;
+  frozen: boolean;
+  openInvoiceCount: number;
+  totalOutstandingUsdc: number;
+  earliestDeadline?: string;
+  latestDeadline?: string;
+  concentrationPct: number;
 }
 
 export interface PlatformAnalytics {

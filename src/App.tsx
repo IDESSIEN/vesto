@@ -27,6 +27,7 @@ import { VerificationQueue } from './components/admin/VerificationQueue';
 import { InvoiceOversightTable } from './components/admin/InvoiceOversightTable';
 import { DisputeResolution } from './components/admin/DisputeResolution';
 import { AnalyticsOverview } from './components/admin/AnalyticsOverview';
+import { BuyerMonitoring } from './components/admin/BuyerMonitoring';
 
 export const AppContent: React.FC = () => {
   const {
@@ -99,6 +100,7 @@ export const AppContent: React.FC = () => {
               {adminOnboarded && navBtn(adminView === 'oversight',  () => setAdminView('oversight'),  'Invoices')}
               {adminOnboarded && navBtn(adminView === 'queue',      () => setAdminView('queue'),      'KYC Queue')}
               {adminOnboarded && navBtn(adminView === 'dispute',    () => setAdminView('dispute'),    'Disputes')}
+              {adminOnboarded && navBtn(adminView === 'buyers',    () => setAdminView('buyers'),    'Buyers')}
               {adminOnboarded && navBtn(adminView === 'analytics',  () => setAdminView('analytics'),  'Analytics')}
               {adminOnboarded && navBtn(adminView === '2fa',        () => setAdminView('2fa'),        '⚙ Security')}
             </>
@@ -141,6 +143,7 @@ export const AppContent: React.FC = () => {
             {adminOnboarded && adminView === 'queue'         && <VerificationQueue />}
             {adminOnboarded && adminView === 'oversight'     && <InvoiceOversightTable />}
             {adminOnboarded && adminView === 'dispute'       && <DisputeResolution />}
+            {adminOnboarded && adminView === 'buyers'        && <BuyerMonitoring />}
             {adminOnboarded && adminView === 'analytics'     && <AnalyticsOverview />}
           </>
         )}
