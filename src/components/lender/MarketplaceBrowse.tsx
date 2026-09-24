@@ -169,6 +169,16 @@ const InvoiceCard: React.FC<{
             </div>
             {/* One-liner thesis */}
             <p className="text-[10.5px] font-medium" style={{ color: 'var(--ink-subtle)' }}>{thesis}</p>
+            {/* Buyer acknowledgement trust badge */}
+            {inv.buyerAcknowledged && (
+              <div className="flex items-center gap-1 mt-1.5">
+                <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
+                  <circle cx="5.5" cy="5.5" r="5" fill="rgba(26,102,69,0.12)" stroke="rgba(26,102,69,0.35)" strokeWidth="0.8"/>
+                  <path d="M3 5.5l1.8 1.8L8 3.5" stroke="#1A6645" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+                <span className="text-[9.5px] font-semibold" style={{ color: '#1A6645' }}>Buyer confirmed debt</span>
+              </div>
+            )}
             <div className="mt-2 w-28">
               <RiskMeter score={inv.riskScore} />
             </div>

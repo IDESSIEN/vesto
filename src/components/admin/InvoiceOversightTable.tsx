@@ -73,7 +73,7 @@ const PendingSettlementBanner: React.FC<{
 };
 
 export const InvoiceOversightTable: React.FC = () => {
-  const { invoices, approveInvoiceAdmin, flagInvoiceAdmin, setAdminView } = useApp();
+  const { invoices, approveInvoiceAdmin, flagInvoiceAdmin, acknowledgeInvoice, setAdminView } = useApp();
   const [filter, setFilter] = useState<Filter>('all');
   const [flagModal, setFlagModal] = useState<Invoice | null>(null);
   const [blockModal, setBlockModal] = useState<Invoice | null>(null);
@@ -300,6 +300,25 @@ export const InvoiceOversightTable: React.FC = () => {
                             >
                               Approve
                             </button>
+                          )}
+                          {/* Buyer acknowledgement — shown when not yet acknowledged */}
+                          {!inv.buyerAcknowledged && inv.status !== 'repaid' && inv.status !== 'defaulted' && (
+                            <button
+                              onClick={() => acknowledgeInvoice(inv.id)}
+                              className="px-2.5 py-1 rounded-[7px] text-[11px] font-semibold transition-all active:scale-[0.97]"
+                              title="Simulate buyer clicking the acknowledgement email link"
+                              style={{ background: 'rgba(26,77,184,0.07)', color: '#1E4DB8', border: '1px solid rgba(26,77,184,0.15)' }}
+                            >
+                              Ack.
+                            </button>
+                          )}
+                          {inv.buyerAcknowledged && (
+                            <span
+                              className="px-2 py-1 rounded-[7px] text-[10px] font-semibold"
+                              style={{ background: 'rgba(26,102,69,0.08)', color: '#1A6645' }}
+                            >
+                              ✓ Ack'd
+                            </span>
                           )}
                           {inv.status !== 'flagged' && (
                             <button

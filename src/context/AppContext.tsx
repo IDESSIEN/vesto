@@ -45,6 +45,7 @@ interface AppContextType {
   fundBatchLender: (invoiceIds: string[]) => void;
   repayInvoiceSeller: (invoiceId: string) => void;
   resolveDisputeAdmin: (invoiceId: string, resolution?: 'refund_lender' | 'pay_seller') => void;
+  acknowledgeInvoice: (invoiceId: string) => void; // demo: simulate buyer clicking the email link
 
   // Verification
   verifications: VerificationRequest[];
@@ -548,6 +549,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     showToast(`Verification rejected for ${req?.businessName}.`, 'warning');
   };
 
+  const acknowledgeInvoice = (invoiceId: string) => {
+    setInvoices(prev =>
+      prev.map(inv => inv.id === invoiceId ? { ...inv, buyerAcknowledged: true } : inv)
+    );
+    showToast('Buyer acknowledgement recorded. Invoice trust level updated.', 'success');
+  };
+
   const freezeBuyer = (id: string, reason: string) => {
     setBuyers(prev => prev.map(b => b.id === id ? { ...b, frozen: true, frozenReason: reason } : b));
     showToast('Buyer account frozen. No new invoices can be listed for this buyer.', 'warning');
@@ -583,7 +591,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         seller, lender,
         invoices, selectedBatchIds, setSelectedBatchIds,
         submitInvoice, approveInvoiceAdmin, flagInvoiceAdmin,
-        fundInvoiceLender, fundBatchLender, repayInvoiceSeller, resolveDisputeAdmin, withdrawFunds,
+        fundInvoiceLender, fundBatchLender, repayInvoiceSeller, resolveDisputeAdmin, withdrawFunds, acknowledgeInvoice,
         setLenderProfile,
         sellerTourCompleted, completeSellerTour,
         verifications,
