@@ -449,9 +449,97 @@ export const InvoiceOversightTable: React.FC = () => {
         ))}
       </div>
 
-      {/* Table */}
+      {/* Card list on mobile, table on desktop */}
+      <div className="sm:hidden flex flex-col gap-3">
+        {filtered.length === 0 ? (
+          <div className="text-center py-12 text-[12px]" style={{ color: 'var(--ink-faint)' }}>
+            No invoices in this category.
+          </div>
+        ) : filtered.map((inv) => {
+          const sm = statusMeta[inv.status] ?? statusMeta['repaid'];
+          return (
+            <div
+              key={inv.id}
+              className="rounded-[13px] overflow-hidden"
+              style={{ border: '1px solid var(--border-2)', background: 'var(--surface-1)', boxShadow: 'var(--shadow-e1)' }}
+            >
+              {/* Left-border risk accent */}
+              <div className="flex">
+                <div className="w-[3px] shrink-0" style={{ background: riskColor(inv.riskTier) }} />
+                <div className="flex-1 p-4 flex flex-col gap-3">
+                  {/* Top row */}
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex flex-col gap-0.5 min-w-0">
+                      <span className="font-mono text-[10px] font-semibold" style={{ color: 'var(--ink-faint)' }}>{inv.id.slice(0,14)}</span>
+                      <span className="text-[13px] font-bold text-ink leading-tight">{inv.sellerBusinessName}</span>
+                      <span className="text-[11px]" style={{ color: 'var(--ink-subtle)' }}>{inv.buyerName}</span>
+                    </div>
+                    <div className="flex flex-col items-end gap-1 shrink-0">
+                      <span className="font-mono font-bold text-[14px] text-ink font-tnum">${inv.amount.toLocaleString()}</span>
+                      <span
+                        className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold"
+                        style={{ background: sm.bg, color: sm.text }}
+                      >
+                        <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: sm.dot }} />
+                        {sm.label}
+                      </span>
+                    </div>
+                  </div>
+                  {/* Risk score */}
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-[10px] font-semibold" style={{ color: riskColor(inv.riskTier) }}>
+                      Risk {inv.riskScore}/100 · {inv.riskTier}
+                    </span>
+                  </div>
+                  {/* Action buttons */}
+                  <div className="flex items-center gap-2 flex-wrap">
+                    {inv.status === 'pending_admin_approval' && (
+                      <button
+                        onClick={() => setSettlementModal(inv)}
+                        className="px-3 py-1.5 rounded-[8px] text-[12px] font-semibold transition-all active:scale-[0.97]"
+                        style={{ background: 'rgba(26,122,70,0.10)', color: '#1A7A46', border: '1px solid rgba(26,122,70,0.20)' }}
+                      >
+                        Approve
+                      </button>
+                    )}
+                    {!inv.buyerAcknowledged && inv.status !== 'repaid' && inv.status !== 'defaulted' && (
+                      <button
+                        onClick={() => acknowledgeInvoice(inv.id)}
+                        className="px-3 py-1.5 rounded-[8px] text-[12px] font-semibold transition-all active:scale-[0.97]"
+                        title="Simulate buyer acknowledgement"
+                        style={{ background: 'rgba(26,77,184,0.07)', color: '#1E4DB8', border: '1px solid rgba(26,77,184,0.15)' }}
+                      >
+                        Ack.
+                      </button>
+                    )}
+                    {inv.buyerAcknowledged && (
+                      <span
+                        className="px-2.5 py-1.5 rounded-[8px] text-[11px] font-semibold"
+                        style={{ background: 'rgba(26,102,69,0.08)', color: '#1A6645' }}
+                      >
+                        ✓ Ack'd
+                      </span>
+                    )}
+                    {inv.status !== 'flagged' && (
+                      <button
+                        onClick={() => { setFlagModal(inv); setFlagReason(''); }}
+                        className="px-3 py-1.5 rounded-[8px] text-[12px] font-semibold transition-all active:scale-[0.97]"
+                        style={{ background: 'rgba(140,26,26,0.07)', color: '#8C1A1A', border: '1px solid rgba(140,26,26,0.15)' }}
+                      >
+                        Flag
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Desktop table */}
       <div
-        className="rounded-[15px] overflow-hidden"
+        className="hidden sm:block rounded-[15px] overflow-hidden"
         style={{ border: '1px solid var(--border-2)', boxShadow: 'var(--shadow-e1)' }}
       >
         <div className="overflow-x-auto">
@@ -503,54 +591,33 @@ export const InvoiceOversightTable: React.FC = () => {
                       onMouseLeave={e => (e.currentTarget.style.background = idx % 2 === 0 ? 'var(--surface-1)' : 'transparent')}
                     >
                       <td style={{ padding: '11px 14px', whiteSpace: 'nowrap' }}>
-                        <span
-                          className="font-mono font-semibold text-[11px]"
-                          style={{ color: 'var(--ink)', letterSpacing: '-0.01em' }}
-                        >
+                        <span className="font-mono font-semibold text-[11px]" style={{ color: 'var(--ink)', letterSpacing: '-0.01em' }}>
                           {inv.id.slice(0, 14)}
                         </span>
                       </td>
                       <td style={{ padding: '11px 14px' }}>
-                        <span className="text-[12px] font-semibold" style={{ color: 'var(--ink)' }}>
-                          {inv.sellerBusinessName}
-                        </span>
+                        <span className="text-[12px] font-semibold" style={{ color: 'var(--ink)' }}>{inv.sellerBusinessName}</span>
                       </td>
                       <td style={{ padding: '11px 14px' }}>
-                        <span className="text-[12px]" style={{ color: 'var(--ink-subtle)' }}>
-                          {inv.buyerName}
-                        </span>
+                        <span className="text-[12px]" style={{ color: 'var(--ink-subtle)' }}>{inv.buyerName}</span>
                       </td>
                       <td style={{ padding: '11px 14px', whiteSpace: 'nowrap' }}>
-                        <span
-                          className="font-mono font-bold text-[12px]"
-                          style={{ color: 'var(--ink)', letterSpacing: '-0.01em' }}
-                        >
+                        <span className="font-mono font-bold text-[12px] font-tnum" style={{ color: 'var(--ink)', letterSpacing: '-0.01em' }}>
                           ${inv.amount.toLocaleString()}
                         </span>
                       </td>
                       <td style={{ padding: '11px 14px', whiteSpace: 'nowrap' }}>
-                        <span
-                          className="text-[11px] font-semibold"
-                          style={{ color: riskColor(inv.riskTier) }}
-                        >
+                        <span className="text-[11px] font-semibold" style={{ color: riskColor(inv.riskTier) }}>
                           {inv.riskScore}/100
                         </span>
-                        <span
-                          className="ml-1 text-[10px]"
-                          style={{ color: riskColor(inv.riskTier) }}
-                        >
-                          {inv.riskTier}
-                        </span>
+                        <span className="ml-1 text-[10px]" style={{ color: riskColor(inv.riskTier) }}>{inv.riskTier}</span>
                       </td>
                       <td style={{ padding: '11px 14px', whiteSpace: 'nowrap' }}>
                         <span
                           className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-semibold"
                           style={{ background: sm.bg, color: sm.text }}
                         >
-                          <span
-                            className="w-1.5 h-1.5 rounded-full shrink-0"
-                            style={{ background: sm.dot }}
-                          />
+                          <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: sm.dot }} />
                           {sm.label}
                         </span>
                       </td>
@@ -565,7 +632,6 @@ export const InvoiceOversightTable: React.FC = () => {
                               Approve
                             </button>
                           )}
-                          {/* Buyer acknowledgement — shown when not yet acknowledged */}
                           {!inv.buyerAcknowledged && inv.status !== 'repaid' && inv.status !== 'defaulted' && (
                             <button
                               onClick={() => acknowledgeInvoice(inv.id)}
@@ -577,10 +643,7 @@ export const InvoiceOversightTable: React.FC = () => {
                             </button>
                           )}
                           {inv.buyerAcknowledged && (
-                            <span
-                              className="px-2 py-1 rounded-[7px] text-[10px] font-semibold"
-                              style={{ background: 'rgba(26,102,69,0.08)', color: '#1A6645' }}
-                            >
+                            <span className="px-2 py-1 rounded-[7px] text-[10px] font-semibold" style={{ background: 'rgba(26,102,69,0.08)', color: '#1A6645' }}>
                               ✓ Ack'd
                             </span>
                           )}
