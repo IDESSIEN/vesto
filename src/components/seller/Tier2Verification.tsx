@@ -181,62 +181,104 @@ export const Tier2Verification: React.FC = () => {
     }
   };
 
-  const inputFocus = (e: React.FocusEvent<HTMLInputElement>) => { e.currentTarget.style.borderColor = '#C9922A'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(201,146,42,0.08)'; };
-  const inputBlur = (e: React.FocusEvent<HTMLInputElement>) => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.boxShadow = 'none'; };
+  const isRecording = videoState === 'recording';
+  const isRecorded  = videoState === 'recorded';
 
   return (
-    <div style={{ maxWidth: '520px', margin: '0 auto', padding: '28px 16px 80px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+    <div className="max-w-[520px] mx-auto px-4 py-7 pb-20 flex flex-col gap-4 view-enter">
 
       {/* Nav row */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <button onClick={() => setSellerView('tier1')}
-          style={{ width: '36px', height: '36px', borderRadius: '9px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--surface-card)', border: '1px solid var(--border)', color: 'var(--secondary)', cursor: 'pointer' }}
+      <div className="flex items-center justify-between">
+        <button
+          onClick={() => setSellerView('tier1')}
+          className="w-9 h-9 rounded-[9px] flex items-center justify-center transition-all duration-150 hover:bg-[rgba(13,24,36,0.06)] active:scale-[0.97]"
+          style={{ background: 'var(--cream)', border: '1px solid var(--border-2)', color: 'var(--ink-muted)' }}
         ><ArrowLeft /></button>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <div style={{ display: 'flex', gap: '4px' }}>
+        <div className="flex items-center gap-2">
+          <div className="flex gap-1">
             {[1,2,3].map(i => (
-              <div key={i} style={{ height: '3px', borderRadius: '999px', background: 'linear-gradient(90deg,#C9922A,#E8B96A)', width: i === 3 ? '28px' : '18px', transition: 'width 300ms' }} />
+              <div
+                key={i}
+                className="h-[3px] rounded-full transition-all duration-300"
+                style={{ width: i === 3 ? '28px' : '18px', background: 'linear-gradient(90deg,#C9922A,#E8B96A)' }}
+              />
             ))}
           </div>
-          <span style={{ fontSize: '9px', fontWeight: 700, color: 'var(--secondary)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Step 3 of 3</span>
+          <span className="text-[9px] font-bold uppercase tracking-[0.10em]" style={{ color: 'var(--ink-subtle)' }}>
+            Step 3 of 3
+          </span>
         </div>
-        <div style={{ width: '36px' }} />
+        <div className="w-9" />
       </div>
 
       {/* Header */}
       <div>
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', padding: '4px 10px', borderRadius: '999px', background: 'rgba(201,146,42,0.09)', border: '1px solid rgba(201,146,42,0.20)', color: '#C9922A', fontSize: '10px', fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: '12px' }}>
+        <div
+          className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-[0.06em] mb-3"
+          style={{ background: 'rgba(201,146,42,0.09)', border: '1px solid rgba(201,146,42,0.20)', color: '#C9922A' }}
+        >
           <BuildingIcon /> Cleanverse Commercial
         </div>
-        <h1 style={{ fontFamily: 'Space Grotesk, sans-serif', fontWeight: 800, fontSize: '26px', letterSpacing: '-0.03em', color: 'var(--primary)', lineHeight: 1.05, marginBottom: '8px' }}>
-          Tier 2 Verification
+        <h1
+          className="font-display font-extrabold text-ink mb-2"
+          style={{ fontSize: '26px', letterSpacing: '-0.03em', lineHeight: 1.05 }}
+        >
+          Tier 2 Business Check
         </h1>
-        <p style={{ fontSize: '13.5px', color: 'var(--secondary)', lineHeight: 1.55 }}>
-          Business document check. Clear passes unlock your <strong style={{ color: 'var(--primary)' }}>$5,000 credit limit</strong> automatically.
+        <p className="text-[13.5px] leading-relaxed" style={{ color: 'var(--ink-subtle)' }}>
+          Business document verification. A clear pass unlocks your{' '}
+          <strong className="text-ink">$5,000 advance limit</strong> automatically.
         </p>
       </div>
 
-      {/* Credit card */}
-      <div style={{ position: 'relative', overflow: 'hidden', borderRadius: '13px', padding: '20px', background: 'linear-gradient(135deg,#0A1628,#112240)', border: '1px solid rgba(201,146,42,0.22)' }}>
-        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '2px', background: 'linear-gradient(90deg,#C9922A,#E8B96A)' }} />
-        <div style={{ position: 'absolute', inset: 0, opacity: 0.022, backgroundImage: 'radial-gradient(circle,#fff 1px,transparent 1px)', backgroundSize: '20px 20px', pointerEvents: 'none' }} />
-        <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      {/* Credit hero */}
+      <div
+        className="relative rounded-[13px] p-5 overflow-hidden grain-overlay"
+        style={{ background: 'linear-gradient(135deg,#0A1628,#112240)', border: '1px solid rgba(201,146,42,0.22)' }}
+      >
+        <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: 'linear-gradient(90deg,#C9922A,#E8B96A)' }} />
+        <div className="absolute inset-0 pointer-events-none" style={{ opacity: 0.022, backgroundImage: 'radial-gradient(circle,#fff 1px,transparent 1px)', backgroundSize: '20px 20px' }} />
+        <div className="relative flex items-center justify-between">
           <div>
-            <p style={{ fontSize: '8px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em', color: 'rgba(255,255,255,0.38)', marginBottom: '6px' }}>Commercial credit limit</p>
-            <p style={{ fontFamily: 'JetBrains Mono, monospace', fontWeight: 800, fontSize: '34px', color: '#fff', letterSpacing: '-0.04em', lineHeight: 1 }}>$5,000</p>
-            <p style={{ fontSize: '10.5px', fontWeight: 600, color: '#E8B96A', marginTop: '6px' }}>Unlocked on clear pass</p>
+            <p className="text-[8px] font-bold uppercase tracking-[0.12em] mb-1.5" style={{ color: 'rgba(255,255,255,0.38)' }}>
+              Commercial advance limit
+            </p>
+            <p className="font-mono font-extrabold text-white font-tnum leading-none" style={{ fontSize: '34px', letterSpacing: '-0.04em' }}>
+              $5,000
+            </p>
+            <p className="text-[10.5px] font-semibold mt-1.5" style={{ color: '#E8B96A' }}>
+              Unlocked on clear pass
+            </p>
           </div>
-          <div style={{ width: '52px', height: '52px', borderRadius: '13px', background: 'rgba(201,146,42,0.13)', border: '1px solid rgba(201,146,42,0.28)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'Space Grotesk, sans-serif', fontWeight: 800, fontSize: '18px', color: '#E8B96A' }}>T2</div>
+          <div
+            className="w-[52px] h-[52px] rounded-[13px] flex items-center justify-center font-display font-extrabold"
+            style={{ fontSize: '18px', color: '#E8B96A', background: 'rgba(201,146,42,0.13)', border: '1px solid rgba(201,146,42,0.28)' }}
+          >
+            T2
+          </div>
         </div>
       </div>
 
       {/* Demo sim */}
-      <div style={{ background: 'var(--surface-card)', border: '1px solid var(--border)', borderRadius: '11px', padding: '11px 14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <span style={{ fontSize: '11.5px', fontWeight: 600, color: 'var(--secondary)' }}>Demo simulation</span>
-        <div style={{ display: 'flex', gap: '4px' }}>
+      <div
+        className="flex items-center justify-between px-3.5 py-2.5 rounded-[11px]"
+        style={{ background: 'var(--cream)', border: '1px solid var(--border)' }}
+      >
+        <span className="text-[11.5px] font-semibold" style={{ color: 'var(--ink-subtle)' }}>Demo simulation</span>
+        <div className="flex gap-1">
           {(['pass', 'fail', 'uncertain'] as const).map((mode) => (
-            <button key={mode} onClick={() => setVerificationOutcome(mode)}
-              style={{ padding: '4px 12px', borderRadius: '6px', fontSize: '9.5px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', cursor: 'pointer', transition: 'all 150ms', border: 'none', background: verificationOutcome === mode ? (mode === 'pass' ? '#047857' : mode === 'fail' ? '#DC2626' : '#7C3AED') : 'var(--canvas)', color: verificationOutcome === mode ? '#fff' : 'var(--secondary)', boxShadow: verificationOutcome === mode ? 'none' : 'inset 0 0 0 1px var(--border)' }}
+            <button
+              key={mode}
+              onClick={() => setVerificationOutcome(mode)}
+              className="px-3 py-1 rounded-[6px] text-[9.5px] font-bold uppercase tracking-[0.06em] transition-all duration-150 active:scale-[0.97]"
+              style={{
+                border: 'none', cursor: 'pointer',
+                background: verificationOutcome === mode
+                  ? (mode === 'pass' ? '#047857' : mode === 'fail' ? '#DC2626' : '#7C3AED')
+                  : 'var(--bg)',
+                color: verificationOutcome === mode ? '#fff' : 'var(--ink-muted)',
+                boxShadow: verificationOutcome === mode ? 'none' : 'inset 0 0 0 1px var(--border)',
+              }}
             >{mode}</button>
           ))}
         </div>
@@ -244,14 +286,20 @@ export const Tier2Verification: React.FC = () => {
 
       {/* Rejection */}
       {rejectionResult && (
-        <div style={{ background: 'rgba(239,68,68,0.05)', border: '1px solid rgba(239,68,68,0.18)', borderRadius: '11px', padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '7px', color: '#EF4444', fontSize: '13px', fontWeight: 700 }}>
+        <div
+          className="rounded-[11px] px-4 py-3.5 flex flex-col gap-2"
+          style={{ background: 'rgba(239,68,68,0.05)', border: '1px solid rgba(239,68,68,0.18)' }}
+        >
+          <div className="flex items-center gap-2 text-[13px] font-bold" style={{ color: '#EF4444' }}>
             <ErrorIcon /> Verification rejected
           </div>
-          <p style={{ fontSize: '12.5px', lineHeight: 1.55, color: 'var(--secondary)' }}>
+          <p className="text-[12.5px] leading-relaxed" style={{ color: 'var(--ink-subtle)' }}>
             {rejectionResult.failureReason || 'Tax PIN could not be verified against the jurisdiction registry.'}
           </p>
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10.5px', fontWeight: 600, paddingTop: '8px', borderTop: '1px solid rgba(239,68,68,0.12)', color: '#EF4444' }}>
+          <div
+            className="flex justify-between text-[10.5px] font-semibold pt-2"
+            style={{ borderTop: '1px solid rgba(239,68,68,0.12)', color: '#EF4444' }}
+          >
             <span>PIN verified: {rejectionResult.taxIdVerified ? 'Yes' : 'No'}</span>
             <span>Upload a valid tax certificate</span>
           </div>
@@ -259,111 +307,194 @@ export const Tier2Verification: React.FC = () => {
       )}
 
       {/* Form */}
-      <form onSubmit={handleCleanverseCheck} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-        <div style={{ background: 'var(--surface-card)', border: '1px solid var(--border)', borderRadius: '13px', overflow: 'hidden', position: 'relative' }}>
-          <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '2px', background: 'linear-gradient(90deg,#C9922A,#E8B96A)' }} />
-          <div style={{ padding: '18px', paddingTop: '20px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
+      <form onSubmit={handleCleanverseCheck} className="flex flex-col gap-3">
+        <div
+          className="relative rounded-[13px] overflow-hidden"
+          style={{ background: 'var(--cream)', border: '1px solid var(--border)' }}
+        >
+          <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: 'linear-gradient(90deg,#C9922A,#E8B96A)' }} />
+          <div className="p-5 pt-6 flex flex-col gap-4">
 
             {/* Tax ID */}
             <div>
-              <label style={{ fontSize: '10.5px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--secondary)', marginBottom: '5px', display: 'block' }}>KRA / National Tax PIN</label>
-              <input type="text" required value={taxId} onChange={e => setTaxId(e.target.value)}
+              <label className="field-label">KRA / National Tax PIN</label>
+              <input
+                type="text" required value={taxId}
+                onChange={e => setTaxId(e.target.value)}
                 placeholder="e.g. P051928401Z"
-                style={{ width: '100%', height: '46px', padding: '0 12px', borderRadius: '9px', fontSize: '13px', color: 'var(--primary)', fontFamily: 'JetBrains Mono, monospace', background: 'var(--canvas)', border: '1px solid var(--border)', outline: 'none', boxSizing: 'border-box' }}
-                onFocus={inputFocus} onBlur={inputBlur}
+                className="input font-mono"
+                style={{ fontSize: '13px' }}
               />
             </div>
 
             {/* Document upload */}
             <div>
-              <label style={{ fontSize: '10.5px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--secondary)', marginBottom: '5px', display: 'block' }}>Business Tax Cert / Bank Statement</label>
-              <div style={{ position: 'relative', border: `1.5px dashed ${fileName ? '#C9922A' : 'var(--border)'}`, borderRadius: '9px', padding: '14px', background: fileName ? 'rgba(201,146,42,0.03)' : 'var(--canvas)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '10px', transition: 'all 200ms' }}>
-                <input type="file" accept=".pdf,.jpg,.png" onChange={handleFileChange}
-                  style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: 0, cursor: 'pointer' }} />
-                <div style={{ color: fileName ? '#C9922A' : 'var(--secondary)', flexShrink: 0 }}>
-                  {fileName ? <FileCheckIcon /> : <UploadIcon />}
-                </div>
-                <div>
-                  <p style={{ fontSize: '12.5px', fontWeight: 600, color: 'var(--primary)' }}>{fileName || 'Click to upload document'}</p>
-                  <p style={{ fontSize: '10.5px', color: 'var(--secondary)', marginTop: '1px' }}>PDF, PNG, JPG up to 15 MB</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Video toggle */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              <div
+              <label className="field-label">Business Tax Cert / Bank Statement</label>
+              <label
+                className="relative flex items-center gap-2.5 p-3.5 rounded-[9px] cursor-pointer transition-all duration-200"
                 style={{
-                  display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 14px', borderRadius: '9px',
-                  background: videoEnabled ? 'rgba(4,120,87,0.05)' : 'var(--canvas)',
-                  border: `1px solid ${videoEnabled ? 'rgba(4,120,87,0.22)' : 'var(--border)'}`,
-                  transition: 'all 200ms',
+                  border: `1.5px dashed ${fileName ? '#C9922A' : 'var(--border-2)'}`,
+                  background: fileName ? 'rgba(201,146,42,0.03)' : 'var(--bg)',
                 }}
               >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <div style={{ color: videoState === 'recording' ? '#EF4444' : videoState === 'recorded' ? '#047857' : '#C9922A', flexShrink: 0 }}>
-                    {videoState === 'recording' ? <RecordIcon /> : videoState === 'recorded' ? <CheckIcon /> : <VideocamIcon />}
-                  </div>
+                <input
+                  type="file" accept=".pdf,.jpg,.png"
+                  onChange={handleFileChange}
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                />
+                <span style={{ color: fileName ? '#C9922A' : 'var(--ink-subtle)', flexShrink: 0 }}>
+                  {fileName ? <FileCheckIcon /> : <UploadIcon />}
+                </span>
+                <div>
+                  <p className="text-[12.5px] font-semibold text-ink">{fileName || 'Click to upload document'}</p>
+                  <p className="text-[10.5px]" style={{ color: 'var(--ink-faint)' }}>PDF, PNG, JPG up to 15 MB</p>
+                </div>
+              </label>
+            </div>
+
+            {/* Video toggle row */}
+            <div className="flex flex-col gap-2.5">
+              <div
+                className="flex items-center justify-between px-3.5 py-3 rounded-[9px] transition-all duration-200"
+                style={{
+                  background: videoEnabled ? 'rgba(4,120,87,0.05)' : 'var(--bg)',
+                  border: `1px solid ${videoEnabled ? 'rgba(4,120,87,0.22)' : 'var(--border)'}`,
+                }}
+              >
+                <div className="flex items-center gap-2.5">
+                  <span
+                    style={{
+                      color: isRecording ? '#EF4444' : isRecorded ? '#047857' : '#C9922A',
+                      flexShrink: 0,
+                    }}
+                  >
+                    {isRecording ? <RecordIcon /> : isRecorded ? <CheckIcon /> : <VideocamIcon />}
+                  </span>
                   <div>
-                    <p style={{ fontSize: '12.5px', fontWeight: 600, color: 'var(--primary)' }}>Shop / Farm walkthrough video</p>
-                    <p style={{ fontSize: '10.5px', color: videoState === 'recording' ? '#EF4444' : videoState === 'recorded' ? '#047857' : 'var(--secondary)', fontWeight: videoState !== 'idle' ? 600 : 400 }}>
-                      {videoState === 'requesting' && 'Opening camera…'}
-                      {videoState === 'recording' && `Recording ${fmtTime(recordingSeconds)}`}
-                      {videoState === 'recorded' && `Recorded (${fmtTime(recordingSeconds)}) — boosts score +15%`}
-                      {videoState === 'error' && 'Camera error — tap to retry'}
-                      {videoState === 'idle' && 'Boosts confidence score by up to 15%'}
+                    <p className="text-[12.5px] font-semibold text-ink">Shop / farm walkthrough</p>
+                    <p
+                      className="text-[10.5px]"
+                      style={{
+                        color: isRecording ? '#EF4444' : isRecorded ? '#047857' : 'var(--ink-subtle)',
+                        fontWeight: videoState !== 'idle' ? 600 : 400,
+                      }}
+                    >
+                      {videoState === 'requesting'  && 'Opening camera…'}
+                      {isRecording                  && `Recording ${fmtTime(recordingSeconds)}`}
+                      {isRecorded                   && `Recorded (${fmtTime(recordingSeconds)}) · boosts score +15%`}
+                      {videoState === 'error'        && 'Camera error — tap to retry'}
+                      {videoState === 'idle'         && 'Boosts confidence score by up to 15%'}
                     </p>
                   </div>
                 </div>
-                <button type="button" onClick={handleVideoToggle}
-                  style={{ width: '40px', height: '22px', borderRadius: '999px', position: 'relative', flexShrink: 0, background: videoEnabled ? 'linear-gradient(135deg,#047857,#10B981)' : 'var(--border)', border: 'none', cursor: 'pointer', transition: 'all 200ms' }}>
-                  <div style={{ position: 'absolute', top: '3px', width: '16px', height: '16px', background: '#fff', borderRadius: '999px', boxShadow: '0 1px 3px rgba(0,0,0,0.2)', transition: 'all 200ms', left: videoEnabled ? '21px' : '3px' }} />
+                {/* Toggle */}
+                <button
+                  type="button"
+                  onClick={handleVideoToggle}
+                  className="relative shrink-0 transition-all duration-200"
+                  style={{
+                    width: '40px', height: '22px', borderRadius: '999px', border: 'none', cursor: 'pointer',
+                    background: videoEnabled ? 'linear-gradient(135deg,#047857,#10B981)' : 'var(--border)',
+                  }}
+                >
+                  <div
+                    className="absolute top-[3px] w-4 h-4 rounded-full transition-all duration-200"
+                    style={{
+                      background: '#fff',
+                      boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
+                      left: videoEnabled ? '21px' : '3px',
+                    }}
+                  />
                 </button>
               </div>
 
+              {/* Camera error */}
               {videoState === 'error' && cameraError && (
-                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', padding: '11px 13px', borderRadius: '9px', background: 'rgba(239,68,68,0.05)', border: '1px solid rgba(239,68,68,0.18)', color: '#EF4444', fontSize: '12px' }}>
-                  <ErrorIcon /><span style={{ lineHeight: 1.5 }}>{cameraError}</span>
+                <div
+                  className="flex items-start gap-2 px-3 py-2.5 rounded-[9px] text-[12px]"
+                  style={{ background: 'rgba(239,68,68,0.05)', border: '1px solid rgba(239,68,68,0.18)', color: '#EF4444' }}
+                >
+                  <ErrorIcon /><span className="leading-relaxed">{cameraError}</span>
                 </div>
               )}
 
-              {/* Live viewfinder — always mounted */}
-              <div style={{ position: 'relative', borderRadius: '11px', overflow: 'hidden', background: '#000', border: '1.5px solid #EF4444', aspectRatio: '16/9', display: videoState === 'recording' ? 'block' : 'none' }}>
-                <video ref={videoRef} autoPlay playsInline muted style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
-                <div style={{ position: 'absolute', top: '10px', left: '10px', display: 'flex', alignItems: 'center', gap: '5px', padding: '3px 10px', borderRadius: '999px', background: '#EF4444', color: '#fff', fontSize: '9.5px', fontWeight: 800 }}>
-                  <span style={{ width: '6px', height: '6px', borderRadius: '999px', background: '#fff', animation: 'ping 1s cubic-bezier(0,0,0.2,1) infinite', display: 'inline-block' }} />
+              {/* Live viewfinder — always mounted, shown only when recording */}
+              <div
+                className="relative rounded-[11px] overflow-hidden bg-black"
+                style={{
+                  border: '1.5px solid #EF4444',
+                  aspectRatio: '16/9',
+                  display: isRecording ? 'block' : 'none',
+                }}
+              >
+                <video
+                  ref={videoRef}
+                  autoPlay playsInline muted
+                  className="w-full h-full object-cover block"
+                />
+                <div
+                  className="absolute top-2.5 left-2.5 flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[9.5px] font-extrabold text-white"
+                  style={{ background: '#EF4444' }}
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping inline-block" />
                   REC {fmtTime(recordingSeconds)}
                 </div>
-                <button type="button" onClick={stopRecording}
-                  style={{ position: 'absolute', bottom: '10px', left: '50%', transform: 'translateX(-50%)', display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 18px', borderRadius: '999px', background: '#EF4444', color: '#fff', border: 'none', cursor: 'pointer', fontSize: '11.5px', fontWeight: 700, boxShadow: '0 4px 14px rgba(239,68,68,0.4)' }}>
-                  <span style={{ width: '10px', height: '10px', background: '#fff', borderRadius: '2px', flexShrink: 0 }} />
+                <button
+                  type="button"
+                  onClick={stopRecording}
+                  className="absolute bottom-2.5 left-1/2 -translate-x-1/2 flex items-center gap-1.5 px-4 py-2 rounded-full text-white font-bold text-[11.5px]"
+                  style={{ background: '#EF4444', border: 'none', cursor: 'pointer', boxShadow: '0 4px 14px rgba(239,68,68,0.4)' }}
+                >
+                  <span className="w-2.5 h-2.5 bg-white rounded-[2px] shrink-0" />
                   Stop recording
                 </button>
               </div>
 
               {/* Playback */}
-              {videoState === 'recorded' && videoPreviewUrl && (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                  <div style={{ position: 'relative', borderRadius: '11px', overflow: 'hidden', background: '#000', border: '1px solid rgba(4,120,87,0.28)', aspectRatio: '16/9' }}>
-                    <video src={videoPreviewUrl} controls playsInline style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
-                    <div style={{ position: 'absolute', top: '10px', left: '10px', display: 'flex', alignItems: 'center', gap: '5px', padding: '3px 10px', borderRadius: '999px', background: 'rgba(4,120,87,0.82)', backdropFilter: 'blur(4px)', color: '#fff', fontSize: '9.5px', fontWeight: 800 }}>
+              {isRecorded && videoPreviewUrl && (
+                <div className="flex flex-col gap-2">
+                  <div
+                    className="relative rounded-[11px] overflow-hidden bg-black"
+                    style={{ border: '1px solid rgba(4,120,87,0.28)', aspectRatio: '16/9' }}
+                  >
+                    <video
+                      src={videoPreviewUrl}
+                      controls playsInline
+                      className="w-full h-full object-cover block"
+                    />
+                    <div
+                      className="absolute top-2.5 left-2.5 flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[9.5px] font-extrabold text-white"
+                      style={{ background: 'rgba(4,120,87,0.82)', backdropFilter: 'blur(4px)' }}
+                    >
                       <CheckIcon /> Recorded · {fmtTime(recordingSeconds)}
                     </div>
                   </div>
-                  <button type="button" onClick={retakeVideo}
-                    style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', padding: '8px', borderRadius: '9px', background: 'var(--canvas)', border: '1px solid var(--border)', color: 'var(--secondary)', cursor: 'pointer', fontSize: '11.5px', fontWeight: 600 }}>
+                  <button
+                    type="button"
+                    onClick={retakeVideo}
+                    className="flex items-center justify-center gap-1.5 py-2 rounded-[9px] text-[11.5px] font-semibold transition-all duration-150 active:scale-[0.97]"
+                    style={{ background: 'var(--bg)', border: '1px solid var(--border)', color: 'var(--ink-subtle)', cursor: 'pointer' }}
+                  >
                     <ReplayIcon /> Retake
                   </button>
                 </div>
               )}
             </div>
+
           </div>
         </div>
 
         {/* CTA */}
-        <button type="submit" disabled={isVerifying}
-          style={{ width: '100%', height: '50px', borderRadius: '11px', fontSize: '13.5px', fontWeight: 700, color: '#fff', background: 'linear-gradient(135deg,#C9922A,#E8B96A)', border: 'none', cursor: isVerifying ? 'wait' : 'pointer', boxShadow: '0 6px 20px rgba(201,146,42,0.30)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', opacity: isVerifying ? 0.75 : 1, transition: 'all 180ms', letterSpacing: '-0.01em' }}>
-          {isVerifying ? <><SpinnerIcon /> Verifying with Cleanverse</> : <><BuildingIcon /> Verify business and unlock $5,000 <ArrowRight /></>}
+        <button
+          type="submit"
+          disabled={isVerifying}
+          className="btn-primary w-full h-[50px] rounded-[11px] text-[13.5px] justify-center active:scale-[0.98]"
+          style={isVerifying ? { opacity: 0.75, cursor: 'wait' } : {}}
+        >
+          {isVerifying
+            ? <><SpinnerIcon /> Verifying with Cleanverse</>
+            : <><BuildingIcon /> Verify business and unlock $5,000 <ArrowRight /></>
+          }
         </button>
       </form>
     </div>

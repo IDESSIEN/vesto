@@ -41,12 +41,16 @@ export const AppContent: React.FC = () => {
   const navBtn = (active: boolean, onClick: () => void, label: string) => (
     <button
       onClick={onClick}
-      className={`px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-full font-semibold whitespace-nowrap transition-all duration-150 text-[11px] sm:text-xs relative ${
-        active
-          ? 'text-primary font-bold shadow-xs'
-          : 'text-secondary hover:text-primary'
-      }`}
-      style={active ? { background: 'linear-gradient(135deg, #C9922A 0%, #E8B96A 100%)', color: '#FFFFFF' } : {}}
+      className="px-3 sm:px-4 py-1 sm:py-1.5 rounded-full font-semibold whitespace-nowrap transition-all duration-150 text-[11px] sm:text-[11.5px] active:scale-[0.97]"
+      style={active ? {
+        background: 'var(--cream)',
+        color: 'var(--ink)',
+        fontWeight: 700,
+        boxShadow: '0 1px 4px rgba(13,24,36,0.10), 0 0 0 1px rgba(13,24,36,0.07)',
+      } : {
+        background: 'transparent',
+        color: 'var(--ink-subtle)',
+      }}
     >
       {label}
     </button>

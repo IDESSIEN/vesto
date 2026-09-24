@@ -68,99 +68,131 @@ export const Tier1Verification: React.FC = () => {
     }
   };
 
-  const sectionStyle: React.CSSProperties = {
-    background: 'var(--surface-card)', border: '1px solid var(--border)',
-    borderRadius: '13px', overflow: 'hidden', position: 'relative',
-  };
-
   return (
-    <div style={{ maxWidth: '520px', margin: '0 auto', padding: '28px 16px 80px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+    <div className="max-w-[520px] mx-auto px-4 py-7 pb-20 flex flex-col gap-4 view-enter">
 
       {/* Nav row */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      <div className="flex items-center justify-between">
         <button
           onClick={() => setSellerView('signup')}
-          style={{ width: '36px', height: '36px', borderRadius: '9px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--surface-card)', border: '1px solid var(--border)', color: 'var(--secondary)', cursor: 'pointer' }}
+          className="w-9 h-9 rounded-[9px] flex items-center justify-center transition-all duration-150 hover:bg-[rgba(13,24,36,0.06)] active:scale-[0.97]"
+          style={{ background: 'var(--cream)', border: '1px solid var(--border-2)', color: 'var(--ink-muted)' }}
         ><ArrowLeft /></button>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <div style={{ display: 'flex', gap: '4px' }}>
+        <div className="flex items-center gap-2">
+          <div className="flex gap-1">
             {[1,2,3].map(i => (
-              <div key={i} style={{ height: '3px', borderRadius: '999px', background: i <= 2 ? 'linear-gradient(90deg,#C9922A,#E8B96A)' : 'var(--border)', width: i === 2 ? '28px' : '18px', transition: 'width 300ms' }} />
+              <div
+                key={i}
+                className="h-[3px] rounded-full transition-all duration-300"
+                style={{
+                  width: i === 2 ? '28px' : '18px',
+                  background: i <= 2 ? 'linear-gradient(90deg,#C9922A,#E8B96A)' : 'var(--border)',
+                }}
+              />
             ))}
           </div>
-          <span style={{ fontSize: '9px', fontWeight: 700, color: 'var(--secondary)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Step 2 of 3</span>
+          <span className="text-[9px] font-bold uppercase tracking-[0.10em]" style={{ color: 'var(--ink-subtle)' }}>
+            Step 2 of 3
+          </span>
         </div>
-        <div style={{ width: '36px' }} />
+        <div className="w-9" />
       </div>
 
       {/* Header */}
       <div>
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', padding: '4px 10px', borderRadius: '999px', background: 'rgba(4,120,87,0.10)', border: '1px solid rgba(4,120,87,0.18)', color: '#047857', fontSize: '10px', fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: '12px' }}>
-          <VerifiedBadge />
-          Cleanverse AI
+        <div
+          className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-[0.06em] mb-3"
+          style={{ background: 'rgba(4,120,87,0.10)', border: '1px solid rgba(4,120,87,0.18)', color: '#047857' }}
+        >
+          <VerifiedBadge /> Cleanverse AI
         </div>
-        <h1 style={{ fontFamily: 'Space Grotesk, sans-serif', fontWeight: 800, fontSize: '26px', letterSpacing: '-0.03em', color: 'var(--primary)', lineHeight: 1.05, marginBottom: '8px' }}>
-          Tier 1 Verification
+        <h1
+          className="font-display font-extrabold text-ink mb-2"
+          style={{ fontSize: '26px', letterSpacing: '-0.03em', lineHeight: 1.05 }}
+        >
+          Tier 1 Identity Check
         </h1>
-        <p style={{ fontSize: '13.5px', color: 'var(--secondary)', lineHeight: 1.55 }}>
-          Government-issued ID check. Clear passes unlock your <strong style={{ color: 'var(--primary)' }}>$500 credit limit</strong> instantly.
+        <p className="text-[13.5px] leading-relaxed" style={{ color: 'var(--ink-subtle)' }}>
+          Government-issued ID check. A clear pass unlocks your{' '}
+          <strong className="text-ink">$500 advance limit</strong> instantly.
         </p>
       </div>
 
-      {/* Credit card */}
-      <div style={{
-        position: 'relative', overflow: 'hidden', borderRadius: '13px', padding: '20px',
-        background: 'linear-gradient(135deg,#0A1628,#112240)',
-        border: '1px solid rgba(201,146,42,0.22)',
-      }}>
-        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '2px', background: 'linear-gradient(90deg,#C9922A,#E8B96A)' }} />
-        <div style={{ position: 'absolute', inset: 0, opacity: 0.022, backgroundImage: 'radial-gradient(circle,#fff 1px,transparent 1px)', backgroundSize: '20px 20px', pointerEvents: 'none' }} />
-        <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      {/* Credit hero — dark cinema card */}
+      <div
+        className="relative rounded-[13px] p-5 overflow-hidden grain-overlay"
+        style={{
+          background: 'linear-gradient(135deg,#0A1628,#112240)',
+          border: '1px solid rgba(201,146,42,0.22)',
+        }}
+      >
+        <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: 'linear-gradient(90deg,#C9922A,#E8B96A)' }} />
+        <div className="absolute inset-0 pointer-events-none" style={{ opacity: 0.022, backgroundImage: 'radial-gradient(circle,#fff 1px,transparent 1px)', backgroundSize: '20px 20px' }} />
+        <div className="relative flex items-center justify-between">
           <div>
-            <p style={{ fontSize: '8px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em', color: 'rgba(255,255,255,0.38)', marginBottom: '6px' }}>Micro credit limit</p>
-            <p style={{ fontFamily: 'JetBrains Mono, monospace', fontWeight: 800, fontSize: '34px', color: '#fff', letterSpacing: '-0.04em', lineHeight: 1 }}>$500</p>
-            <p style={{ fontSize: '10.5px', fontWeight: 600, color: '#E8B96A', marginTop: '6px' }}>Unlocked on clear pass</p>
+            <p className="text-[8px] font-bold uppercase tracking-[0.12em] mb-1.5" style={{ color: 'rgba(255,255,255,0.38)' }}>
+              Micro advance limit
+            </p>
+            <p className="font-mono font-extrabold text-white font-tnum leading-none" style={{ fontSize: '34px', letterSpacing: '-0.04em' }}>
+              $500
+            </p>
+            <p className="text-[10.5px] font-semibold mt-1.5" style={{ color: '#E8B96A' }}>
+              Unlocked on clear pass
+            </p>
           </div>
-          <div style={{
-            width: '52px', height: '52px', borderRadius: '13px',
-            background: 'rgba(201,146,42,0.13)', border: '1px solid rgba(201,146,42,0.28)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontFamily: 'Space Grotesk, sans-serif', fontWeight: 800, fontSize: '18px', color: '#E8B96A',
-          }}>T1</div>
+          <div
+            className="w-[52px] h-[52px] rounded-[13px] flex items-center justify-center font-display font-extrabold"
+            style={{ fontSize: '18px', color: '#E8B96A', background: 'rgba(201,146,42,0.13)', border: '1px solid rgba(201,146,42,0.28)' }}
+          >
+            T1
+          </div>
         </div>
       </div>
 
-      {/* Demo sim */}
-      <div style={{ ...sectionStyle, padding: '12px 14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <span style={{ fontSize: '11.5px', fontWeight: 600, color: 'var(--secondary)' }}>Demo simulation</span>
-        <div style={{ display: 'flex', gap: '4px' }}>
+      {/* Demo simulation selector */}
+      <div
+        className="flex items-center justify-between px-3.5 py-2.5 rounded-[11px]"
+        style={{ background: 'var(--cream)', border: '1px solid var(--border)' }}
+      >
+        <span className="text-[11.5px] font-semibold" style={{ color: 'var(--ink-subtle)' }}>Demo simulation</span>
+        <div className="flex gap-1">
           {(['pass', 'fail', 'uncertain'] as const).map((mode) => (
-            <button key={mode} onClick={() => setVerificationOutcome(mode)}
+            <button
+              key={mode}
+              onClick={() => setVerificationOutcome(mode)}
+              className="px-3 py-1 rounded-[6px] text-[9.5px] font-bold uppercase tracking-[0.06em] transition-all duration-150 active:scale-[0.97]"
               style={{
-                padding: '4px 12px', borderRadius: '6px', fontSize: '9.5px', fontWeight: 700,
-                textTransform: 'uppercase', letterSpacing: '0.06em', cursor: 'pointer',
-                transition: 'all 150ms', border: 'none',
+                border: 'none',
+                cursor: 'pointer',
                 background: verificationOutcome === mode
                   ? (mode === 'pass' ? '#047857' : mode === 'fail' ? '#DC2626' : '#7C3AED')
-                  : 'var(--canvas)',
-                color: verificationOutcome === mode ? '#fff' : 'var(--secondary)',
+                  : 'var(--bg)',
+                color: verificationOutcome === mode ? '#fff' : 'var(--ink-muted)',
                 boxShadow: verificationOutcome === mode ? 'none' : 'inset 0 0 0 1px var(--border)',
               }}
-            >{mode}</button>
+            >
+              {mode}
+            </button>
           ))}
         </div>
       </div>
 
-      {/* Rejection */}
+      {/* Rejection card */}
       {rejectionResult && (
-        <div style={{ background: 'rgba(239,68,68,0.05)', border: '1px solid rgba(239,68,68,0.18)', borderRadius: '11px', padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '7px', color: '#EF4444', fontSize: '13px', fontWeight: 700 }}>
+        <div
+          className="rounded-[11px] px-4 py-3.5 flex flex-col gap-2"
+          style={{ background: 'rgba(239,68,68,0.05)', border: '1px solid rgba(239,68,68,0.18)' }}
+        >
+          <div className="flex items-center gap-2 text-[13px] font-bold" style={{ color: '#EF4444' }}>
             <ErrorIcon /> Verification rejected
           </div>
-          <p style={{ fontSize: '12.5px', lineHeight: 1.55, color: 'var(--secondary)' }}>
+          <p className="text-[12.5px] leading-relaxed" style={{ color: 'var(--ink-subtle)' }}>
             {rejectionResult.failureReason || 'Document photo was too dark or blurry.'}
           </p>
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10.5px', fontWeight: 600, paddingTop: '8px', borderTop: '1px solid rgba(239,68,68,0.12)', color: '#EF4444' }}>
+          <div
+            className="flex justify-between text-[10.5px] font-semibold pt-2"
+            style={{ borderTop: '1px solid rgba(239,68,68,0.12)', color: '#EF4444' }}
+          >
             <span>Confidence: {rejectionResult.confidenceScore}%</span>
             <span>Re-upload a clear photo</span>
           </div>
@@ -168,23 +200,35 @@ export const Tier1Verification: React.FC = () => {
       )}
 
       {/* ID preview */}
-      <div style={sectionStyle}>
-        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '2px', background: 'linear-gradient(90deg,#C9922A,#E8B96A)' }} />
-        <div style={{ padding: '16px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
-            <span style={{ fontSize: '11px', fontWeight: 700, color: 'var(--primary)' }}>Government ID (Front)</span>
-            <span style={{ fontSize: '9.5px', fontWeight: 700, padding: '3px 9px', borderRadius: '999px', background: 'rgba(4,120,87,0.09)', color: '#047857', border: '1px solid rgba(4,120,87,0.18)' }}>Ready</span>
+      <div
+        className="relative rounded-[13px] overflow-hidden"
+        style={{ background: 'var(--cream)', border: '1px solid var(--border)' }}
+      >
+        <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: 'linear-gradient(90deg,#C9922A,#E8B96A)' }} />
+        <div className="p-4 pt-5">
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-[11px] font-bold text-ink">Government ID (Front)</span>
+            <span
+              className="text-[9.5px] font-bold px-2.5 py-0.5 rounded-full"
+              style={{ background: 'rgba(4,120,87,0.09)', color: '#047857', border: '1px solid rgba(4,120,87,0.18)' }}
+            >
+              Ready
+            </span>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'var(--canvas)', border: '1px solid var(--border)', borderRadius: '9px', padding: '10px' }}>
-            <div style={{ width: '72px', height: '88px', borderRadius: '8px', overflow: 'hidden', flexShrink: 0 }}>
-              <img src={docUrl} alt="ID Document" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+          <div
+            className="flex items-center gap-3 p-2.5 rounded-[9px]"
+            style={{ background: 'var(--bg)', border: '1px solid var(--border)' }}
+          >
+            <div className="w-[72px] h-[88px] rounded-[8px] overflow-hidden shrink-0">
+              <img src={docUrl} alt="ID Document" className="w-full h-full object-cover" />
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', fontSize: '12px' }}>
-              <span style={{ fontWeight: 700, color: 'var(--primary)' }}>{seller.fullName || 'Your Name'}</span>
-              <span style={{ color: 'var(--secondary)', fontFamily: 'JetBrains Mono, monospace', fontSize: '11px' }}>ID No: KEN-849201948</span>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '5px', color: '#047857', fontSize: '10.5px', fontWeight: 600, marginTop: '3px' }}>
-                <VerifiedBadge />
-                Cleanverse AI Ready
+            <div className="flex flex-col gap-1.5 text-[12px]">
+              <span className="font-bold text-ink">{seller.fullName || 'Your Name'}</span>
+              <span className="font-mono text-[11px]" style={{ color: 'var(--ink-subtle)' }}>
+                ID No: KEN-849201948
+              </span>
+              <div className="flex items-center gap-1.5 text-[10.5px] font-semibold mt-0.5" style={{ color: '#047857' }}>
+                <VerifiedBadge /> Cleanverse AI Ready
               </div>
             </div>
           </div>
@@ -195,21 +239,13 @@ export const Tier1Verification: React.FC = () => {
       <button
         onClick={handleCleanverseCheck}
         disabled={isVerifying}
-        style={{
-          width: '100%', height: '50px', borderRadius: '11px',
-          fontSize: '13.5px', fontWeight: 700, color: '#fff',
-          background: 'linear-gradient(135deg,#C9922A,#E8B96A)', border: 'none',
-          cursor: isVerifying ? 'wait' : 'pointer',
-          boxShadow: '0 6px 20px rgba(201,146,42,0.30)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
-          opacity: isVerifying ? 0.75 : 1, transition: 'all 180ms', letterSpacing: '-0.01em',
-        }}
+        className="btn-primary w-full h-[50px] rounded-[11px] text-[13.5px] justify-center active:scale-[0.98]"
+        style={isVerifying ? { opacity: 0.75, cursor: 'wait' } : {}}
       >
-        {isVerifying ? (
-          <><SpinnerIcon /> Sending to Cleanverse AI</>
-        ) : (
-          <><ShieldIcon /> Verify identity and unlock $500 <ArrowRight /></>
-        )}
+        {isVerifying
+          ? <><SpinnerIcon /> Sending to Cleanverse AI</>
+          : <><ShieldIcon /> Verify identity and unlock $500 <ArrowRight /></>
+        }
       </button>
     </div>
   );
