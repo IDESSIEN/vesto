@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Vesto — Complete System Flowchart</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+  :root {
+    --canvas:   #F8F6F1;
+    --cream:    #F2EFE8;
+    --ink:      #0D1824;
+    --ink-2:    #1E2B38;
+    --ink-sub:  #4A5568;
+    --ink-faint:#8A96A3;
+    --gold:     #B8821E;
+    --gold-lt:  #E9BE68;
+    --navy:     #0D1824;
+    --border:   rgba(13,24,36,0.10);
+
+    /* swim lane colours */
+    --seller-bg:  rgba(184,130,30,0.06);
+    --seller-bd:  rgba(184,130,30,0.22);
+    --lender-bg:  rgba(30,77,184,0.05);
+    --lender-bd:  rgba(30,77,184,0.20);
+    --admin-bg:   rgba(13,24,36,0.04);
+    --admin-bd:   rgba(13,24,36,0.18);
+    --chain-bg:   rgba(26,102,69,0.05);
+    --chain-bd:   rgba(26,102,69,0.22);
+    --buyer-bg:   rgba(124,58,237,0.05);
+    --buyer-bd:   rgba(124,58,237,0.20);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Space Grotesk', sans-serif;
+    background: var(--canvas);
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 40px 24px 80px;
+  }
+
+  /* ── Header ── */
+  .header {
+    max-width: 1100px;
+    margin: 0 auto 48px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  .header-left {}
+  .wordmark {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: var(--ink);
+  }
+  .wordmark span { color: var(--gold); }
+  .subtitle {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ink-faint);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--ink-sub);
+  }
+  .legend-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* ── Flowchart wrapper ── */
+  .chart {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  /* ── Phase header ── */
+  .phase-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 24px;
+    border-radius: 13px 13px 0 0;
+    border: 1px solid var(--border);
+    border-bottom: none;
+    background: var(--navy);
+    margin-top: 32px;
+  }
+  .phase-header:first-child { margin-top: 0; }
+  .phase-num {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--gold);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .phase-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.01em;
+  }
+  .phase-desc {
+    font-size: 11px;
+    color: rgba(255,255,255,0.40);
+    margin-left: auto;
+    font-weight: 500;
+  }
+
+  /* ── Swim lane row ── */
+  .lane-row {
+    display: grid;
+    grid-template-columns: 120px 1fr 1fr 1fr 1fr 1fr;
+    border: 1px solid var(--border);
+    border-top: none;
+  }
+  .lane-row:last-child {
+    border-radius: 0 0 13px 13px;
+  }
+
+  /* ── Lane label ── */
+  .lane-label {
+    padding: 16px 10px;
+    border-right: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    writing-mode: vertical-lr;
+    text-orientation: mixed;
+    transform: rotate(180deg);
+    font-size: 9.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.10em;
+    color: var(--ink-faint);
+    background: var(--cream);
+  }
+
+  /* ── Lane content ── */
+  .lane-content {
+    grid-column: 2 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 18px 20px;
+    align-items: flex-start;
+  }
+
+  /* ── Step node ── */
+  .node {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 11px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: #fff;
+    min-width: 140px;
+    max-width: 200px;
+    position: relative;
+    cursor: default;
+    transition: box-shadow 0.15s ease, transform 0.15s ease;
+  }
+  .node:hover {
+    box-shadow: 0 4px 16px rgba(13,24,36,0.12);
+    transform: translateY(-2px);
+  }
+  .node-label {
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.3;
+  }
+  .node-sub {
+    font-size: 9.5px;
+    color: var(--ink-faint);
+    font-weight: 500;
+    line-height: 1.4;
+  }
+  .node-tag {
+    font-size: 8px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    padding: 2px 6px;
+    border-radius: 4px;
+    align-self: flex-start;
+    margin-top: 2px;
+  }
+
+  /* Node variants */
+  .node-seller   { border-color: var(--seller-bd); background: var(--seller-bg); }
+  .node-lender   { border-color: var(--lender-bd); background: var(--lender-bg); }
+  .node-admin    { border-color: var(--admin-bd);  background: var(--admin-bg);  }
+  .node-chain    { border-color: var(--chain-bd);  background: var(--chain-bg);  }
+  .node-buyer    { border-color: var(--buyer-bd);  background: var(--buyer-bg);  }
+  .node-gold     { border-color: rgba(184,130,30,0.45); background: rgba(184,130,30,0.08); }
+  .node-danger   { border-color: rgba(140,26,26,0.30); background: rgba(140,26,26,0.06); }
+  .node-start    {
+    background: var(--navy);
+    border-color: transparent;
+  }
+  .node-start .node-label { color: #fff; }
+  .node-start .node-sub   { color: rgba(255,255,255,0.45); }
+
+  .tag-seller  { background: rgba(184,130,30,0.12); color: #92570D; }
+  .tag-lender  { background: rgba(30,77,184,0.10);  color: #1E4DB8; }
+  .tag-admin   { background: rgba(13,24,36,0.09);   color: var(--ink-2); }
+  .tag-chain   { background: rgba(26,102,69,0.10);  color: #1A6645; }
+  .tag-buyer   { background: rgba(124,58,237,0.10); color: #6D28D9; }
+  .tag-auto    { background: rgba(26,102,69,0.12);  color: #1A6645; }
+  .tag-danger  { background: rgba(140,26,26,0.10);  color: #8C1A1A; }
+
+  /* ── Arrow between nodes ── */
+  .arrow {
+    display: flex;
+    align-items: center;
+    color: var(--ink-faint);
+    font-size: 16px;
+    align-self: center;
+    flex-shrink: 0;
+    line-height: 1;
+    padding-top: 2px;
+  }
+  .arrow-down {
+    display: flex;
+    justify-content: center;
+    color: var(--ink-faint);
+    font-size: 18px;
+    width: 100%;
+    padding: 2px 0;
+  }
+
+  /* ── Decision diamond ── */
+  .decision {
+    width: 130px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    flex-shrink: 0;
+  }
+  .diamond {
+    width: 110px;
+    height: 55px;
+    background: rgba(184,130,30,0.10);
+    border: 1.5px solid rgba(184,130,30,0.35);
+    transform: rotate(45deg) scale(0.71);
+    border-radius: 4px;
+    position: absolute;
+  }
+  .diamond-label {
+    position: relative;
+    z-index: 1;
+    font-size: 10.5px;
+    font-weight: 700;
+    color: var(--gold);
+    text-align: center;
+    line-height: 1.3;
+    max-width: 90px;
+  }
+  .decision.danger .diamond {
+    background: rgba(140,26,26,0.10);
+    border-color: rgba(140,26,26,0.30);
+  }
+  .decision.danger .diamond-label { color: #8C1A1A; }
+  .decision.chain .diamond {
+    background: rgba(26,102,69,0.08);
+    border-color: rgba(26,102,69,0.28);
+  }
+  .decision.chain .diamond-label { color: #1A6645; }
+
+  /* ── Branch labels ── */
+  .branch-yes { font-size: 9px; font-weight: 700; color: #1A6645; text-transform: uppercase; letter-spacing: 0.07em; }
+  .branch-no  { font-size: 9px; font-weight: 700; color: #8C1A1A; text-transform: uppercase; letter-spacing: 0.07em; }
+
+  /* ── Connector line (vertical spacer) ── */
+  .connector {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 2px;
+    padding: 4px 0;
+  }
+  .connector-line {
+    width: 1.5px;
+    height: 20px;
+    background: var(--border);
+  }
+  .connector-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--ink-faint);
+  }
+
+  /* ── Full-width section ── */
+  .full-row {
+    border: 1px solid var(--border);
+    border-top: none;
+    padding: 20px 24px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .full-row:last-child { border-radius: 0 0 13px 13px; }
+
+  /* ── State machine ── */
+  .state-machine {
+    max-width: 1100px;
+    margin: 48px auto 0;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+  .state-header {
+    background: var(--navy);
+    padding: 16px 24px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .state-header h2 {
+    font-size: 14px; font-weight: 700; color: #fff;
+  }
+  .state-header p { font-size: 11px; color: rgba(255,255,255,0.40); margin-left: auto; }
+  .state-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    padding: 1px;
+  }
+  .state-cell {
+    background: var(--cream);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .state-num {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ink-faint);
+  }
+  .state-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -0.015em;
+  }
+  .state-desc {
+    font-size: 10.5px;
+    color: var(--ink-sub);
+    line-height: 1.5;
+  }
+  .state-trigger {
+    font-size: 9.5px;
+    font-weight: 600;
+    font-family: 'JetBrains Mono', monospace;
+    padding: 3px 7px;
+    border-radius: 4px;
+    align-self: flex-start;
+    margin-top: 4px;
+  }
+  .t-admin   { background: rgba(13,24,36,0.07);   color: var(--ink-2); }
+  .t-auto    { background: rgba(26,102,69,0.10);  color: #1A6645; }
+  .t-lender  { background: rgba(30,77,184,0.08);  color: #1E4DB8; }
+  .t-seller  { background: rgba(184,130,30,0.10); color: #92570D; }
+  .t-buyer   { background: rgba(124,58,237,0.08); color: #6D28D9; }
+  .t-system  { background: rgba(140,26,26,0.08);  color: #8C1A1A; }
+
+  /* ── Settlement layers table ── */
+  .layers-table {
+    max-width: 1100px;
+    margin: 48px auto 0;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .layers-header {
+    background: var(--navy);
+    padding: 16px 24px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .layers-header h2 { font-size: 14px; font-weight: 700; color: #fff; }
+  .layers-header p  { font-size: 11px; color: rgba(255,255,255,0.40); margin-left: auto; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--cream);
+  }
+  thead tr {
+    background: rgba(13,24,36,0.04);
+    border-bottom: 1px solid var(--border);
+  }
+  th {
+    padding: 10px 16px;
+    font-size: 9.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    color: var(--ink-faint);
+    text-align: left;
+  }
+  td {
+    padding: 13px 16px;
+    font-size: 12px;
+    color: var(--ink-sub);
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  td:first-child {
+    font-weight: 700;
+    color: var(--ink);
+    width: 36px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+  }
+  td:nth-child(2) { font-weight: 600; color: var(--ink); }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(184,130,30,0.03); }
+
+  /* ── Print ── */
+  @media print {
+    body { padding: 20px; background: #fff; }
+    .phase-header { break-inside: avoid; }
+    .lane-row { break-inside: avoid; }
+    .state-machine { break-before: page; }
+    .layers-table { break-before: page; }
+    .node:hover { box-shadow: none; transform: none; }
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 700px) {
+    .lane-row { grid-template-columns: 72px 1fr; }
+    .phase-desc { display: none; }
+    .node { min-width: 110px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════
+     HEADER
+════════════════════════════════════════════════════════ -->
+<div class="header">
+  <div class="header-left">
+    <div class="wordmark">Ve<span>sto</span></div>
+    <div class="subtitle">Complete System Flowchart · All Roles · All Paths</div>
+  </div>
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:#B8821E"></div>Seller</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#1E4DB8"></div>Lender</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#0D1824"></div>Admin</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#1A6645"></div>Onchain / Arc</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#7C3AED"></div>Buyer</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#8C1A1A"></div>Exception / Default</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     PHASE 1 — ONBOARDING
+════════════════════════════════════════════════════════ -->
+<div class="chart">
+
+  <div class="phase-header">
+    <div class="phase-num">1</div>
+    <div class="phase-title">Onboarding &amp; Identity Verification</div>
+    <div class="phase-desc">All three roles enter the platform and establish identity</div>
+  </div>
+
+  <!-- Seller lane -->
+  <div class="lane-row">
+    <div class="lane-label" style="color:#92570D;background:var(--seller-bg)">Seller</div>
+    <div class="lane-content">
+      <div class="node node-start">
+        <div class="node-label">Visit Vesto</div>
+        <div class="node-sub">Landing · Sign Up</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node node-seller">
+        <div class="node-label">Create seller account</div>
+        <div class="node-sub">Name, email, business, jurisdiction</div>
+        <div class="node-tag tag-seller">Step 1 of 3</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node node-seller">
+        <div class="node-label">Tier 1 KYC</div>
+        <div class="node-sub">Upload national ID · Cleanverse AI scan</div>
+        <div class="node-tag tag-seller">£0–500 limit</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node node-admin">
+        <div class="node-label">Admin review</div>
+        <div class="node-sub">Approve or reject T1 submission</div>
+        <div class="node-tag tag-admin">Verification Queue</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node node-seller">
+        <div class="node-label">Tier 2 KYC (optional)</div>
+        <div class="node-sub">Video recording · Business docs</div>
+        <div class="node-tag tag-seller">Up to $5,000</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node node-chain">
+        <div class="node-label">Credit limit assigned</div>
+        <div class="node-sub">Onchain: seller pre-registered by admin</div>
+        <div class="node-tag tag-chain">Arc Testnet</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lender lane -->
+  <div class="lane-row">
+    <div class="lane-label" style="color:#1E4DB8;background:var(--lender-bg)">Lender</div>
+    <div class="lane-content">
+      <div class="node node-start">
+        <div class="node-label">Visit Vesto</div>
+        <div class="node-sub">Landing · Sign Up</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node node-lender">
+        <div class="node-label">Create lender account</div>
+        <div class="node-sub">Name, email, allocation target, risk appetite</div>
+        <div class="node-tag tag-lender">Step 1 of 3</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node node-lender">
+        <div class="node-label">Read risk disclosure</div>
+        <div class="node-sub">Accept terms before accessing marketplace</div>
+        <div class="node-tag tag-lender">Required gate</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node node-lender">
+        <div class="node-label">Connect wallet</div>
+        <div class="node-sub">ConnectKit · Arc Testnet · USDC balance check</div>
+        <div class="node-tag tag-chain">wagmi v2</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node node-lender">
+        <div class="node-label">Lender welcome</div>
+        <div class="node-sub">Allocation confirmed · Yield estimate shown</div>
+        <div class="node-tag tag-lender">Personalised</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin lane -->
+  <div class="lane-row">
+    <div class="lane-label" style="background:var(--admin-bg)">Admin</div>
+    <div class="lane-content">
+      <div class="node node-start">
+        <div class="node-label">Admin login</div>
+        <div class="node-sub">@vesto.finance email · 6-digit 2FA</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node node-admin">
+        <div class="node-label">Verification Queue</div>
+        <div class="node-sub">Review T1 / T2 KYC submissions</div>
+        <div class="node-tag tag-admin">Approve or Reject</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node node-chain">
+        <div class="node-label">Pre-register seller</div>
+        <div class="node-sub">VestoEscrow.registerSeller() · assign credit limit</div>
+        <div class="node-tag tag-chain">Onchain action</div>
+      </div>
+    </div>
+  </div>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     PHASE 2 — INVOICE SUBMISSION
+════════════════════════════════════════════════════════ -->
+  <div class="phase-header">
+    <div class="phase-num">2</div>
+    <div class="phase-title">Invoice Submission &amp; Admin Review</div>
+    <div class="phase-desc">Seller submits invoice → admin validates → listed on marketplace</div>
+  </div>
+
+  <!-- Seller lane -->
+  <div class="lane-row">
+    <div class="lane-label" style="color:#92570D;background:var(--seller-bg)">Seller</div>
+    <div class="lane-content">
+      <div class="node node-seller">
+        <div class="node-label">Submit invoice</div>
+        <div class="node-sub">Buyer name, amount, due date, document upload</div>
+        <div class="node-tag tag-seller">SubmitInvoice screen</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="decision">
+        <div class="diamond"></div>
+        <div class="diamond-label">Within credit limit?</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node node-seller">
+        <div class="node-label">Invoice pending</div>
+        <div class="node-sub">Awaiting admin review · Status: pending</div>
+        <div class="node-tag tag-seller">Off-chain</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node node-danger">
+        <div class="node-label">Over credit limit</div>
+        <div class="node-sub">Blocked at submission · Must upgrade tier</div>
+        <div class="node-tag tag-danger">Hard block</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin lane -->
+  <div class="lane-row">
+    <div class="lane-label" style="background:var(--admin-bg)">Admin</div>
+    <div class="lane-content">
+      <div class="node node-admin">
+        <div class="node-label">Invoice Oversight Table</div>
+        <div class="node-sub">Review submission · Check buyer, amount, docs</div>
+        <div class="node-tag tag-admin">Admin screen</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="decision">
+        <div class="diamond"></div>
+        <div class="diamond-label">Valid &amp; approved?</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node node-admin">
+        <div class="node-label">Assign risk grade</div>
+        <div class="node-sub">A+, A, B+, B · Risk score 0–100 · Expected yield</div>
+        <div class="node-tag tag-admin">Risk scoring</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node node-chain">
+        <div class="node-label">Register invoice onchain</div>
+        <div class="node-sub">VestoEscrow.registerInvoice() · invoiceId, amount</div>
+        <div class="node-tag tag-chain">Onchain action</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node node-admin">
+        <div class="node-label">Publish to marketplace</div>
+        <div class="node-sub">Status → published_marketplace</div>
+        <div class="node-tag tag-auto">Visible to lenders</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Buyer lane — virtual account -->
+  <div class="lane-row">
+    <div class="lane-label" style="color:#6D28D9;background:var(--buyer-bg)">Buyer</div>
+    <div class="lane-content">
+      <div class="node node-buyer">
+        <div class="node-label">Buyer acknowledgement</div>
+        <div class="node-sub">Countersigns invoice · Confirms debt exists</div>
+        <div class="node-tag tag-buyer">Layer 1 fraud prevention</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node node-buyer">
+        <div class="node-label">Virtual account issued</div>
+        <div class="node-sub">Unique bank account number per invoice · BaaS provider</div>
+        <div class="node-tag tag-buyer">Layer 2 payment routing</div>
+      </div>
+    </div>
+  </div>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     PHASE 3 — MARKETPLACE &amp; FUNDING
+════════════════════════════════════════════════════════ -->
+  <div class="phase-header">
+    <div class="phase-num">3</div>
+    <div class="phase-title">Marketplace Discovery &amp; Lender Funding</div>
+    <div class="phase-desc">Lender browses invoices, evaluates risk, deploys USDC onchain</div>
+  </div>
+
+  <!-- Lender lane -->
+  <div class="lane-row">
+    <div class="lane-label" style="color:#1E4DB8;background:var(--lender-bg)">Lender</div>
+    <div class="lane-content">
+      <div class="node node-lender">
+        <div class="node-label">Browse marketplace</div>
+        <div class="node-sub">Filter: yield, term, category, risk grade</div>
+        <div class="node-tag tag-lender">MarketplaceBrowse</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node node-lender">
+        <div class="node-label">Review invoice card</div>
+        <div class="node-sub">Buyer on-time rate · Seller tier · Gross / net APY split · Risk score</div>
+        <div class="node-tag tag-lender">Buyer credit signal</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node node-lender">
+        <div class="node-label">Open funding modal</div>
+        <div class="node-sub">Deal facts: gross APY · 2.8% fee · net APY · term · risk</div>
+        <div class="node-tag tag-lender">FundingModal</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="decision class=chain">
+        <div class="diamond" style="background:rgba(30,77,184,0.08);border-color:rgba(30,77,184,0.25)"></div>
+        <div class="diamond-label" style="color:#1E4DB8">USDC balance sufficient?</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node node-chain">
+        <div class="node-label">Step 1: Approve USDC</div>
+        <div class="node-sub">ERC-20 approve() · VestoEscrow as spender</div>
+        <div class="node-tag tag-chain">wallet tx 1/2</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node node-chain">
+        <div class="node-label">Step 2: Fund invoice</div>
+        <div class="node-sub">VestoEscrow.fundInvoice() · USDC locked in escrow</div>
+        <div class="node-tag tag-chain">wallet tx 2/2</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node node-lender">
+        <div class="node-label">Position confirmed</div>
+        <div class="node-sub">Inline position strip on card · Portfolio updated</div>
+        <div class="node-tag tag-auto">Status: funded</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Batch funding -->
+  <div class="lane-row">
+    <div class="lane-label" style="color:#1E4DB8;background:var(--lender-bg)">Lender (Batch)</div>
+    <div class="lane-content">
+      <div class="node node-lender">
+        <div class="node-label">Select multiple invoices</div>
+        <div class="node-sub">Checkbox on each card · Batch counter</div>
+        <div class="node-tag tag-lender">Multi-select</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node node-lender">
+        <div class="node-label">Fund Invoice Batch</div>
+        <div class="node-sub">One approve tx → batch fund tx for all selected</div>
+        <div class="node-tag tag-chain">FundInvoiceBatch</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node node-lender">
+        <div class="node-label">Portfolio updated</div>
+        <div class="node-sub">All batch positions shown in LenderPortfolio</div>
+        <div class="node-tag tag-auto">Instant</div>
+      </div>
+    </div>
+  </div>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     PHASE 4 — REPAYMENT &amp; SETTLEMENT
+════════════════════════════════════════════════════════ -->
+  <div class="phase-header">
+    <div class="phase-num">4</div>
+    <div class="phase-title">Buyer Repayment &amp; Hybrid Settlement</div>
+    <div class="phase-desc">7-layer settlement system — automated detection, 24h buffer, onchain release</div>
+  </div>
+
+  <!-- Buyer lane -->
+  <div class="lane-row">
+    <div class="lane-label" style="color:#6D28D9;background:var(--buyer-bg)">Buyer</div>
+    <div class="lane-content">
+      <div class="node node-buyer">
+        <div class="node-label">Receives repayment instructions</div>
+        <div class="node-sub">Seller shares virtual account number + payment ref</div>
+        <div class="node-tag tag-buyer">Email / portal</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="decision">
+        <div class="diamond" style="background:rgba(124,58,237,0.08);border-color:rgba(124,58,237,0.28)"></div>
+        <div class="diamond-label" style="color:#6D28D9">Pays in USDC or bank?</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node node-chain">
+        <div class="node-label">Option A: USDC direct</div>
+        <div class="node-sub">buyerRepay() on contract · Instant settlement · 0.5% fee discount</div>
+        <div class="node-tag tag-chain">Layer 6 — trustless</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node node-buyer">
+        <div class="node-label">Option B: Bank transfer</div>
+        <div class="node-sub">Pays to virtual account via SWIFT / ACH / M-Pesa</div>
+        <div class="node-tag tag-buyer">Layer 2 routing</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BaaS + webhook lane -->
+  <div class="lane-row">
+    <div class="lane-label" style="background:var(--chain-bg);color:#1A6645">BaaS / Auto</div>
+    <div class="lane-content">
+      <div class="node node-chain">
+        <div class="node-label">BaaS webhook fires</div>
+        <div class="node-sub">Payment detected on virtual account · HMAC verified</div>
+        <div class="node-tag tag-auto">Layer 3 — automatic</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="decision class=chain">
+        <div class="diamond" style="background:rgba(26,102,69,0.08);border-color:rgba(26,102,69,0.25)"></div>
+        <div class="diamond-label" style="color:#1A6645">Amount ≥ required?</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node node-chain">
+        <div class="node-label">Full payment queued</div>
+        <div class="node-sub">pending_settlements · execute_after = now + 24h</div>
+        <div class="node-tag tag-auto">24h fraud buffer</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node node-danger">
+        <div class="node-label">Partial payment</div>
+        <div class="node-sub">Proportional lender release · Shortfall escrow · 7d cure window</div>
+        <div class="node-tag tag-danger">Layer 7</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin override lane -->
+  <div class="lane-row">
+    <div class="lane-label" style="background:var(--admin-bg)">Admin</div>
+    <div class="lane-content">
+      <div class="node node-admin">
+        <div class="node-label">24h review window</div>
+        <div class="node-sub">Admin can block settlement within buffer</div>
+        <div class="node-tag tag-admin">Layer 4 override</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="decision">
+        <div class="diamond"></div>
+        <div class="diamond-label">Block or let pass?</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node node-chain">
+        <div class="node-label">Auto-settlement executes</div>
+        <div class="node-sub">process-settlements Edge Function · approvePayout() called</div>
+        <div class="node-tag tag-auto">Layer 3 unstoppable</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node node-danger">
+        <div class="node-label">Block → dispute</div>
+        <div class="node-sub">Admin routes to DisputeResolution screen</div>
+        <div class="node-tag tag-danger">DisputeResolution</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Escrow timer fallback -->
+  <div class="lane-row">
+    <div class="lane-label" style="color:#1E4DB8;background:var(--lender-bg)">Lender (Fallback)</div>
+    <div class="lane-content">
+      <div class="node node-lender">
+        <div class="node-label">Repayment deadline passes</div>
+        <div class="node-sub">Due date + 14 days grace · No settlement received</div>
+        <div class="node-tag tag-danger">Layer 5 escrow timer</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node node-lender">
+        <div class="node-label">claimRefund() available</div>
+        <div class="node-sub">Lender calls contract directly · Principal returned</div>
+        <div class="node-tag tag-chain">Trustless exit</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node node-danger">
+        <div class="node-label">Seller marked defaulted</div>
+        <div class="node-sub">Credit limit frozen · Buyer credit score drops · New invoices blocked</div>
+        <div class="node-tag tag-danger">Auto-consequence</div>
+      </div>
+    </div>
+  </div>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     PHASE 5 — PAYOUT CLAIMS
+════════════════════════════════════════════════════════ -->
+  <div class="phase-header">
+    <div class="phase-num">5</div>
+    <div class="phase-title">Payout Claims — Pull Model</div>
+    <div class="phase-desc">Both seller and lender pull their USDC from escrow independently</div>
+  </div>
+
+  <div class="lane-row">
+    <div class="lane-label" style="color:#92570D;background:var(--seller-bg)">Seller</div>
+    <div class="lane-content">
+      <div class="node node-chain">
+        <div class="node-label">approvePayout() fired</div>
+        <div class="node-sub">Admin or auto-settlement marks invoice settled</div>
+        <div class="node-tag tag-chain">Trigger</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node node-seller">
+        <div class="node-label">Claim payout available</div>
+        <div class="node-sub">Seller Dashboard shows "Claim your advance" CTA</div>
+        <div class="node-tag tag-seller">Pull model</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node node-chain">
+        <div class="node-label">claimPayout() called</div>
+        <div class="node-sub">USDC transferred to seller wallet · Net of platform fee</div>
+        <div class="node-tag tag-chain">Arc Testnet tx</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node node-seller">
+        <div class="node-label">Advance received</div>
+        <div class="node-sub">USDC in seller wallet · Invoice marked settled</div>
+        <div class="node-tag tag-auto">Complete</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lane-row">
+    <div class="lane-label" style="color:#1E4DB8;background:var(--lender-bg)">Lender</div>
+    <div class="lane-content">
+      <div class="node node-lender">
+        <div class="node-label">Settlement confirmed</div>
+        <div class="node-sub">Portfolio shows "Settled" status · Claim yield available</div>
+        <div class="node-tag tag-lender">LenderPortfolio</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node node-chain">
+        <div class="node-label">claimYield() called</div>
+        <div class="node-sub">Principal + net yield transferred to lender wallet</div>
+        <div class="node-tag tag-chain">Arc Testnet tx</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node node-lender">
+        <div class="node-label">Returns received</div>
+        <div class="node-sub">Auto-reinvest toggle: redeploy to next invoice automatically</div>
+        <div class="node-tag tag-auto">Auto-reinvest</div>
+      </div>
+    </div>
+  </div>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     PHASE 6 — MONITORING &amp; ADMIN OVERSIGHT
+════════════════════════════════════════════════════════ -->
+  <div class="phase-header">
+    <div class="phase-num">6</div>
+    <div class="phase-title">Ongoing Monitoring &amp; Admin Oversight</div>
+    <div class="phase-desc">Buyer monitoring, reminders, concentration risk, analytics</div>
+  </div>
+
+  <div class="lane-row">
+    <div class="lane-label" style="background:var(--admin-bg)">Admin</div>
+    <div class="lane-content">
+      <div class="node node-admin">
+        <div class="node-label">Buyer Monitoring</div>
+        <div class="node-sub">Outstanding per buyer · Days to deadline · Alert states</div>
+        <div class="node-tag tag-admin">BuyerMonitoring</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node node-admin">
+        <div class="node-label">Concentration risk alert</div>
+        <div class="node-sub">Fires when single buyer &gt;25% of platform outstanding</div>
+        <div class="node-tag tag-danger">25% cap</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node node-admin">
+        <div class="node-label">Automated reminders</div>
+        <div class="node-sub">14d / 7d / 3d / overdue emails to seller · Admin CC on final two</div>
+        <div class="node-tag tag-auto">send-reminders fn</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node node-admin">
+        <div class="node-label">Analytics Overview</div>
+        <div class="node-sub">KPIs, sparklines, sector bars, Arc health, revenue curve</div>
+        <div class="node-tag tag-admin">AnalyticsOverview</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node node-admin">
+        <div class="node-label">Freeze buyer</div>
+        <div class="node-sub">Blocks all new invoices from seller-buyer pair until resolved</div>
+        <div class="node-tag tag-danger">freezeBuyer()</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end .chart -->
+
+
+<!-- ═══════════════════════════════════════════════════════
+     INVOICE STATE MACHINE
+════════════════════════════════════════════════════════ -->
+<div class="state-machine">
+  <div class="state-header">
+    <div class="phase-num" style="background:var(--gold)">∑</div>
+    <h2>Invoice Lifecycle — State Machine</h2>
+    <p>10 states · 14 transitions · All paths end in settled, defaulted, or disputed</p>
+  </div>
+  <div class="state-grid">
+
+    <div class="state-cell">
+      <div class="state-num">State 01</div>
+      <div class="state-name">Pending</div>
+      <div class="state-desc">Invoice submitted by seller. Awaiting admin review and risk scoring.</div>
+      <div class="state-trigger t-seller">seller.submitInvoice()</div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-num">State 02</div>
+      <div class="state-name">Approved</div>
+      <div class="state-desc">Admin approved. Risk grade assigned. Registered onchain. Virtual account issued.</div>
+      <div class="state-trigger t-admin">admin.approveInvoice()</div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-num">State 03</div>
+      <div class="state-name">Published</div>
+      <div class="state-desc">Visible in lender marketplace. Buyer acknowledgement required before funding.</div>
+      <div class="state-trigger t-admin">admin.publishToMarket()</div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-num">State 04</div>
+      <div class="state-name">Funded</div>
+      <div class="state-desc">Lender USDC locked in VestoEscrow contract. Repayment deadline set. Seller receives repayment instructions.</div>
+      <div class="state-trigger t-lender">lender.fundInvoice()</div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-num">State 05</div>
+      <div class="state-name">Payment Detected</div>
+      <div class="state-desc">BaaS webhook received. Full payment confirmed. 24-hour fraud buffer running.</div>
+      <div class="state-trigger t-auto">webhook.paymentReceived()</div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-num">State 06</div>
+      <div class="state-name">Partial Shortfall</div>
+      <div class="state-desc">Buyer paid less than required. Proportional lender release done. 7-day cure window open.</div>
+      <div class="state-trigger t-auto">webhook.partialPayment()</div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-num">State 07</div>
+      <div class="state-name">Settled</div>
+      <div class="state-desc">approvePayout() fired. Seller and lender can now claim USDC independently via pull model.</div>
+      <div class="state-trigger t-auto">auto.executeSettlement()</div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-num">State 08</div>
+      <div class="state-name">USDC Repaid</div>
+      <div class="state-desc">Buyer paid directly onchain via buyerRepay(). Instant settlement. 0.5% fee discount applied.</div>
+      <div class="state-trigger t-buyer">buyer.buyerRepay()</div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-num">State 09</div>
+      <div class="state-name">Defaulted</div>
+      <div class="state-desc">repaymentDeadline passed. No settlement received. Lender can call claimRefund() for principal. Seller credit frozen.</div>
+      <div class="state-trigger t-system">timer.deadlineExpired()</div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-num">State 10</div>
+      <div class="state-name">Disputed</div>
+      <div class="state-desc">Admin blocked auto-settlement, or overdue escalation fired. DisputeResolution screen active. Admin resolves: refund lender or pay seller.</div>
+      <div class="state-trigger t-admin">admin.blockPayout() / overdue</div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     HYBRID SETTLEMENT LAYERS TABLE
+════════════════════════════════════════════════════════ -->
+<div class="layers-table">
+  <div class="layers-header">
+    <div class="phase-num" style="background:var(--gold)">7</div>
+    <h2>Hybrid Settlement — All 7 Lender Protection Layers</h2>
+    <p>Each layer is independent — no single point of failure can lock lender capital</p>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Layer</th>
+        <th>Mechanism</th>
+        <th>Threat it neutralises</th>
+        <th>Implemented in</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>L1</td>
+        <td>Buyer Acknowledgement</td>
+        <td>Buyer countersigns invoice before any lender can fund. Cryptographic proof of debt.</td>
+        <td>Fake invoice fraud by seller</td>
+        <td>VestoEscrow.acknowledgeBuyer()</td>
+      </tr>
+      <tr>
+        <td>L2</td>
+        <td>Virtual Account Routing</td>
+        <td>Each invoice gets a unique virtual bank account. Unambiguous payment matching.</td>
+        <td>Payment sent to wrong account · Amount ambiguity</td>
+        <td>invoice_virtual_accounts table · BaaS provider</td>
+      </tr>
+      <tr>
+        <td>L3</td>
+        <td>Automated Webhook Settlement</td>
+        <td>BaaS fires webhook on payment. Edge Function validates and queues approvePayout() with 24h buffer. After buffer: unstoppable.</td>
+        <td>Admin failure / absence / corruption</td>
+        <td>payment-received · process-settlements Edge Functions</td>
+      </tr>
+      <tr>
+        <td>L4</td>
+        <td>Admin Override Window</td>
+        <td>Admin can call blockPayout() within the 24h buffer. After expiry, no actor can halt settlement.</td>
+        <td>Bank reversal fraud · Suspicious payment</td>
+        <td>VestoEscrow.blockPayout() · Admin settlement queue UI</td>
+      </tr>
+      <tr>
+        <td>L5</td>
+        <td>Escrow Reversal Timer</td>
+        <td>repaymentDeadline = invoice due date + 14 days. After deadline, lender calls claimRefund() for principal unconditionally.</td>
+        <td>Buyer default · Permanent capital lock</td>
+        <td>VestoEscrow.claimRefund() · LenderPortfolio countdown</td>
+      </tr>
+      <tr>
+        <td>L6</td>
+        <td>USDC Direct Repayment</td>
+        <td>Buyer calls buyerRepay() on contract with USDC. Instant trustless settlement. 0.5% fee discount incentive.</td>
+        <td>Bank settlement delay · Slow finality</td>
+        <td>VestoEscrow.buyerRepay() · useBuyerRepay() hook</td>
+      </tr>
+      <tr>
+        <td>L7</td>
+        <td>Partial Payment Handling</td>
+        <td>If buyer pays &lt;100%: proportional lender capital released immediately. Remainder enters shortfall escrow with 7-day cure window.</td>
+        <td>Partial non-payment ambiguity · Full lock on partial receipt</td>
+        <td>invoice_shortfalls table · VestoEscrow._handlePartialPayment()</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+</body>
+</html>
