@@ -1,6 +1,269 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useApp } from '../../context/AppContext';
 import { Invoice } from '../../types';
+
+/* ─── helpers ─── */
+function addDays(dateStr: string, days: number): string {
+  const d = new Date(dateStr);
+  d.setDate(d.getDate() + days);
+  return d.toISOString().split('T')[0];
+}
+function daysBetween(from: Date, toStr: string): number {
+  return Math.ceil((new Date(toStr).getTime() - from.getTime()) / 86400000);
+}
+function fmtDate(iso: string): string {
+  return new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+}
+
+const REASON_CODES = [
+  { code: 'R-01', label: 'Buyer has confirmed early payment intent' },
+  { code: 'R-02', label: 'Buyer has strong payment history (on-time ≥ 95%)' },
+  { code: 'R-03', label: 'Buyer payment terms are shorter than standard' },
+  { code: 'R-04', label: 'Seller requested tighter deadline' },
+  { code: 'R-05', label: 'High-value invoice — tighter control required' },
+  { code: 'R-06', label: 'Buyer history of late payment — extended grace needed' },
+  { code: 'R-07', label: 'Seasonal buyer — extended deadline for payment cycle' },
+  { code: 'R-08', label: 'Dispute pending — extended deadline while resolving' },
+  { code: 'R-09', label: 'First invoice from this buyer — conservative extension' },
+  { code: 'R-10', label: 'Lender requested specific maturity date' },
+  { code: 'R-11', label: 'Other (describe below)' },
+];
+
+/* ─── Settlement Terms Modal ─── */
+const SettlementModal: React.FC<{
+  inv: Invoice;
+  onConfirm: (params: {
+    gracePeriodDays: number;
+    finalRepaymentDeadline: string;
+    overrideReasonCode?: string;
+    overrideReasonText?: string;
+  }) => void;
+  onCancel: () => void;
+}> = ({ inv, onConfirm, onCancel }) => {
+  const DEFAULT_GRACE = 14;
+  const today = new Date();
+  const defaultDeadline = addDays(inv.dueDate, DEFAULT_GRACE);
+
+  const [grace, setGrace] = useState(DEFAULT_GRACE);
+  const [deadline, setDeadline] = useState(defaultDeadline);
+  const [reasonCode, setReasonCode] = useState('');
+  const [reasonText, setReasonText] = useState('');
+  const [step, setStep] = useState<'edit' | 'confirm'>('edit');
+  const [graceInput, setGraceInput] = useState(String(DEFAULT_GRACE));
+
+  const isOverride = grace !== DEFAULT_GRACE || deadline !== defaultDeadline;
+  const lockupDays = daysBetween(today, deadline);
+
+  // Sync grace → deadline
+  const handleGraceChange = (val: number) => {
+    const clamped = Math.max(0, Math.min(60, val));
+    setGrace(clamped);
+    setGraceInput(String(clamped));
+    setDeadline(addDays(inv.dueDate, clamped));
+  };
+
+  // Sync deadline → grace (back-calculate)
+  const handleDeadlineChange = (val: string) => {
+    setDeadline(val);
+    const newGrace = daysBetween(new Date(inv.dueDate), val);
+    setGrace(newGrace);
+    setGraceInput(String(newGrace));
+  };
+
+  // Validation
+  const minDeadline = addDays(today.toISOString().split('T')[0], 7);
+  const maxDeadline = addDays(inv.dueDate, 60);
+  const errors: string[] = [];
+  if (deadline < minDeadline) errors.push('Deadline must be at least 7 days from today. (V-01)');
+  if (deadline > maxDeadline) errors.push('Deadline cannot exceed invoice due date by more than 60 days. (V-02)');
+  if (grace < 0) errors.push('Grace period cannot be negative. (V-03)');
+  if (isOverride && !reasonCode) errors.push('A reason is required when overriding the default grace period. (V-05)');
+  if (reasonCode === 'R-11' && reasonText.trim().length < 20) errors.push('Please describe the reason (minimum 20 characters). (V-06)');
+
+  const warnings: string[] = [];
+  if (grace < 7 && grace >= 0 && errors.length === 0) warnings.push(`Grace period is ${grace} days — confirm the buyer's payment cycle supports this.`);
+  if (grace > 30 && errors.length === 0) warnings.push(`Grace period is ${grace} days. Lender lock-up will be extended. Confirm yield reflects this term.`);
+  if (grace === 0 && errors.length === 0) warnings.push('No grace period set. Buyer must pay on or before invoice due date.');
+  if (lockupDays > 90 && errors.length === 0) warnings.push('Total lender lock-up exceeds 90 days. Institutional lenders may not accept this term.');
+
+  const canProceed = errors.length === 0;
+
+  useEffect(() => { setStep('edit'); }, [inv.id]);
+
+  if (step === 'confirm') return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(13,24,36,0.60)', backdropFilter: 'blur(10px)' }}>
+      <div className="w-full max-w-[400px] rounded-[17px] overflow-hidden animate-fade-up" style={{ background: 'var(--surface-1)', border: '1px solid var(--border-2)', boxShadow: 'var(--shadow-e4)' }}>
+        <div className="h-[2px]" style={{ background: 'linear-gradient(90deg,#B8821E,#E8B96A)' }} />
+        <div className="p-5 flex flex-col gap-4">
+          <div>
+            <p className="text-[9px] font-bold uppercase tracking-[0.11em] mb-1" style={{ color: 'var(--ink-faint)' }}>Confirm settlement terms</p>
+            <h3 className="font-display font-bold text-ink" style={{ fontSize: '16px', letterSpacing: '-0.02em' }}>Review before approving</h3>
+          </div>
+          <div className="rounded-[11px] overflow-hidden divide-y" style={{ border: '1px solid var(--border)' }}>
+            {[
+              ['Invoice due date', fmtDate(inv.dueDate)],
+              ['Grace period', `${grace} calendar days`],
+              ['Final repayment deadline', fmtDate(deadline)],
+              ['Lender lock-up', `Up to ${lockupDays} days from today`],
+              ...(isOverride && reasonCode ? [['Override reason', REASON_CODES.find(r => r.code === reasonCode)?.label ?? reasonCode]] : []),
+            ].map(([label, value]) => (
+              <div key={label} className="flex items-center justify-between px-4 py-2.5" style={{ background: 'var(--cream)' }}>
+                <span className="text-[11px]" style={{ color: 'var(--ink-subtle)' }}>{label}</span>
+                <span className="text-[12px] font-semibold text-ink">{value}</span>
+              </div>
+            ))}
+          </div>
+          <div className="rounded-[9px] px-3.5 py-3" style={{ background: 'rgba(30,77,184,0.05)', border: '1px solid rgba(30,77,184,0.14)' }}>
+            <p className="text-[11px]" style={{ color: '#1E4DB8' }}>
+              This deadline will be locked into the escrow contract when a lender funds. It cannot be changed after funding.
+            </p>
+          </div>
+          <div className="flex gap-2.5">
+            <button onClick={() => setStep('edit')} className="flex-1 h-10 rounded-[9px] text-[12px] font-semibold" style={{ background: 'var(--cream)', border: '1px solid var(--border-2)', color: 'var(--ink-subtle)' }}>Back</button>
+            <button
+              onClick={() => onConfirm({ gracePeriodDays: grace, finalRepaymentDeadline: deadline, overrideReasonCode: isOverride ? reasonCode : undefined, overrideReasonText: reasonCode === 'R-11' ? reasonText : undefined })}
+              className="flex-1 h-10 rounded-[9px] text-[12px] font-semibold text-white transition-all active:scale-[0.98]"
+              style={{ background: 'linear-gradient(135deg,#1A7A46,#22A05C)' }}
+            >
+              Confirm and approve
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(13,24,36,0.60)', backdropFilter: 'blur(10px)' }}>
+      <div className="w-full max-w-[420px] rounded-[17px] overflow-hidden animate-fade-up" style={{ background: 'var(--surface-1)', border: '1px solid var(--border-2)', boxShadow: 'var(--shadow-e4)' }}>
+        <div className="h-[2px]" style={{ background: 'linear-gradient(90deg,#B8821E,#E8B96A)' }} />
+        <div className="p-5 flex flex-col gap-4">
+          {/* Header */}
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-[9px] font-bold uppercase tracking-[0.11em] mb-1" style={{ color: 'var(--ink-faint)' }}>Settlement terms</p>
+              <h3 className="font-display font-bold text-ink" style={{ fontSize: '16px', letterSpacing: '-0.02em' }}>{inv.sellerBusinessName}</h3>
+              <p className="text-[11px] mt-0.5 font-mono" style={{ color: 'var(--ink-faint)' }}>{inv.id} · ${inv.amount.toLocaleString()} USDC</p>
+            </div>
+            <button onClick={onCancel} className="w-7 h-7 rounded-full flex items-center justify-center" style={{ background: 'var(--cream)', color: 'var(--ink-subtle)' }}>
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1 1l8 8M9 1l-8 8" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/></svg>
+            </button>
+          </div>
+
+          {/* Invoice due date — read only */}
+          <div className="flex flex-col gap-1">
+            <div className="flex items-center justify-between">
+              <label className="text-[10px] font-semibold uppercase tracking-[0.09em]" style={{ color: 'var(--ink-faint)' }}>Invoice due date</label>
+              <span className="flex items-center gap-1 text-[10px]" style={{ color: 'var(--ink-faint)' }}>
+                <svg width="9" height="9" viewBox="0 0 9 9" fill="none"><rect x="0.5" y="0.5" width="8" height="8" rx="1.5" stroke="currentColor" strokeWidth="1"/><path d="M2.5 0.5v1.5M6.5 0.5v1.5M0.5 3.5h8" stroke="currentColor" strokeWidth="1" strokeLinecap="round"/></svg>
+                Read-only
+              </span>
+            </div>
+            <div className="px-3.5 py-2.5 rounded-[9px] text-[13px] font-semibold text-ink" style={{ background: 'var(--bg-2)', border: '1px solid var(--border)' }}>
+              {fmtDate(inv.dueDate)}
+              <span className="ml-1.5 text-[10px] font-normal" style={{ color: 'var(--ink-faint)' }}>as submitted by seller</span>
+            </div>
+          </div>
+
+          {/* Grace period stepper */}
+          <div className="flex flex-col gap-1">
+            <label className="text-[10px] font-semibold uppercase tracking-[0.09em]" style={{ color: 'var(--ink-faint)' }}>Grace period after due date</label>
+            <div className="flex items-center gap-2">
+              <button onClick={() => handleGraceChange(grace - 1)} className="w-9 h-9 rounded-[8px] text-[16px] font-semibold flex items-center justify-center transition-all active:scale-[0.94]" style={{ background: 'var(--cream)', border: '1px solid var(--border-2)', color: 'var(--ink)' }}>−</button>
+              <input
+                type="number"
+                value={graceInput}
+                onChange={e => { setGraceInput(e.target.value); const n = parseInt(e.target.value); if (!isNaN(n)) handleGraceChange(n); }}
+                className="flex-1 text-center h-9 rounded-[8px] text-[14px] font-bold text-ink font-mono focus:outline-none"
+                style={{ background: 'var(--cream)', border: '1px solid var(--border-2)' }}
+                min={0} max={60}
+              />
+              <button onClick={() => handleGraceChange(grace + 1)} className="w-9 h-9 rounded-[8px] text-[16px] font-semibold flex items-center justify-center transition-all active:scale-[0.94]" style={{ background: 'var(--cream)', border: '1px solid var(--border-2)', color: 'var(--ink)' }}>+</button>
+              <span className="text-[11px] font-medium shrink-0" style={{ color: 'var(--ink-subtle)' }}>calendar days</span>
+            </div>
+            <p className="text-[10px]" style={{ color: 'var(--ink-faint)' }}>Default is 14 days. Range: 0 – 60.</p>
+          </div>
+
+          {/* Final repayment deadline date picker */}
+          <div className="flex flex-col gap-1">
+            <label className="text-[10px] font-semibold uppercase tracking-[0.09em]" style={{ color: 'var(--ink-faint)' }}>Final repayment deadline</label>
+            <input
+              type="date"
+              value={deadline}
+              min={minDeadline}
+              max={maxDeadline}
+              onChange={e => handleDeadlineChange(e.target.value)}
+              className="h-10 px-3.5 rounded-[9px] text-[13px] font-semibold text-ink focus:outline-none"
+              style={{ background: 'var(--cream)', border: '1px solid var(--border-2)', width: '100%' }}
+            />
+            <p className="text-[10px]" style={{ color: 'var(--ink-faint)' }}>The hard cutoff locked into the escrow contract at funding time.</p>
+          </div>
+
+          {/* Lender lock-up (derived, read only) */}
+          <div className="flex items-center justify-between px-3.5 py-2.5 rounded-[9px]" style={{ background: 'var(--bg-2)', border: '1px solid var(--border)' }}>
+            <span className="text-[11px]" style={{ color: 'var(--ink-subtle)' }}>Lender lock-up from today</span>
+            <span className={`font-mono font-bold text-[13px] font-tnum ${lockupDays > 90 ? 'text-red-600' : lockupDays > 60 ? 'text-amber-600' : 'text-ink'}`}>
+              {lockupDays > 0 ? `${lockupDays}d` : 'Expired'}
+            </span>
+          </div>
+
+          {/* Override reason — only shown when override */}
+          {isOverride && (
+            <div className="flex flex-col gap-1.5">
+              <label className="text-[10px] font-semibold uppercase tracking-[0.09em]" style={{ color: 'var(--ink-faint)' }}>Reason for non-default deadline <span style={{ color: '#8C1A1A' }}>*</span></label>
+              <select
+                value={reasonCode}
+                onChange={e => setReasonCode(e.target.value)}
+                className="h-10 px-3 rounded-[9px] text-[12px] text-ink focus:outline-none appearance-none"
+                style={{ background: 'var(--cream)', border: `1.5px solid ${reasonCode ? 'var(--border-2)' : 'rgba(140,26,26,0.35)'}` }}
+              >
+                <option value="">Select a reason</option>
+                {REASON_CODES.map(r => <option key={r.code} value={r.code}>{r.code} — {r.label}</option>)}
+              </select>
+              {reasonCode === 'R-11' && (
+                <textarea
+                  value={reasonText}
+                  onChange={e => setReasonText(e.target.value)}
+                  placeholder="Describe the reason (minimum 20 characters)..."
+                  rows={2}
+                  className="w-full px-3.5 py-2.5 text-[12px] text-ink resize-none focus:outline-none rounded-[9px]"
+                  style={{ background: 'var(--cream)', border: '1px solid var(--border-2)' }}
+                />
+              )}
+            </div>
+          )}
+
+          {/* Errors */}
+          {errors.length > 0 && (
+            <div className="flex flex-col gap-1 px-3.5 py-3 rounded-[9px]" style={{ background: '#FBE8E8', border: '1px solid rgba(140,26,26,0.18)' }}>
+              {errors.map(e => <p key={e} className="text-[11px] font-medium" style={{ color: '#8C1A1A' }}>⛔ {e}</p>)}
+            </div>
+          )}
+
+          {/* Warnings */}
+          {warnings.length > 0 && errors.length === 0 && (
+            <div className="flex flex-col gap-1 px-3.5 py-3 rounded-[9px]" style={{ background: 'rgba(184,130,30,0.06)', border: '1px solid rgba(184,130,30,0.22)' }}>
+              {warnings.map(w => <p key={w} className="text-[11px]" style={{ color: '#7A5510' }}>⚠ {w}</p>)}
+            </div>
+          )}
+
+          {/* Actions */}
+          <div className="flex gap-2.5">
+            <button onClick={onCancel} className="flex-1 h-10 rounded-[9px] text-[12px] font-semibold" style={{ background: 'var(--cream)', border: '1px solid var(--border-2)', color: 'var(--ink-subtle)' }}>Cancel</button>
+            <button
+              disabled={!canProceed}
+              onClick={() => setStep('confirm')}
+              className="flex-1 h-10 rounded-[9px] text-[12px] font-semibold text-white transition-all disabled:opacity-35 disabled:cursor-not-allowed active:scale-[0.98]"
+              style={{ background: canProceed ? 'linear-gradient(135deg,#1A7A46,#22A05C)' : '#ccc' }}
+            >
+              Review terms →
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const statusMeta: Record<string, { label: string; dot: string; text: string; bg: string }> = {
   pending_admin_approval: { label: 'Awaiting review', dot: '#B8821E', text: '#7A5510', bg: 'rgba(184,130,30,0.08)' },
@@ -77,6 +340,7 @@ export const InvoiceOversightTable: React.FC = () => {
   const [filter, setFilter] = useState<Filter>('all');
   const [flagModal, setFlagModal] = useState<Invoice | null>(null);
   const [blockModal, setBlockModal] = useState<Invoice | null>(null);
+  const [settlementModal, setSettlementModal] = useState<Invoice | null>(null);
   const [flagReason, setFlagReason] = useState('');
   const [blockReason, setBlockReason] = useState('');
   const [reasonFocused, setReasonFocused] = useState(false);
@@ -294,7 +558,7 @@ export const InvoiceOversightTable: React.FC = () => {
                         <div className="flex items-center justify-end gap-2">
                           {inv.status === 'pending_admin_approval' && (
                             <button
-                              onClick={() => approveInvoiceAdmin(inv.id)}
+                              onClick={() => setSettlementModal(inv)}
                               className="px-2.5 py-1 rounded-[7px] text-[11px] font-semibold transition-all active:scale-[0.97]"
                               style={{ background: 'rgba(26,122,70,0.10)', color: '#1A7A46', border: '1px solid rgba(26,122,70,0.20)' }}
                             >
@@ -339,6 +603,18 @@ export const InvoiceOversightTable: React.FC = () => {
           </table>
         </div>
       </div>
+
+      {/* Settlement terms modal */}
+      {settlementModal && (
+        <SettlementModal
+          inv={settlementModal}
+          onConfirm={(params) => {
+            approveInvoiceAdmin(settlementModal.id, params);
+            setSettlementModal(null);
+          }}
+          onCancel={() => setSettlementModal(null)}
+        />
+      )}
 
       {/* Block settlement modal */}
       {blockModal && (

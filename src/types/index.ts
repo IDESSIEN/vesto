@@ -79,6 +79,12 @@ export interface Invoice {
   sellerVerificationTier?: 1 | 2;
   buyerId?: string;
   repaymentDeadline?: string;
+  gracePeriodDays?: number;           // admin-set, default 14
+  finalRepaymentDeadline?: string;    // ISO date locked at approval time
+  overrideReasonCode?: string;        // R-01 … R-11 if non-default
+  overrideReasonText?: string;        // free text for R-11
+  deadlineLocked?: boolean;           // true once a lender has funded
+  lenderLockupDays?: number;          // finalRepaymentDeadline - approvedAt
   buyerAcknowledged?: boolean;
   virtualAccountNumber?: string;
   settlementQueuedAt?: string;

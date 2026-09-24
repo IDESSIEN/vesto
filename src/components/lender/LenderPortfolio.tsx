@@ -33,15 +33,20 @@ const WalletIcon = () => (
 
 const FEE_PCT = 2.8;
 
-// Settlement countdown — shows days to due date, or detected/settled status
-const SettlementCountdown: React.FC<{ status: string; dueDate: string }> = ({ status, dueDate }) => {
+// Settlement countdown — shows days to finalRepaymentDeadline, or detected/settled status
+const SettlementCountdown: React.FC<{
+  status: string;
+  dueDate: string;
+  finalRepaymentDeadline?: string;
+}> = ({ status, dueDate, finalRepaymentDeadline }) => {
   const [daysLeft, setDaysLeft] = useState<number | null>(null);
+  const deadlineDate = finalRepaymentDeadline ?? dueDate;
 
   useEffect(() => {
-    const due = new Date(dueDate);
+    const due = new Date(deadlineDate);
     const diff = Math.ceil((due.getTime() - Date.now()) / (1000 * 60 * 60 * 24));
     setDaysLeft(diff);
-  }, [dueDate]);
+  }, [deadlineDate]);
 
   if (status === 'payment_detected') {
     return (
@@ -365,6 +370,12 @@ export const LenderPortfolio: React.FC = () => {
                     <p className="text-[10.5px] truncate" style={{ color: 'var(--ink-subtle)' }}>
                       {pos.buyerName} · {pos.termDays}d · due {pos.dueDate}
                     </p>
+                    {/* Settlement countdown using admin-set finalRepaymentDeadline */}
+                    <SettlementCountdown
+                      status={pos.status}
+                      dueDate={pos.dueDate}
+                      finalRepaymentDeadline={pos.finalRepaymentDeadline}
+                    />
                   </div>
 
                   <div className="text-right shrink-0">

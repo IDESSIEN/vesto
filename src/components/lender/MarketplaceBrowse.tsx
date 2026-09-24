@@ -197,6 +197,11 @@ const InvoiceCard: React.FC<{
             { label: 'Advance', value: `$${inv.advanceAmount.toLocaleString()} (${inv.advanceRatePct}%)`, mono: true },
             { label: 'Term', value: `${inv.termDays}d`, mono: false },
             { label: 'Due', value: inv.dueDate, mono: false },
+            ...(inv.finalRepaymentDeadline ? [{
+              label: 'Lender exit',
+              value: `${inv.finalRepaymentDeadline}${inv.lenderLockupDays ? ` · ${inv.lenderLockupDays}d lock-up` : ''}`,
+              mono: false,
+            }] : []),
           ].map(({ label, value, mono }) => (
             <div key={label} className="flex flex-col gap-0.5">
               <span
@@ -336,6 +341,10 @@ const FundingModal: React.FC<{
               ['Platform fee', `${FEE_PCT}%`, false],
               ['Net APY to you', `${Math.max(0, inv.expectedYieldPct - FEE_PCT).toFixed(1)}%`, true],
               ['Term', `${inv.termDays}d · due ${inv.dueDate}`, false],
+              ...(inv.finalRepaymentDeadline ? [
+                ['Final repayment deadline', inv.finalRepaymentDeadline, false] as [string, string, boolean],
+                ['Lender lock-up', `${inv.lenderLockupDays ?? '—'} calendar days`, false] as [string, string, boolean],
+              ] : []),
               ['Risk', `${RISK_LABEL(inv.riskScore)} · ${inv.riskScore}/100`, false],
             ] as [string, string, boolean][]).map(([label, value, isGold]) => (
               <div

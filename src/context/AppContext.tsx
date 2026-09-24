@@ -39,7 +39,12 @@ interface AppContextType {
   selectedBatchIds: string[];
   setSelectedBatchIds: (ids: string[]) => void;
   submitInvoice: (invoiceData: Partial<Invoice>) => void;
-  approveInvoiceAdmin: (invoiceId: string) => void;
+  approveInvoiceAdmin: (invoiceId: string, settlementParams?: {
+    gracePeriodDays: number;
+    finalRepaymentDeadline: string;
+    overrideReasonCode?: string;
+    overrideReasonText?: string;
+  }) => void;
   flagInvoiceAdmin: (invoiceId: string, reason?: string) => void;
   fundInvoiceLender: (invoiceId: string) => void;
   fundBatchLender: (invoiceIds: string[]) => void;
@@ -127,6 +132,10 @@ const initialInvoices: Invoice[] = [
     riskTier: 'A+',
     riskScore: 94,
     status: 'published_marketplace',
+    gracePeriodDays: 14,
+    finalRepaymentDeadline: '2026-10-29',
+    lenderLockupDays: 37,
+    deadlineLocked: false,
     createdAt: '2026-09-01',
     docName: 'bill_of_lading_metro_produce.pdf',
   },
@@ -149,6 +158,10 @@ const initialInvoices: Invoice[] = [
     riskTier: 'A',
     riskScore: 88,
     status: 'published_marketplace',
+    gracePeriodDays: 14,
+    finalRepaymentDeadline: '2026-11-13',
+    lenderLockupDays: 52,
+    deadlineLocked: false,
     createdAt: '2026-09-03',
     docName: 'export_manifest_cashew_shipment.pdf',
   },
@@ -173,6 +186,11 @@ const initialInvoices: Invoice[] = [
     status: 'funded',
     fundedByLenderId: 'len_seed_001',
     fundedAt: '2026-09-04',
+    gracePeriodDays: 7,
+    finalRepaymentDeadline: '2026-11-17',
+    overrideReasonCode: 'R-03',
+    lenderLockupDays: 54,
+    deadlineLocked: true,
     createdAt: '2026-08-28',
     docName: 'freight_waybill_sugar_route.pdf',
   },
@@ -380,11 +398,38 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     showToast(`Invoice ${newInv.id} submitted and saved.`, 'info');
   };
 
-  const approveInvoiceAdmin = (invoiceId: string) => {
+  const approveInvoiceAdmin = (invoiceId: string, settlementParams?: {
+    gracePeriodDays: number;
+    finalRepaymentDeadline: string;
+    overrideReasonCode?: string;
+    overrideReasonText?: string;
+  }) => {
+    const today = new Date();
+    const grace = settlementParams?.gracePeriodDays ?? 14;
     setInvoices((prev) =>
-      prev.map((inv) => inv.id === invoiceId ? { ...inv, status: 'published_marketplace' } : inv)
+      prev.map((inv) => {
+        if (inv.id !== invoiceId) return inv;
+        const dueDate = new Date(inv.dueDate);
+        const defaultDeadline = new Date(dueDate);
+        defaultDeadline.setDate(defaultDeadline.getDate() + 14);
+        const finalDeadline = settlementParams?.finalRepaymentDeadline
+          ?? defaultDeadline.toISOString().split('T')[0];
+        const lockupDays = Math.ceil(
+          (new Date(finalDeadline).getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
+        );
+        return {
+          ...inv,
+          status: 'published_marketplace',
+          gracePeriodDays: grace,
+          finalRepaymentDeadline: finalDeadline,
+          overrideReasonCode: settlementParams?.overrideReasonCode,
+          overrideReasonText: settlementParams?.overrideReasonText,
+          lenderLockupDays: lockupDays,
+          deadlineLocked: false,
+        };
+      })
     );
-    showToast(`Invoice ${invoiceId} approved and published to marketplace.`, 'success');
+    showToast(`Invoice ${invoiceId} approved. Settlement deadline set.`, 'success');
   };
 
   const flagInvoiceAdmin = (invoiceId: string, reason?: string) => {

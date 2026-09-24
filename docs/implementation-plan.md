@@ -1,51 +1,111 @@
-You already have a full answer to this — I sent it in the previous message. Here is a quick recap, then we move to building it.
+Yes. Here are the exact UI changes, screen by screen, so you know precisely what will change before a single line is written.
 
 ---
 
-**The hybrid uses 7 layers, each covering a different failure mode:**
+## Screens that change
 
-- **Layer 1** — Buyer acknowledgement before any lender can fund (kills fake invoice fraud at source)
-- **Layer 2** — Unique virtual bank account per invoice (eliminates payment matching ambiguity)
-- **Layer 3** — Automated webhook settlement with a 24-hour buffer (auto-detects real payment, protects against bank reversal)
-- **Layer 4** — Admin block window during the 24h buffer (human override without being the primary path)
-- **Layer 5** — Escrow reversal timer (guaranteed principal recovery if buyer goes silent — no lender is ever locked in indefinitely)
-- **Layer 6** — USDC direct repayment with fee discount (instant trustless settlement for crypto-native buyers)
-- **Layer 7** — Partial payment handling (lenders get proportional capital back immediately, remainder goes to cure window)
+### 1. Admin — Invoice Oversight Table (`InvoiceOversightTable.tsx`)
 
-**The lender protection answer:** yes, significantly safer. Under the current single-layer system, one admin failure or one undetected non-payment locks lender capital indefinitely. Under the hybrid, every risk vector has at least two independent protections. The only way a lender loses principal is if: the buyer defaults AND the escrow timer has not expired yet. And that is time-bounded, not permanent.
+**What changes:**
+The Approve button currently fires immediately with no modal. It will now open a verification panel / modal instead.
 
----
+**New elements:**
+- A "Settlement Terms" block inside the approval modal containing the four fields (Invoice Due Date read-only, Grace Period stepper, Final Repayment Deadline date picker, Lender Lock-up derived read-only)
+- The Override Reason dropdown — hidden by default, appears when admin changes the grace period from 14
+- Warning banners (amber strip for W-01 through W-06, red strip for V-03 W-03)
+- A confirmation summary step before final approval showing all four settlement values
+- The "Ack." button column already exists — no change there
 
-You answered the three planning questions as:
+**What it looks like now vs after:**
 
-- **Build now:** Not yet — understand the architecture first
-- **BaaS layer:** Provider-agnostic design
-- **USDC buyers:** Can accommodate both now, strictly USDC in V2
+Now: `[Approve]` button → invoice immediately moves to approved state.
 
-So the plan is written to be BaaS-agnostic (the Edge Function accepts any provider's webhook format via an adapter pattern) and the USDC direct-repayment path is live from day one.
-
-The full plan is saved. Switch to **Build mode** to implement it — the contract changes first, then the Edge Function, then the frontend settlement status UI. Now saving the hybrid settlement plan as its own document. Plan saved to `arc-studio-plans/HYBRID_SETTLEMENT_PLAN.md`.
+After: `[Approve]` button → opens a dark modal with the settlement terms block → admin reviews / adjusts → clicks "Confirm and approve" → invoice moves to approved with deadline locked.
 
 ---
 
-Here is the precise answer to your question: **yes, the hybrid makes lender protection significantly stronger.** Here is why in concrete terms.
+### 2. Admin — Verification Queue (`VerificationQueue.tsx`)
 
-**Under the current system, a lender can lose in two ways:**
-1. Admin never calls `approvePayout` — capital locked permanently
-2. Admin calls it prematurely on a fraudulent invoice — capital lost
+**What changes:**
+Same as above — the T1/T2 KYC approve action currently has no settlement step. Since KYC approval and invoice approval are separate flows, the settlement modal only appears on the invoice approval path, not on KYC approval. No change to VerificationQueue.
 
-**Under the hybrid, every lender risk vector has two or more independent protections:**
+---
 
-| Risk | Primary protection | Backup protection |
+### 3. Marketplace — Invoice Card (`MarketplaceBrowse.tsx`)
+
+**What changes:**
+Two new data points added to the card, both derived from `finalRepaymentDeadline`:
+
+Before (current thesis line):
+```
+60d trade receivable · AgriCo Ltd · 94% on-time · A+ grade
+```
+
+After:
+```
+60d trade receivable · AgriCo Ltd · 94% on-time · A+ grade
+Lender exit: 22 Oct 2026 · 28d lock-up
+```
+
+The "Lender exit" line is a second line below the thesis in `text-[10px]` — navy for normal, amber if ≤14 days remaining, red if ≤7 days.
+
+**Funding modal deal facts table** gets one new row:
+```
+Final repayment deadline    22 Oct 2026
+Lender lock-up              28 calendar days
+```
+Replaces the current generic "Term" placeholder row.
+
+---
+
+### 4. Lender Portfolio — Position rows (`LenderPortfolio.tsx`)
+
+**What changes:**
+The `SettlementCountdown` component already exists and shows a countdown. It currently calculates days from a hardcoded offset. After the change it reads the actual `finalRepaymentDeadline` date from the invoice record.
+
+Visual change is minimal — the countdown number and urgency colour will now reflect the admin-set deadline rather than a formula. If an admin set a 7-day grace period on an invoice, a lender in their portfolio will see a tighter countdown than they would have seen before.
+
+---
+
+### 5. Seller Dashboard — Repayment instructions card
+
+**What changes:**
+The card that shows the buyer their virtual account number and payment deadline currently shows `invoiceDueDate`. After the change it shows `finalRepaymentDeadline` (the hard cutoff) alongside the contractual due date:
+
+```
+Invoice due date:           15 Oct 2026  ← when buyer should pay
+Final settlement deadline:  22 Oct 2026  ← last possible date before lender can claim refund
+```
+
+This distinction matters for the seller — they need to know that chasing the buyer must happen before the 22nd, not just by the 15th.
+
+---
+
+## Screens that do NOT change
+
+- `SellerSignUp`, `LenderSignUp`, `AdminLogin2FA` — no change
+- `SubmitInvoice` — no change (seller does not set the deadline)
+- `Tier1Verification`, `Tier2Verification` — no change (KYC flow, unrelated)
+- `SellerStatus` — no change
+- `BuyerMonitoring` — the deadline column already shows `finalRepaymentDeadline`; once it is admin-set it will just show a more precise date. No layout change.
+- `AnalyticsOverview`, `DisputeResolution` — no change
+- `AcknowledgePage` — no change
+
+---
+
+## Summary of new UI elements count
+
+| Element | Screen | New or modified |
 |---|---|---|
-| Fake invoice | Layer 1 buyer acknowledgement | Admin review before listing |
-| Admin failure / absence | Layer 3 auto-settlement | Layer 5 escrow timer |
-| Admin corruption | Layer 3 auto-settlement (unstoppable after 24h) | Layer 5 timer bypass |
-| Buyer default | Layer 5 guaranteed principal recovery | Layer 7 partial release |
-| Bank reversal fraud | Layer 3 24h buffer | Layer 4 admin block |
-| Capital locked forever | Layer 5 time-bounded exit | Layer 6 USDC instant path |
-| Partial non-payment | Layer 7 proportional release | Cure window before dispute |
+| Settlement terms block (4 fields) | Admin approval modal | New |
+| Override reason dropdown | Admin approval modal | New |
+| Warning banners (up to 3 types) | Admin approval modal | New |
+| Confirmation summary step | Admin approval modal | New |
+| "Lender exit" line on card | MarketplaceBrowse card | New line |
+| Deadline + lock-up rows in funding modal | MarketplaceBrowse modal | New rows |
+| SettlementCountdown data source fix | LenderPortfolio | Modified |
+| Dual date display (due vs deadline) | SellerDashboard repayment card | Modified |
 
-**The key safety property:** no single actor — not admin, not the seller, not the BaaS provider — can permanently prevent a lender from recovering their principal. Layer 5 (the escrow reversal timer) is the unconditional floor. It requires no admin, no webhook, no third party. After the deadline, the contract returns the money. That is the guarantee.
+Eight discrete UI changes across four screens, all additive — nothing is removed, only extended.
 
-**Switch to Build mode** to implement it. The contract changes come first — they are the foundation everything else depends on.
+Ready to build?

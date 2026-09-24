@@ -527,6 +527,8 @@ export const SellerDashboard: React.FC = () => {
                 { label: 'Account number', value: 'VT-' + myInvoices.find(i => i.status === 'funded')?.id.slice(0,8).toUpperCase() },
                 { label: 'Payment reference', value: 'VESTO-' + myInvoices.find(i => i.status === 'funded')?.id.slice(0,6).toUpperCase() },
                 { label: 'Amount due',     value: '$' + (myInvoices.find(i => i.status === 'funded')?.amount ?? 0).toLocaleString() + ' USD' },
+                { label: 'Invoice due date', value: myInvoices.find(i => i.status === 'funded')?.dueDate ?? '—' },
+                { label: 'Final settlement deadline', value: myInvoices.find(i => i.status === 'funded')?.finalRepaymentDeadline ?? 'Pending admin approval' },
               ].map(({ label, value }) => (
                 <div
                   key={label}
@@ -541,6 +543,18 @@ export const SellerDashboard: React.FC = () => {
                   </span>
                 </div>
               ))}
+            </div>
+            <div
+              className="flex items-start gap-2.5 px-3.5 py-3 rounded-[9px]"
+              style={{ background: 'rgba(184,130,30,0.06)', border: '1px solid rgba(184,130,30,0.18)' }}
+            >
+              <svg width="13" height="13" viewBox="0 0 13 13" fill="none" className="shrink-0 mt-0.5">
+                <path d="M6.5 1.5L12 11H1L6.5 1.5Z" stroke="#B8821E" strokeWidth="1.2" strokeLinejoin="round"/>
+                <path d="M6.5 5v3M6.5 9.5h.01" stroke="#B8821E" strokeWidth="1.2" strokeLinecap="round"/>
+              </svg>
+              <p className="text-[11px] leading-relaxed" style={{ color: '#7A5510' }}>
+                <strong>Invoice due date</strong> is when your buyer should pay. <strong>Final settlement deadline</strong> is the last possible date — after this, lenders may reclaim their funds. Please ensure your buyer pays before the invoice due date.
+              </p>
             </div>
             <p className="text-[11px] leading-relaxed" style={{ color: 'var(--ink-subtle)' }}>
               Payment is automatically verified within 24 hours of bank settlement. Your USDC advance will be released to claim once confirmed — no manual step required.
