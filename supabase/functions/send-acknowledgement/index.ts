@@ -42,6 +42,33 @@ function formatDate(dateStr: string): string {
   });
 }
 
+// Verify the caller is an authenticated admin using their Supabase JWT.
+// Identity is read from the verified JWT — never from the request body.
+async function requireAdmin(req: Request, supabaseClient: ReturnType<typeof createClient>): Promise<string | null> {
+  const authHeader = req.headers.get('Authorization');
+  if (!authHeader?.startsWith('Bearer ')) return null;
+  const jwt = authHeader.slice(7);
+
+  // Use the user client (anon key) to verify the token — this respects RLS
+  const userClient = createClient(SUPABASE_URL, Deno.env.get('SUPABASE_ANON_KEY') ?? '', {
+    global: { headers: { Authorization: `Bearer ${jwt}` } },
+  });
+
+  const { data: { user }, error } = await userClient.auth.getUser();
+  if (error || !user) return null;
+
+  // Verify the authenticated user has admin role in profiles table
+  const { data: profile, error: profileErr } = await supabaseClient
+    .from('profiles')
+    .select('role')
+    .eq('id', user.id)
+    .single();
+
+  if (profileErr || profile?.role !== 'admin') return null;
+
+  return user.id; // return the admin's actual user id
+}
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response('ok', {
@@ -53,6 +80,15 @@ Deno.serve(async (req) => {
   }
 
   try {
+    // ── Caller verification: must be an authenticated admin ─────────────────
+    const adminId = await requireAdmin(req, supabase);
+    if (!adminId) {
+      return new Response(
+        JSON.stringify({ error: 'Unauthorized: only authenticated admins can trigger acknowledgement emails' }),
+        { status: 401 }
+      );
+    }
+
     const body = await req.json();
     const { invoiceId } = body;
 
@@ -283,6 +319,15 @@ Deno.serve(async (req) => {
       .update({ email_sent_at: new Date().toISOString() })
       .eq('invoice_id', invoiceId)
       .eq('status', 'pending');
+
+    // Audit log: record which admin triggered the acknowledgement
+    await supabase.from('admin_notes').insert({
+      entity_type: 'invoice',
+      entity_id: invoiceId,
+      admin_id: adminId,
+      admin_name: 'System',
+      note: `Buyer acknowledgement email sent to ${buyerEmail} by admin ${adminId}`,
+    });
 
     return new Response(
       JSON.stringify({ success: true, buyerEmail, invoiceId }),

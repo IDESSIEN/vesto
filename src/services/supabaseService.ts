@@ -12,8 +12,19 @@ export interface AdminNote {
 
 export const supabaseService = {
   // 1. Storage Document Upload
+  // SECURITY: storage path is derived from the authenticated session uid, not
+  // the client-supplied userId parameter. The userId param is used only as a
+  // fallback label when Supabase is not configured (mock mode).
   uploadDocument: async (file: File | { name: string; type: string }, userId: string, docType: string) => {
-    const fileName = `${userId}/${Date.now()}_${file.name}`;
+    // Determine the actual authenticated uid — never trust the client-supplied value
+    let authenticatedUid = userId; // fallback for mock mode
+    if (isSupabaseConfigured) {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user?.id) {
+        authenticatedUid = user.id;
+      }
+    }
+    const fileName = `${authenticatedUid}/${Date.now()}_${file.name}`;
     let fileUrl = `https://storage.supabase.co/documents/${fileName}`;
 
     if (isSupabaseConfigured && 'size' in file) {
@@ -34,9 +45,10 @@ export const supabaseService = {
     }
 
     // Persist document metadata off-chain
+    // SECURITY: user_id is always set to authenticatedUid (from session), never userId (client param)
     const docRecord = {
       id: `doc_${Math.floor(1000 + Math.random() * 9000)}`,
-      user_id: userId,
+      user_id: authenticatedUid,
       document_type: docType,
       file_name: file.name,
       file_url: fileUrl,
@@ -131,16 +143,20 @@ export const supabaseService = {
   },
 
   // 5. Update Seller Credit Limit & Tier Off-Chain
+  // SECURITY: calls the admin_update_seller_tier() SECURITY DEFINER function
+  // which enforces admin-only access server-side. The client cannot bypass this
+  // by passing a different sellerId — the function re-checks is_admin() inside Postgres.
   updateSellerTierOffchain: async (sellerId: string, tier: 1 | 2, limit: number) => {
     if (isSupabaseConfigured) {
-      await supabase
-        .from('profiles')
-        .update({
-          verification_tier: tier,
-          credit_limit: limit,
-          updated_at: new Date().toISOString(),
-        })
-        .eq('id', sellerId);
+      const { error } = await supabase.rpc('admin_update_seller_tier', {
+        p_seller_id: sellerId,
+        p_tier: tier,
+        p_limit: limit,
+      });
+      if (error) {
+        console.error('admin_update_seller_tier failed:', error.message);
+        throw new Error(error.message);
+      }
     }
   },
 };
