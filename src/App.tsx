@@ -21,21 +21,14 @@ import { MarketplaceBrowse } from './components/lender/MarketplaceBrowse';
 import { FundInvoiceBatch } from './components/lender/FundInvoiceBatch';
 import { LenderPortfolio } from './components/lender/LenderPortfolio';
 
-// Admin Components
-import { AdminLogin2FA } from './components/admin/AdminLogin2FA';
-import { VerificationQueue } from './components/admin/VerificationQueue';
-import { InvoiceOversightTable } from './components/admin/InvoiceOversightTable';
-import { DisputeResolution } from './components/admin/DisputeResolution';
-import { AnalyticsOverview } from './components/admin/AnalyticsOverview';
-import { BuyerMonitoring } from './components/admin/BuyerMonitoring';
+// Admin components are only used in AdminPortal (/admin route) — not imported here
 
 export const AppContent: React.FC = () => {
   const {
     currentRole,
     sellerView, setSellerView,
     lenderView, setLenderView,
-    adminView, setAdminView,
-    sellerOnboarded, lenderOnboarded, adminOnboarded,
+    sellerOnboarded, lenderOnboarded,
     seller,
   } = useApp();
 
@@ -94,24 +87,14 @@ export const AppContent: React.FC = () => {
               {lenderOnboarded && navBtn(lenderView === 'portfolio',      () => setLenderView('portfolio'),      'Portfolio')}
             </>
           )}
-          {currentRole === 'admin' && (
-            <>
-              {navBtn(adminView === '2fa' && !adminOnboarded, () => setAdminView('2fa'), 'Sign In')}
-              {adminOnboarded && navBtn(adminView === 'oversight',  () => setAdminView('oversight'),  'Invoices')}
-              {adminOnboarded && navBtn(adminView === 'queue',      () => setAdminView('queue'),      'KYC Queue')}
-              {adminOnboarded && navBtn(adminView === 'dispute',    () => setAdminView('dispute'),    'Disputes')}
-              {adminOnboarded && navBtn(adminView === 'buyers',    () => setAdminView('buyers'),    'Buyers')}
-              {adminOnboarded && navBtn(adminView === 'analytics',  () => setAdminView('analytics'),  'Analytics')}
-              {adminOnboarded && navBtn(adminView === '2fa',        () => setAdminView('2fa'),        '⚙ Security')}
-            </>
-          )}
+          {/* Admin sub-nav lives in /admin route only */}
         </div>
       </div>
 
       {/* Main Content - fade-in on every view switch */}
       <main
         className="flex-1 max-w-7xl w-full mx-auto p-0 sm:p-2"
-        key={`${currentRole}:${sellerView}:${lenderView}:${adminView}`}
+        key={`${currentRole}:${sellerView}:${lenderView}`}
         style={{ animation: 'vesto-fade-in 0.18s ease-out both' }}
       >
         {currentRole === 'seller' && (
@@ -137,16 +120,7 @@ export const AppContent: React.FC = () => {
             {lenderOnboarded && lenderView === 'portfolio'      && <LenderPortfolio />}
           </>
         )}
-        {currentRole === 'admin' && (
-          <>
-            {(!adminOnboarded || adminView === '2fa')        && <AdminLogin2FA />}
-            {adminOnboarded && adminView === 'queue'         && <VerificationQueue />}
-            {adminOnboarded && adminView === 'oversight'     && <InvoiceOversightTable />}
-            {adminOnboarded && adminView === 'dispute'       && <DisputeResolution />}
-            {adminOnboarded && adminView === 'buyers'        && <BuyerMonitoring />}
-            {adminOnboarded && adminView === 'analytics'     && <AnalyticsOverview />}
-          </>
-        )}
+        {/* Admin panel is at /admin — not rendered in the main app */}
       </main>
     </div>
   );

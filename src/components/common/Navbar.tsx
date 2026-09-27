@@ -45,7 +45,7 @@ const InfoIcon = () => (
 );
 
 export const Navbar: React.FC = () => {
-  const { currentRole, setCurrentRole, notification, sellerOnboarded, lenderOnboarded, adminOnboarded, seller, lender, signOut } = useApp();
+  const { currentRole, setCurrentRole, notification, sellerOnboarded, lenderOnboarded, seller, lender, signOut } = useApp();
   const [menuOpen, setMenuOpen] = useState(false);
   const [roleOpen, setRoleOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -61,13 +61,11 @@ export const Navbar: React.FC = () => {
 
   const isAuthenticated =
     (currentRole === 'seller' && sellerOnboarded) ||
-    (currentRole === 'lender' && lenderOnboarded) ||
-    (currentRole === 'admin' && adminOnboarded);
+    (currentRole === 'lender' && lenderOnboarded);
 
   const displayName =
     currentRole === 'seller' ? seller.fullName || 'Seller' :
-    currentRole === 'lender' ? lender.fullName || 'Lender' :
-    'Admin';
+    lender.fullName || 'Lender';
 
   const rawInitials = displayName.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
   const initials = rawInitials || currentRole[0].toUpperCase();
@@ -80,10 +78,10 @@ export const Navbar: React.FC = () => {
     return () => document.removeEventListener('mousedown', handler);
   }, []);
 
+  // Admin is intentionally absent — accessible only via the /admin route
   const roles = [
     { id: 'seller' as const, label: 'Seller', Icon: SellerIcon },
     { id: 'lender' as const, label: 'Lender', Icon: LenderIcon },
-    { id: 'admin'  as const, label: 'Admin',  Icon: AdminIcon  },
   ];
 
   const ActiveIcon = roles.find(r => r.id === currentRole)?.Icon ?? SellerIcon;
