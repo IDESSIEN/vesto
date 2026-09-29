@@ -301,10 +301,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [notification, setNotification] = useState<{ message: string; type: 'success' | 'info' | 'warning' } | null>(null);
 
   const completeSellerOnboarding = (data: Partial<SellerProfile>) => {
+    // Generate a unique seller ID so new sellers never collide with seed demo data
+    const uniqueId = `sel_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
     const newSeller: SellerProfile = {
       ...initialSeller,
       ...data,
-      id: 'sel_101',
+      id: uniqueId,
       creditLimit: 0,
       verificationTier: 0,
       kycStatusTier1: 'none',
@@ -326,11 +328,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const completeLenderOnboarding = (data: Partial<LenderProfile>) => {
+    const uniqueLenderId = `len_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
     setLender(prev => ({
       ...initialLender,
       ...prev,
       ...data,
-      id: 'len_505',
+      id: uniqueLenderId,
       totalInvested: 0,
       totalYieldEarned: 0,
       availableBalance: data.targetAllocation ?? 0,
