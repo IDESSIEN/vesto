@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Vesto — Backend Setup Guide</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+  :root {
+    --canvas: #F8F6F1;
+    --cream: #FDFAF4;
+    --navy: #0A1628;
+    --navy-mid: #1C2D47;
+    --navy-light: #2A3F5F;
+    --gold: #C9963A;
+    --gold-light: #E8B84B;
+    --ink: #1A1A1A;
+    --ink-mid: #3D3D3D;
+    --ink-light: #6B6B6B;
+    --border: #E2DDD5;
+    --green: #1A6B3C;
+    --green-bg: #F0FBF4;
+    --amber: #92400E;
+    --amber-bg: #FFFBEB;
+    --red: #991B1B;
+    --red-bg: #FEF2F2;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Space Grotesk', sans-serif;
+    background: var(--canvas);
+    color: var(--ink);
+    font-size: 15px;
+    line-height: 1.65;
+    padding: 0;
+  }
+
+  /* ── Print ── */
+  @media print {
+    body { background: #fff; font-size: 12px; }
+    .no-print { display: none !important; }
+    .page-break { page-break-before: always; }
+    pre { white-space: pre-wrap; word-break: break-word; }
+    a { color: inherit; text-decoration: none; }
+  }
+
+  /* ── Layout ── */
+  .cover {
+    background: var(--navy);
+    color: #fff;
+    padding: 72px 64px 56px;
+    position: relative;
+    overflow: hidden;
+  }
+  .cover::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+  }
+  .cover-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold-light);
+    margin-bottom: 16px;
+  }
+  .cover h1 {
+    font-size: clamp(32px, 5vw, 52px);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 20px;
+  }
+  .cover-sub {
+    font-size: 17px;
+    color: rgba(255,255,255,0.65);
+    max-width: 520px;
+    line-height: 1.55;
+  }
+  .cover-meta {
+    margin-top: 40px;
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+  .cover-meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .cover-meta-label {
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+  }
+  .cover-meta-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--gold-light);
+  }
+
+  .toc {
+    background: var(--cream);
+    border-bottom: 1px solid var(--border);
+    padding: 40px 64px;
+  }
+  .toc-title {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    margin-bottom: 20px;
+  }
+  .toc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 8px 32px;
+  }
+  .toc-item {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--ink-mid);
+  }
+  .toc-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--gold);
+    font-weight: 700;
+    min-width: 20px;
+  }
+
+  .body-wrap {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 56px 64px 80px;
+  }
+
+  /* ── Section ── */
+  .section {
+    margin-bottom: 64px;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 28px;
+    padding-bottom: 16px;
+    border-bottom: 1.5px solid var(--border);
+  }
+  .section-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--gold);
+    background: rgba(201,150,58,0.1);
+    border: 1px solid rgba(201,150,58,0.25);
+    padding: 3px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.08em;
+  }
+  .section h2 {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--navy);
+  }
+
+  h3 {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--navy);
+    margin: 28px 0 10px;
+    letter-spacing: -0.005em;
+  }
+
+  p { margin-bottom: 14px; color: var(--ink-mid); }
+  p:last-child { margin-bottom: 0; }
+
+  /* ── Steps ── */
+  .steps { display: flex; flex-direction: column; gap: 0; }
+  .step {
+    display: flex;
+    gap: 20px;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .step:last-child { border-bottom: none; }
+  .step-num {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    background: var(--navy);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    margin-top: 2px;
+  }
+  .step-body { flex: 1; }
+  .step-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 6px;
+  }
+  .step-desc { font-size: 14px; color: var(--ink-mid); margin-bottom: 10px; }
+
+  /* ── Code blocks ── */
+  pre, code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+  }
+  pre {
+    background: var(--navy);
+    color: #e8dfc8;
+    padding: 20px 24px;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin: 14px 0;
+    line-height: 1.7;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  pre .comment { color: #6B7A8D; }
+  pre .key { color: var(--gold-light); }
+  pre .val { color: #8FD9A8; }
+  pre .cmd { color: #7DD3FC; }
+  pre .warn { color: #FCA5A5; }
+  code {
+    background: rgba(10,22,40,0.07);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 13px;
+    color: var(--navy);
+  }
+
+  /* ── Callout boxes ── */
+  .callout {
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin: 18px 0;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .callout-icon { flex-shrink: 0; margin-top: 1px; }
+  .callout-body { flex: 1; font-size: 14px; line-height: 1.6; }
+  .callout-body strong { display: block; margin-bottom: 4px; font-size: 13px; letter-spacing: 0.04em; }
+  .callout.green { background: var(--green-bg); border: 1px solid rgba(26,107,60,0.2); color: var(--green); }
+  .callout.amber { background: var(--amber-bg); border: 1px solid rgba(146,64,14,0.2); color: var(--amber); }
+  .callout.red { background: var(--red-bg); border: 1px solid rgba(153,27,27,0.2); color: var(--red); }
+  .callout.navy { background: rgba(10,22,40,0.05); border: 1px solid rgba(10,22,40,0.12); color: var(--navy-mid); }
+
+  /* ── Tables ── */
+  table { width: 100%; border-collapse: collapse; margin: 18px 0; font-size: 13.5px; }
+  th {
+    background: var(--navy);
+    color: rgba(255,255,255,0.85);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 10px 14px;
+    text-align: left;
+  }
+  td { padding: 11px 14px; border-bottom: 1px solid var(--border); color: var(--ink-mid); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:nth-child(even) td { background: rgba(248,246,241,0.6); }
+  .tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+  .tag-green { background: var(--green-bg); color: var(--green); border: 1px solid rgba(26,107,60,0.2); }
+  .tag-red { background: var(--red-bg); color: var(--red); border: 1px solid rgba(153,27,27,0.2); }
+  .tag-amber { background: var(--amber-bg); color: var(--amber); border: 1px solid rgba(146,64,14,0.2); }
+
+  /* ── Checklist ── */
+  .checklist { display: flex; flex-direction: column; gap: 10px; margin: 16px 0; }
+  .check-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 16px;
+    background: var(--cream);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 14px;
+    color: var(--ink-mid);
+  }
+  .check-box {
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--border);
+    border-radius: 4px;
+    margin-top: 1px;
+  }
+
+  /* ── Dark editorial panel ── */
+  .editorial {
+    background: var(--navy);
+    color: rgba(255,255,255,0.85);
+    border-radius: 12px;
+    padding: 32px 36px;
+    margin: 28px 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .editorial::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--gold), var(--gold-light));
+  }
+  .editorial h3 {
+    color: var(--gold-light);
+    margin-top: 0;
+    font-size: 16px;
+  }
+  .editorial p { color: rgba(255,255,255,0.7); }
+  .editorial code {
+    background: rgba(255,255,255,0.1);
+    color: var(--gold-light);
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+
+  /* ── Key table ── */
+  .key-table th { background: var(--navy-mid); }
+  .path-cell {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--navy);
+  }
+
+  /* ── Divider ── */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 48px 0;
+  }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-label">Vesto · Technical Documentation</div>
+  <h1>Backend &amp; API<br>Setup Guide</h1>
+  <p class="cover-sub">A complete, step-by-step walkthrough for wiring Supabase, Edge Functions, and environment variables — without exposing sensitive keys or data.</p>
+  <div class="cover-meta">
+    <div class="cover-meta-item">
+      <span class="cover-meta-label">Version</span>
+      <span class="cover-meta-value">1.0.0</span>
+    </div>
+    <div class="cover-meta-item">
+      <span class="cover-meta-label">Audience</span>
+      <span class="cover-meta-value">Developer / Founder</span>
+    </div>
+    <div class="cover-meta-item">
+      <span class="cover-meta-label">Chain</span>
+      <span class="cover-meta-value">Arc Testnet</span>
+    </div>
+    <div class="cover-meta-item">
+      <span class="cover-meta-label">Date</span>
+      <span class="cover-meta-value">Sep 2026</span>
+    </div>
+  </div>
+</div>
+
+<!-- TABLE OF CONTENTS -->
+<div class="toc">
+  <div class="toc-title">Contents</div>
+  <div class="toc-grid">
+    <div class="toc-item"><span class="toc-num">01</span> The three-layer model</div>
+    <div class="toc-item"><span class="toc-num">02</span> Every key Vesto uses</div>
+    <div class="toc-item"><span class="toc-num">03</span> Create your Supabase project</div>
+    <div class="toc-item"><span class="toc-num">04</span> Set environment variables on Netlify</div>
+    <div class="toc-item"><span class="toc-num">05</span> Set secrets in Edge Functions</div>
+    <div class="toc-item"><span class="toc-num">06</span> Run the database migrations</div>
+    <div class="toc-item"><span class="toc-num">07</span> Deploy the Edge Functions</div>
+    <div class="toc-item"><span class="toc-num">08</span> Wire the email provider</div>
+    <div class="toc-item"><span class="toc-num">09</span> Verify the wiring end to end</div>
+    <div class="toc-item"><span class="toc-num">10</span> The five exposure risks</div>
+    <div class="toc-item"><span class="toc-num">11</span> Go-live checklist</div>
+  </div>
+</div>
+
+<!-- BODY -->
+<div class="body-wrap">
+
+  <!-- 01 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <h2>The three-layer model</h2>
+    </div>
+    <p>Think of your app as a restaurant. This mental model explains every decision in this guide.</p>
+
+    <div class="editorial">
+      <h3>The dining room — your React frontend</h3>
+      <p>This is what users see and click. It runs entirely inside the user's browser. Anyone in the world can open DevTools and read every line of code and every network request. It should contain <strong style="color:#fff">zero secrets</strong> — no private API keys, no passwords, no admin tokens. It talks to the kitchen by making HTTP requests.</p>
+    </div>
+
+    <div class="editorial" style="margin-top:16px">
+      <h3>The kitchen — your Supabase Edge Functions</h3>
+      <p>This is where the real work happens. Users never see inside it. It holds all the secrets and validates every request before acting on it. Your five Edge Functions live here: <code>send-acknowledgement</code>, <code>handle-acknowledgement</code>, <code>payment-received</code>, <code>process-settlements</code>, <code>send-reminders</code>.</p>
+    </div>
+
+    <div class="editorial" style="margin-top:16px">
+      <h3>The pantry — Supabase secrets and Netlify env vars</h3>
+      <p>This is where keys are stored at runtime. The code reads them with <code>Deno.env.get('KEY_NAME')</code> in Edge Functions and <code>import.meta.env.VITE_KEY</code> in the browser — but only the safe anon key goes in the browser. The real secrets never leave the pantry.</p>
+    </div>
+
+    <div class="callout navy" style="margin-top:24px">
+      <svg class="callout-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <div class="callout-body">
+        <strong>The one rule</strong>
+        Secret keys never go in the browser. If a variable name starts with <code>VITE_</code>, it is bundled into the browser build and is visible to anyone. Only two variables should ever have the <code>VITE_</code> prefix: <code>VITE_SUPABASE_URL</code> and <code>VITE_SUPABASE_ANON_KEY</code>. Everything else is server-side only.
+      </div>
+    </div>
+  </div>
+
+  <!-- 02 -->
+  <div class="section page-break">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <h2>Every key Vesto uses</h2>
+    </div>
+    <p>Here is the complete map of every credential the app depends on, where it lives, and whether it is safe to expose.</p>
+
+    <table class="key-table">
+      <thead>
+        <tr>
+          <th>Key name</th>
+          <th>What it does</th>
+          <th>Lives in</th>
+          <th>Safe to expose?</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="path-cell">VITE_SUPABASE_URL</td>
+          <td>The address of your Supabase project</td>
+          <td><code>.env</code> + Netlify env vars</td>
+          <td><span class="tag tag-green">Yes</span></td>
+        </tr>
+        <tr>
+          <td class="path-cell">VITE_SUPABASE_ANON_KEY</td>
+          <td>Lets the browser talk to Supabase with RLS enforced</td>
+          <td><code>.env</code> + Netlify env vars</td>
+          <td><span class="tag tag-green">Yes — RLS is the lock</span></td>
+        </tr>
+        <tr>
+          <td class="path-cell">SUPABASE_SERVICE_ROLE_KEY</td>
+          <td>Full database access — bypasses all RLS</td>
+          <td>Supabase Edge Function secrets ONLY</td>
+          <td><span class="tag tag-red">Never in browser</span></td>
+        </tr>
+        <tr>
+          <td class="path-cell">EMAIL_API_KEY</td>
+          <td>Sends emails via Resend or SendGrid</td>
+          <td>Supabase Edge Function secrets ONLY</td>
+          <td><span class="tag tag-red">Never in browser</span></td>
+        </tr>
+        <tr>
+          <td class="path-cell">BAAS_WEBHOOK_SECRET</td>
+          <td>Validates incoming payment webhooks from BaaS provider</td>
+          <td>Supabase Edge Function secrets ONLY</td>
+          <td><span class="tag tag-red">Never in browser</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout amber">
+      <svg class="callout-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      <div class="callout-body">
+        <strong>Why is the anon key safe to expose?</strong>
+        The anon key is more like a door handle than a key. The real lock is Row Level Security (RLS). When a user logs in, Supabase gives them a JWT token. Every database request carries that token. Supabase checks the token against RLS rules before returning any data. Even if someone steals the anon key, they can only see what an unauthenticated user is allowed to see — which in Vesto is nothing.
+      </div>
+    </div>
+  </div>
+
+  <!-- 03 -->
+  <div class="section page-break">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <h2>Create your Supabase project</h2>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">Go to supabase.com and sign in</div>
+          <div class="step-desc">Create a free account if you don't have one. The free tier supports up to 500MB database and 2GB bandwidth — sufficient for early-stage testing.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">Create a new project</div>
+          <div class="step-desc">Click "New project". Choose a name (e.g. <code>vesto-production</code>), set a strong database password, and select the region closest to your primary user base (for East Africa: <strong>eu-west-1</strong> or <strong>ap-southeast-1</strong>).</div>
+          <div class="callout amber" style="margin-top:10px">
+            <svg class="callout-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            <div class="callout-body">Save your database password somewhere safe. You will need it for the Supabase CLI later. Supabase does not show it again.</div>
+          </div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">Copy your Project URL and Anon Key</div>
+          <div class="step-desc">Go to <strong>Project Settings → API</strong>. You will see two values:</div>
+          <pre><span class="comment"># Project URL — looks like this:</span>
+<span class="key">VITE_SUPABASE_URL</span>=<span class="val">https://abcdefghijklmnop.supabase.co</span>
+
+<span class="comment"># Anon / Public Key — a long JWT string starting with eyJ:</span>
+<span class="key">VITE_SUPABASE_ANON_KEY</span>=<span class="val">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...</span></pre>
+          <div class="step-desc">Copy both values. You will paste them into your <code>.env</code> file and Netlify in the next two steps.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <div class="step-title">Copy your Service Role Key — but keep it safe</div>
+          <div class="step-desc">On the same API settings page, scroll down to find the <strong>Service Role Key</strong>. Copy it but do NOT paste it into your <code>.env</code> file. This key bypasses all RLS. It goes only into Supabase Edge Function secrets (Section 05).</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-body">
+          <div class="step-title">Create your .env file</div>
+          <div class="step-desc">In your project root, copy <code>.env.example</code> to <code>.env</code> and fill in exactly two values:</div>
+          <pre><span class="comment"># .env — this file never gets committed to GitHub</span>
+<span class="key">VITE_SUPABASE_URL</span>=<span class="val">https://YOUR_PROJECT_REF.supabase.co</span>
+<span class="key">VITE_SUPABASE_ANON_KEY</span>=<span class="val">YOUR_ANON_KEY_HERE</span></pre>
+          <div class="callout red" style="margin-top:10px">
+            <svg class="callout-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+            <div class="callout-body">The <code>.env</code> file is in <code>.gitignore</code> and must never be committed to GitHub. If it ever is committed, rotate both keys immediately from the Supabase dashboard.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 04 -->
+  <div class="section page-break">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <h2>Set environment variables on Netlify</h2>
+    </div>
+    <p>Your <code>.env</code> file is for local development only. Netlify needs the same two values set in its dashboard so the deployed build can connect to Supabase.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">Open your Netlify site settings</div>
+          <div class="step-desc">Go to <strong>app.netlify.com</strong> → your site (<code>clever-alpaca-c23dbf</code>) → <strong>Site configuration → Environment variables</strong>.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">Add the two safe variables</div>
+          <div class="step-desc">Click "Add a variable" for each:</div>
+          <pre><span class="key">VITE_SUPABASE_URL</span>      = <span class="val">https://YOUR_PROJECT_REF.supabase.co</span>
+<span class="key">VITE_SUPABASE_ANON_KEY</span> = <span class="val">eyJhbGci...</span></pre>
+          <div class="step-desc">Set scope to "All scopes" (production + deploy previews + branch deploys).</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">Trigger a new deploy</div>
+          <div class="step-desc">Go to <strong>Deploys → Trigger deploy → Deploy site</strong>. Netlify injects env vars at build time — they only take effect after a fresh build, not on page refresh.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout navy">
+      <svg class="callout-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <div class="callout-body">
+        <strong>Why only two variables on Netlify?</strong>
+        Netlify environment variables are injected into the browser bundle at build time. Any variable you set here becomes readable by anyone who inspects your site. Only the two <code>VITE_</code> prefixed variables belong here. The service role key, email key, and webhook secret go into Supabase Edge Function secrets — they never touch Netlify.
+      </div>
+    </div>
+  </div>
+
+  <!-- 05 -->
+  <div class="section page-break">
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <h2>Set secrets in Supabase Edge Functions</h2>
+    </div>
+    <p>Edge Functions run on Supabase's servers, not in the browser. Their secrets are stored encrypted in Supabase's infrastructure and are only accessible to the functions themselves at runtime.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">Navigate to Edge Function secrets</div>
+          <div class="step-desc">In your Supabase project → <strong>Edge Functions → Manage secrets</strong>. This is separate from the API settings page.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">Add all five secrets</div>
+          <pre><span class="key">SUPABASE_SERVICE_ROLE_KEY</span> = <span class="val">eyJhbGci...</span>   <span class="comment"># from Project Settings → API</span>
+<span class="key">EMAIL_API_KEY</span>             = <span class="val">re_xxxx...</span>    <span class="comment"># from Resend dashboard (see Section 08)</span>
+<span class="key">BAAS_WEBHOOK_SECRET</span>       = <span class="val">whsec_xxxx..</span> <span class="comment"># from your BaaS provider dashboard</span>
+<span class="key">EMAIL_FROM_ADDRESS</span>        = <span class="val">noreply@vesto.finance</span>
+<span class="key">APP_URL</span>                   = <span class="val">https://clever-alpaca-c23dbf.netlify.app</span></pre>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">Understand how functions read secrets</div>
+          <div class="step-desc">Inside any Edge Function, secrets are read like this — they are never hard-coded:</div>
+          <pre><span class="comment">// ✅ Correct — reads from the encrypted secrets store</span>
+<span class="cmd">const</span> apiKey = Deno.env.get(<span class="val">'EMAIL_API_KEY'</span>);
+
+<span class="comment">// ❌ Wrong — never write a key directly in code</span>
+<span class="warn">const apiKey = 're_real_key_here'; // this gets committed to GitHub</span></pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout green">
+      <svg class="callout-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      <div class="callout-body">
+        <strong>Supabase automatically injects SUPABASE_URL and SUPABASE_ANON_KEY</strong>
+        You do not need to add these two to secrets — Supabase injects them automatically into every Edge Function. Only add values that are not already provided by the platform.
+      </div>
+    </div>
+  </div>
+
+  <!-- 06 -->
+  <div class="section page-break">
+    <div class="section-header">
+      <span class="section-num">06</span>
+      <h2>Run the database migrations</h2>
+    </div>
+    <p>Migrations create all your tables, RLS policies, triggers, and security rules. They must be run in order — each one builds on the previous.</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>File</th>
+          <th>What it creates</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td class="path-cell">20260905000000_initial_schema.sql</td>
+          <td>Core tables (profiles, documents, invoices, verifications, admin_notes), RLS policies, <code>is_admin()</code> helper</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td class="path-cell">20260923000000_hybrid_settlement.sql</td>
+          <td>Settlement tables (invoice_virtual_accounts, invoice_settlements, pending_settlements), settlement RLS</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td class="path-cell">20260923000001_hybrid_settlement.sql</td>
+          <td>Additional settlement columns on invoices (grace_period_days, final_repayment_deadline, deadline_locked)</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td class="path-cell">20260924000000_buyer_registry.sql</td>
+          <td>Buyers table with credit scoring fields, concentration risk view</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td class="path-cell">20260924000000_buyer_acknowledgements.sql</td>
+          <td>Buyer acknowledgements table, HMAC token fields, audit log</td>
+        </tr>
+        <tr>
+          <td>6</td>
+          <td class="path-cell">20260925000000_security_hardening.sql</td>
+          <td>Column-level protection triggers, admin-only RPC functions, immutability guards</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">Open the Supabase SQL Editor</div>
+          <div class="step-desc">Go to your Supabase project → <strong>SQL Editor</strong> → <strong>+ New query</strong>.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">Run each migration file in order</div>
+          <div class="step-desc">Open each file from your project's <code>supabase/migrations/</code> folder, copy the entire contents, paste into the SQL Editor, and click <strong>Run</strong>. Wait for "Success" before running the next file.</div>
+          <pre><span class="comment"># The files are in your project at:</span>
+supabase/migrations/20260905000000_initial_schema.sql
+supabase/migrations/20260923000000_hybrid_settlement.sql
+supabase/migrations/20260923000001_hybrid_settlement.sql
+supabase/migrations/20260924000000_buyer_registry.sql
+supabase/migrations/20260924000000_buyer_acknowledgements.sql
+supabase/migrations/20260925000000_security_hardening.sql</pre>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">Verify RLS is enabled on every table</div>
+          <div class="step-desc">Go to <strong>Table Editor</strong>. Click each table and look for the orange "RLS enabled" badge in the top right. Every table must show this badge. If any table shows "RLS disabled", run this in the SQL Editor:</div>
+          <pre><span class="cmd">ALTER TABLE</span> public.your_table_name <span class="cmd">ENABLE ROW LEVEL SECURITY</span>;</pre>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <div class="step-title">Set up the pg_cron job for process-settlements</div>
+          <div class="step-desc">The settlement processor runs every 15 minutes. Enable it with this SQL:</div>
+          <pre><span class="comment">-- Enable pg_cron extension (run once)</span>
+<span class="cmd">CREATE EXTENSION IF NOT EXISTS</span> pg_cron;
+
+<span class="comment">-- Schedule process-settlements every 15 minutes</span>
+<span class="cmd">SELECT</span> cron.schedule(
+  <span class="val">'process-settlements'</span>,
+  <span class="val">'*/15 * * * *'</span>,
+  <span class="val">$$
+    SELECT net.http_post(
+      url := current_setting('app.supabase_url') || '/functions/v1/process-settlements',
+      headers := jsonb_build_object(
+        'Authorization', 'Bearer ' || current_setting('app.service_role_key'),
+        'Content-Type', 'application/json'
+      ),
+      body := '{}'::jsonb
+    );
+  $$</span>
+);</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 07 -->
+  <div class="section page-break">
+    <div class="section-header">
+      <span class="section-num">07</span>
+      <h2>Deploy the Edge Functions</h2>
+    </div>
+    <p>Edge Functions are deployed using the Supabase CLI from your local machine or CI pipeline.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">Install the Supabase CLI</div>
+          <pre><span class="comment"># macOS</span>
+<span class="cmd">brew install supabase/tap/supabase</span>
+
+<span class="comment"># Windows / Linux</span>
+<span class="cmd">npm install -g supabase</span></pre>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">Log in and link your project</div>
+          <pre><span class="cmd">supabase login</span>
+<span class="comment"># Opens browser — log in with your Supabase account</span>
+
+<span class="cmd">supabase link --project-ref YOUR_PROJECT_REF</span>
+<span class="comment"># YOUR_PROJECT_REF is the part before .supabase.co in your project URL</span>
+<span class="comment"># e.g. if URL is https://abcdefgh.supabase.co → ref is abcdefgh</span></pre>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">Deploy all five functions</div>
+          <pre><span class="cmd">supabase functions deploy send-acknowledgement</span>
+<span class="cmd">supabase functions deploy handle-acknowledgement</span>
+<span class="cmd">supabase functions deploy payment-received</span>
+<span class="cmd">supabase functions deploy process-settlements</span>
+<span class="cmd">supabase functions deploy send-reminders</span></pre>
+          <div class="step-desc">Each function takes about 30 seconds. You will see "Deployed Function" for each one. The function URLs follow the pattern:</div>
+          <pre><span class="val">https://YOUR_PROJECT_REF.supabase.co/functions/v1/FUNCTION_NAME</span></pre>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <div class="step-title">Delete the legacy Agora function</div>
+          <div class="step-desc">The <code>agora/index.ts</code> function is a leftover from the original app and is not used in Vesto. Delete it to avoid unnecessary invocations:</div>
+          <pre><span class="cmd">supabase functions delete agora</span></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 08 -->
+  <div class="section page-break">
+    <div class="section-header">
+      <span class="section-num">08</span>
+      <h2>Wire the email provider</h2>
+    </div>
+    <p>Vesto sends two types of emails: buyer acknowledgement requests and seller repayment reminders. Both use the <code>EMAIL_API_KEY</code> secret you set in Section 05.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">Create a free Resend account</div>
+          <div class="step-desc">Go to <strong>resend.com</strong> → Sign up. Resend has a free tier of 3,000 emails/month. No credit card required. It is the simplest email API available and has first-class Deno/Edge Function support.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">Add and verify your sending domain</div>
+          <div class="step-desc">Go to <strong>Domains → Add Domain</strong>. Add <code>vesto.finance</code> (or your actual domain). Resend will give you DNS records to add — three TXT records and one MX record. Add them in your DNS provider (Cloudflare, Namecheap, etc.) and click Verify. This takes 5–30 minutes.</div>
+          <div class="callout amber" style="margin-top:10px">
+            <svg class="callout-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            <div class="callout-body">If you do not own <code>vesto.finance</code> yet, use <code>onboarding@resend.dev</code> as the from address for testing only. It works without domain verification but emails go to spam in production.</div>
+          </div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">Get your API key</div>
+          <div class="step-desc">Go to <strong>API Keys → Create API Key</strong>. Name it <code>vesto-edge-functions</code>. Copy the key (starts with <code>re_</code>) and paste it into your Supabase Edge Function secrets as <code>EMAIL_API_KEY</code>.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 09 -->
+  <div class="section page-break">
+    <div class="section-header">
+      <span class="section-num">09</span>
+      <h2>Verify the wiring end to end</h2>
+    </div>
+    <p>After completing all steps, run these five checks to confirm everything is connected.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">✓</div>
+        <div class="step-body">
+          <div class="step-title">Check 1 — Supabase connection</div>
+          <div class="step-desc">Open the app in your browser. Open DevTools → Network tab. Filter by <code>supabase</code>. Perform any action that reads data (e.g. navigate to the Lender Marketplace). You should see requests going to <code>https://YOUR_PROJECT_REF.supabase.co/rest/v1/...</code> and returning <code>200 OK</code> responses. If you see 401 errors, your anon key is wrong.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">✓</div>
+        <div class="step-body">
+          <div class="step-title">Check 2 — RLS data isolation</div>
+          <div class="step-desc">Sign up as a seller. Submit an invoice. Sign out. Sign up as a different seller. Navigate to invoices. You should see zero invoices — the second seller cannot see the first seller's invoices. If you see the first seller's invoices, RLS is not working.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">✓</div>
+        <div class="step-body">
+          <div class="step-title">Check 3 — Buyer acknowledgement email</div>
+          <div class="step-desc">Log in as admin at <code>/admin</code>. Find a pending invoice. Click Approve → set settlement terms → Confirm. The <code>send-acknowledgement</code> Edge Function should fire and send an email to the buyer's AP address. Check your Resend dashboard under <strong>Logs</strong> to confirm delivery.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">✓</div>
+        <div class="step-body">
+          <div class="step-title">Check 4 — Wallet connection</div>
+          <div class="step-desc">Click "Connect Wallet" in the navbar. Connect MetaMask or any injected wallet. The wallet should connect to Arc Testnet. If it prompts to switch networks, accept. Once connected, your USDC balance should appear (it will be 0 if you haven't received testnet USDC yet).</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">✓</div>
+        <div class="step-body">
+          <div class="step-title">Check 5 — Admin portal separation</div>
+          <div class="step-desc">Navigate to the main app. Confirm there is no Admin option in the role switcher — only Seller and Lender. Then navigate directly to <code>/admin</code>. Confirm you see only the email + passcode gate with no admin content visible. Log in with a <code>@vesto.finance</code> email and passcode <code>123456</code>. Confirm the full admin panel appears only after authentication.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 10 -->
+  <div class="section page-break">
+    <div class="section-header">
+      <span class="section-num">10</span>
+      <h2>The five exposure risks</h2>
+    </div>
+    <p>These are the five mistakes that would give an attacker access to your data or your users' funds. Each one is explained plainly.</p>
+
+    <div class="editorial">
+      <h3 style="color:#FCA5A5">Risk 1 — Service role key in a VITE_ variable</h3>
+      <p>If you add <code>VITE_SUPABASE_SERVICE_ROLE_KEY</code> to your <code>.env</code> or Netlify, Vite bundles it into the browser JavaScript. Anyone who opens DevTools → Sources can read it in plain text. With the service role key, an attacker can read, modify, or delete every row in your database — all invoices, all seller profiles, all lender positions, all KYC documents.</p>
+      <p style="color:rgba(255,255,255,0.9);margin-top:10px"><strong style="color:#8FD9A8">Current status:</strong> Clean. The grep across all src/ files confirms zero references to SERVICE_ROLE with a VITE_ prefix.</p>
+    </div>
+
+    <div class="editorial" style="margin-top:16px">
+      <h3 style="color:#FCA5A5">Risk 2 — Committing .env to GitHub</h3>
+      <p>Even if you fix it immediately, git history is permanent. Anyone who ever had access to your repository can read the old commit and find your keys. GitHub's secret scanning will flag it, but the key is already compromised the moment it is pushed.</p>
+      <p style="color:rgba(255,255,255,0.9);margin-top:10px"><strong style="color:#8FD9A8">Current status:</strong> Clean. <code>.env</code> and all variants are in <code>.gitignore</code>. If this ever happens: rotate both keys immediately from the Supabase dashboard, then do a <code>git filter-branch</code> or <code>BFG Repo Cleaner</code> to remove the commit from history.</p>
+    </div>
+
+    <div class="editorial" style="margin-top:16px">
+      <h3 style="color:#FCA5A5">Risk 3 — RLS disabled on any table</h3>
+      <p>With RLS disabled, any authenticated user — any seller, any lender — can run a query like <code>SELECT * FROM invoices</code> and get every invoice in the database, including funded amounts, lender IDs, and buyer details. With the anon key (which is public), even unauthenticated users could read everything.</p>
+      <p style="color:rgba(255,255,255,0.9);margin-top:10px"><strong style="color:#8FD9A8">Current status:</strong> All migrations include <code>ENABLE ROW LEVEL SECURITY</code>. Verify in Supabase dashboard after running migrations.</p>
+    </div>
+
+    <div class="editorial" style="margin-top:16px">
+      <h3 style="color:#FCA5A5">Risk 4 — Trusting user-supplied IDs</h3>
+      <p>If your API or Edge Function accepts <code>sellerId</code> from the request body and uses it directly to query the database, any authenticated user can supply a different seller's UUID and read or modify their data. The session JWT, not the request body, must be the source of identity.</p>
+      <p style="color:rgba(255,255,255,0.9);margin-top:10px"><strong style="color:#8FD9A8">Current status:</strong> Fixed by the security hardening migration. All sensitive column updates use <code>auth.uid()</code> from the JWT, enforced by database triggers.</p>
+    </div>
+
+    <div class="editorial" style="margin-top:16px">
+      <h3 style="color:#FCA5A5">Risk 5 — Logging secrets in console.log</h3>
+      <p>A <code>console.log(apiKey)</code> in an Edge Function writes the key to Supabase's log stream, which is visible in the Supabase dashboard and potentially in log aggregation services. A <code>console.log(token)</code> in the browser writes it to DevTools, which can be read by browser extensions.</p>
+      <p style="color:rgba(255,255,255,0.9);margin-top:10px"><strong style="color:#8FD9A8">Current status:</strong> Clean. Zero console.log calls found across all src/ and supabase/functions/ files.</p>
+    </div>
+  </div>
+
+  <!-- 11 -->
+  <div class="section page-break">
+    <div class="section-header">
+      <span class="section-num">11</span>
+      <h2>Go-live checklist</h2>
+    </div>
+    <p>Print this page. Check every item before pointing a real user at the application.</p>
+
+    <h3>Supabase project</h3>
+    <div class="checklist">
+      <div class="check-item"><div class="check-box"></div>Supabase project created and database password saved securely</div>
+      <div class="check-item"><div class="check-box"></div>Project URL and anon key copied from Project Settings → API</div>
+      <div class="check-item"><div class="check-box"></div>All six migrations run in order with no errors</div>
+      <div class="check-item"><div class="check-box"></div>RLS badge visible on every table in the Table Editor</div>
+      <div class="check-item"><div class="check-box"></div>pg_cron job scheduled for process-settlements every 15 minutes</div>
+    </div>
+
+    <h3>Environment variables</h3>
+    <div class="checklist">
+      <div class="check-item"><div class="check-box"></div><code>.env</code> file created locally with exactly two VITE_ variables</div>
+      <div class="check-item"><div class="check-box"></div><code>.env</code> is listed in <code>.gitignore</code> and has never been committed</div>
+      <div class="check-item"><div class="check-box"></div>VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY set on Netlify</div>
+      <div class="check-item"><div class="check-box"></div>New Netlify deploy triggered after adding env vars</div>
+    </div>
+
+    <h3>Supabase Edge Function secrets</h3>
+    <div class="checklist">
+      <div class="check-item"><div class="check-box"></div>SUPABASE_SERVICE_ROLE_KEY set in Edge Function secrets (not in .env)</div>
+      <div class="check-item"><div class="check-box"></div>EMAIL_API_KEY set (from Resend dashboard)</div>
+      <div class="check-item"><div class="check-box"></div>EMAIL_FROM_ADDRESS set to a verified domain email</div>
+      <div class="check-item"><div class="check-box"></div>APP_URL set to the live Netlify URL</div>
+      <div class="check-item"><div class="check-box"></div>BAAS_WEBHOOK_SECRET set (when BaaS provider is onboarded)</div>
+    </div>
+
+    <h3>Edge Functions</h3>
+    <div class="checklist">
+      <div class="check-item"><div class="check-box"></div>All five functions deployed: send-acknowledgement, handle-acknowledgement, payment-received, process-settlements, send-reminders</div>
+      <div class="check-item"><div class="check-box"></div>Legacy agora function deleted</div>
+      <div class="check-item"><div class="check-box"></div>send-acknowledgement test: approve a test invoice, verify email arrives in Resend logs</div>
+    </div>
+
+    <h3>End-to-end verification</h3>
+    <div class="checklist">
+      <div class="check-item"><div class="check-box"></div>Supabase requests returning 200 in browser DevTools</div>
+      <div class="check-item"><div class="check-box"></div>RLS isolation confirmed: seller A cannot see seller B's invoices</div>
+      <div class="check-item"><div class="check-box"></div>Wallet connects to Arc Testnet successfully</div>
+      <div class="check-item"><div class="check-box"></div>Admin portal at /admin shows only the login gate — no admin content visible before auth</div>
+      <div class="check-item"><div class="check-box"></div>Admin login works with @vesto.finance email and correct passcode</div>
+    </div>
+
+    <div class="editorial" style="margin-top:32px">
+      <h3>When something breaks</h3>
+      <p>Start with the Supabase logs. Go to <strong>Edge Functions → your function → Logs</strong>. Every invocation is logged with the request and response. Most issues are either a missing secret (the function logs "SECRET_NAME is not set") or an RLS policy blocking a query (the Postgres logs show "new row violates row-level security policy").</p>
+      <p style="margin-top:12px">For wallet connection issues, check the Arc Testnet RPC in your browser's Network tab. For USDC balance not showing, confirm the wallet is connected to Arc Testnet (chain ID 9001 for Arc Testnet) and not a different network.</p>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
