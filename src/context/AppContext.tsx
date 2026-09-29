@@ -112,10 +112,13 @@ const initialLender: LenderProfile = {
   createdAt: '2026-07-01',
 };
 
+// Seed invoices use fixed demo seller IDs that will never match a real sign-up
+// (real sign-ups get unique timestamped IDs like sel_1727123456789_x8k2j)
+
 const initialInvoices: Invoice[] = [
   {
     id: 'INV-2026-8901',
-    sellerId: 'sel_101',
+    sellerId: 'sel_demo_001',
     sellerBusinessName: 'Nairobi Fresh Produce Co.',
     sellerCategory: 'Agri Exporter',
     buyerName: 'Metro Supermarkets East Africa',
@@ -141,7 +144,7 @@ const initialInvoices: Invoice[] = [
   },
   {
     id: 'INV-2026-7734',
-    sellerId: 'sel_102',
+    sellerId: 'sel_demo_002',
     sellerBusinessName: 'Kilifi Cashew Processors',
     sellerCategory: 'Agri Processing',
     buyerName: 'Global Commodities Direct',
@@ -167,7 +170,7 @@ const initialInvoices: Invoice[] = [
   },
   {
     id: 'INV-2026-6102',
-    sellerId: 'sel_103',
+    sellerId: 'sel_demo_003',
     sellerBusinessName: 'Rift Valley Logistics',
     sellerCategory: 'Cold Chain Transport',
     buyerName: 'Kabras Sugar Refineries',
@@ -196,7 +199,7 @@ const initialInvoices: Invoice[] = [
   },
   {
     id: 'INV-2026-5011',
-    sellerId: 'sel_104',
+    sellerId: 'sel_demo_004',
     sellerBusinessName: 'Mombasa Spice Traders',
     sellerCategory: 'Spices & Culinary',
     buyerName: 'Zanzibar Spice Imports',
@@ -221,7 +224,7 @@ const initialInvoices: Invoice[] = [
 const initialVerifications: VerificationRequest[] = [
   {
     id: 'VR-901',
-    sellerId: 'sel_101',
+    sellerId: 'sel_demo_001',
     sellerName: 'Amina Diallo',
     businessName: 'Nairobi Fresh Produce Co.',
     tier: 2,
@@ -233,7 +236,7 @@ const initialVerifications: VerificationRequest[] = [
   },
   {
     id: 'VR-899',
-    sellerId: 'sel_104',
+    sellerId: 'sel_demo_004',
     sellerName: 'Hassan Omar',
     businessName: 'Mombasa Spice Traders',
     tier: 1,
