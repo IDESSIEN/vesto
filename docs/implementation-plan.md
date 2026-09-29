@@ -1,58 +1,87 @@
-Based on your answers — both the role switcher and sub-nav should be hidden, Admin should be a completely separate page, and the existing email + passcode gate should stay as a second layer — here is the precise plan before we touch a single line of code.
+Reading the codebase to check every one of these five against what's actually in the code. Now check for console.log of any sensitive values, VITE_ prefixed secrets, and service role key usage in frontend code: Now check the initial schema for RLS enablement, and check the Edge Functions for any console.log of sensitive data: Full picture. Here is the complete, honest check against all five exposure risks:
 
 ---
 
-## The problem in concrete terms
+## Check 1 — Service role key in a VITE_ variable
 
-Right now the app has three roles in one place. The navbar shows a role switcher with Seller, Lender, and Admin visible to everyone. When someone clicks Admin they see the 2FA login — but the fact that an admin interface exists at all is already exposed. On mobile the sub-nav tabs (Invoices, KYC Queue, Disputes, Buyers, Analytics) are also partially visible before authentication.
+**Status: Clean.**
 
----
+`src/lib/supabase.ts` uses only `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`. No service role key anywhere in the `src/` directory. The grep for `SERVICE_ROLE` across all of `src/` returned zero matches. The service role key is referenced only in Edge Functions via `Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')` — server-side only, never in the browser bundle.
 
-## The correct architecture
-
-**The main app** (`clever-alpaca-c23dbf.netlify.app`) shows only Seller and Lender. Admin is completely absent — no tab, no option, no hint it exists.
-
-**The admin portal** lives at a separate route — `/admin` or a path you choose — that is not linked from anywhere in the main app. You share the URL privately with your admin team. Anyone who navigates there directly sees only the existing `@vesto.finance` email + 6-digit passcode gate. Nothing else is visible until they authenticate.
+**One thing to note:** `supabase.ts` has a hardcoded fallback URL (`https://advance-agrarian-monad.supabase.co`) and `'mock_key'` fallback. These are placeholders, not real secrets — but the old Supabase project URL is visible in the bundle if env vars are not set. This is not a security risk (it is just an address, not a key) but it is a hygiene issue. When you wire the real project, the env vars will override these fallbacks and the old URL disappears.
 
 ---
 
-## Exactly what changes and what does not
+## Check 2 — Committing .env to GitHub
 
-**What changes:**
-1. Remove Admin from the role switcher in the navbar — the switcher shows only Seller and Lender
-2. Remove the Admin sub-nav from App.tsx — it does not render at all on the main app
-3. Add a dedicated `/admin` route in the router that renders a self-contained `AdminPortal` component
-4. The `AdminPortal` component renders the existing `AdminLogin2FA` screen first, then — after successful authentication — renders the full admin panel with all existing screens (Invoices, KYC Queue, Disputes, Buyers, Analytics, Security) unchanged
-5. The admin panel state stays in AppContext — nothing is ripped out, the `isAdminAuthenticated` flag simply moves to being set by the `/admin` route instead of the role switcher
+**Status: Clean.**
 
-**What does not change:**
-- Every admin screen (InvoiceOversightTable, VerificationQueue, DisputeResolution, BuyerMonitoring, AnalyticsOverview, AdminLogin2FA) — zero changes to any of these files
-- The existing `@vesto.finance` email + 6-digit passcode gate — stays exactly as is
-- The `completeAdminOnboarding` and `signOut` logic in AppContext — unchanged
-- All the security hardening from the RLS migration — unchanged
-- The Seller and Lender flows — completely untouched
+`.gitignore` explicitly lists:
+```
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+```
 
----
+All five variants are excluded. The only env-related file that can ever reach GitHub is `.env.example` — which contains only placeholder names, never real values. The real `.env` file (with your actual Supabase URL and anon key) will never be committed as long as `.gitignore` stays intact.
 
-## The two-layer security model after the change
-
-**Layer 1 — Obscurity:** The admin URL is not published or linked anywhere. You only share it with your team. The main app has no trace of admin functionality.
-
-**Layer 2 — Authentication:** Anyone who finds or guesses the URL still hits the `@vesto.finance` email + 6-digit passcode gate before seeing anything. These are two independent barriers.
+**One thing to note:** `*.log` is also in `.gitignore` — this matters because if a secret ever appeared in a log file and that file was committed, it would be in the git history permanently.
 
 ---
 
-## The four files that change
+## Check 3 — RLS disabled on any table
 
-1. `src/App.tsx` — remove Admin from the role switcher; remove the admin sub-nav and admin view router; add the `/admin` route handler
-2. `src/main.tsx` — add the `/admin` path to the router so it renders `AdminPortal`
-3. `src/components/admin/AdminPortal.tsx` — new file, thin wrapper that renders `AdminLogin2FA` or the full admin panel based on auth state (reuses everything that already exists)
-4. `src/components/common/Navbar.tsx` — hide the Admin option from the role switcher (one conditional)
+**Status: Clean — with one gap.**
 
-No other files change. All existing admin screens are untouched.
+The initial schema migration explicitly enables RLS on five tables:
+```sql
+ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.documents ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.invoices ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.verifications ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.admin_notes ENABLE ROW LEVEL SECURITY;
+```
+
+**The gap:** The newer tables added in later migrations — `invoice_virtual_accounts`, `invoice_settlements`, `pending_settlements`, `buyer_acknowledgements`, `buyers`, `invoice_reminders` — each have `ENABLE ROW LEVEL SECURITY` in their own migration files. This is correct. But you need to verify in the Supabase dashboard after running all migrations that every table in the list shows the green RLS shield. The migrations should have done it, but if any migration was run partially or errored mid-way, a table could be left with RLS disabled. Check: Supabase → Table Editor → each table → the RLS badge in the top right.
 
 ---
 
-Ready to build? Say "build it" and I'll implement all four changes. Plan saved to `arc-studio-plans/ADMIN_SEPARATION_PLAN.md`.
+## Check 4 — Trusting user-supplied IDs without re-checking the session
 
-Switch to **Build mode** and say "build it" — I'll implement all four changes cleanly without touching any admin screen files.
+**Status: Fixed by the security hardening migration.**
+
+This was the most serious gap found in the audit. Before the hardening migration, `updateSellerTierOffchain` accepted a `sellerId` from the client and called `profiles.update()` with it — any authenticated user could supply someone else's UUID and escalate their verification tier.
+
+The security hardening migration (`20260925000000_security_hardening.sql`) fixed this with:
+- A `BEFORE UPDATE` trigger on `profiles` that raises `AUTHORIZATION_DENIED` if a non-admin touches `role`, `verification_tier`, `credit_limit`, or `used_limit`
+- A `SECURITY DEFINER` RPC function for `updateSellerTier` that re-checks `is_admin()` inside Postgres — the user ID comes from `auth.uid()`, never from the request body
+- An immutability trigger on `invoices.funded_by_lender_id` — cannot be changed after it is set
+- A restricted UPDATE policy on `invoices` that blocks sellers from changing `status`, `risk_tier`, `risk_score`, or `funded_by_lender_id`
+
+One residual note: `supabaseService.ts` has a `saveInvoiceOffchain` function that passes `seller_id: invoice.sellerId` from the client-supplied `Invoice` object. The INSERT RLS policy `WITH CHECK (auth.uid() = seller_id)` catches this at the DB layer — if the seller_id does not match the authenticated user's UUID, Postgres rejects the insert. This is correct behaviour. The client-supplied value is validated by the DB, not trusted blindly.
+
+---
+
+## Check 5 — Logging secrets in console.log
+
+**Status: Clean.**
+
+Zero `console.log` calls across the entire `src/` directory (all `.ts` and `.tsx` files). Zero `console.log` calls across all six Edge Functions in `supabase/functions/`. This means no API keys, JWT tokens, webhook secrets, or user data are being logged to the browser console or Supabase Edge Function logs.
+
+**One legacy file to clean up:** `supabase/functions/agora/index.ts` is a leftover from the original Advance app (it proxies Agora Finance API calls). It references `AGORA_API_KEY` which is no longer used in Vesto. It does not log anything sensitive, but it is dead code. It should be deleted when you wire the real Supabase project so it does not consume Edge Function invocation quota.
+
+---
+
+## Summary scorecard
+
+| Risk | Status | Action needed |
+|---|---|---|
+| Service role key in browser | Clean | None |
+| .env committed to GitHub | Clean | None |
+| RLS disabled | Mostly clean | Verify each new table in Supabase dashboard after migrations |
+| User-supplied ID trusted | Fixed | Migration must be run — not automatic until applied to live project |
+| console.log of secrets | Clean | Delete dead `agora/index.ts` function when wiring live project |
+
+**The one action required before going live:** run all six migrations on the live Supabase project in order, then verify RLS is enabled on every table in the dashboard. Everything else is already in order.

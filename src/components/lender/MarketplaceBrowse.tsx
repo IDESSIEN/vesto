@@ -734,7 +734,7 @@ export const MarketplaceBrowse: React.FC = () => {
 
             <div className="flex items-center gap-3">
               <button
-                onClick={() => setLenderView('tour')}
+                onClick={() => setLenderView('guided_tour')}
                 className="h-8 px-3 rounded-[7px] text-[10px] font-medium transition-all duration-150 hover:bg-white/10"
                 style={{ background: 'rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.45)', border: '1px solid rgba(255,255,255,0.08)' }}
               >
